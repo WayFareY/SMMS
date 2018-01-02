@@ -5,6 +5,7 @@
 <sql id="listColumns">
 	
             ssp.RID,
+            ssp.MAIN_RID,
             ssp.CLIENTNAME,
             ssp.REPORT_CITY,
             ssp.REPORT_TIME,
@@ -22,7 +23,7 @@
             ssp.CC_DOMAIN,
             ssp.CC_URL,
             ssp.IP,
-            ssp.DOMAIN,
+            ssp.DOMAIN_NAME,
             ssp.URL,
             ssp.UNIT_INDUSTY,
             ssp.UNIT_NAME,
@@ -45,6 +46,7 @@
             ssp.RECTIFY_STATE,
             ssp.EVENT_SOURCE,
             ssp.WEB_CASE_RID,
+            ssp.MAPPING_MODE,
             ssp.IS_FORCE_CLOSE,
             ssp.FORCE_CLOSE_DESCE,
             ssp.IS_WHITE_LIST,
@@ -58,7 +60,8 @@
 </sql>
 <sql id="detailColumns">
 	
-                 ssp.RID,
+            ssp.RID,
+            ssp.MAIN_RID,
             ssp.CLIENTNAME,
             ssp.REPORT_CITY,
             ssp.REPORT_TIME,
@@ -76,7 +79,7 @@
             ssp.CC_DOMAIN,
             ssp.CC_URL,
             ssp.IP,
-            ssp.DOMAIN,
+            ssp.DOMAIN_NAME,
             ssp.URL,
             ssp.UNIT_INDUSTY,
             ssp.UNIT_NAME,
@@ -99,6 +102,7 @@
             ssp.RECTIFY_STATE,
             ssp.EVENT_SOURCE,
             ssp.WEB_CASE_RID,
+            ssp.MAPPING_MODE,
             ssp.IS_FORCE_CLOSE,
             ssp.FORCE_CLOSE_DESCE,
        		ssp.SNAPSHOP,
@@ -121,8 +125,16 @@
 	else 
 		'无' 
 	end  as TRANS_SNAPSHOP,
-	<include refid="listColumns"/>,CONCAT(CONCAT(ssp.EVENT_TYPE1,'_'),ssp.EVENT_TYPE2) as EVENT_ALL,
-	CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as TYPE_ALL 
+	<include refid="listColumns"/>,
+	
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		CONCAT(CONCAT(ssp.EVENT_TYPE1,'_'),ssp.EVENT_TYPE2) as EVENT_ALL,
+		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as TYPE_ALL 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		 ssp.EVENT_TYPE1 || '_' || ssp.EVENT_TYPE2  as EVENT_ALL,
+		 ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_'  || ssp.THREAT_TYPE4  as TYPE_ALL 
+	</if>	
 	from smms_pending_event as ssp
 	left join smms_idc_info as sii
     on ssp.ACCESS_ID=sii.IDC_ID
@@ -130,7 +142,7 @@
     	SMMS_WEB_CASE as ssw
     	on ssp.WEB_CASE_RID=ssw.RID
 	<where>
-		ssp.RECORDSTATE='0'
+		ssp.RECORDSTATE='0' 
         <if test="whereCondition!=null and whereCondition!='' ">   
              ${whereCondition}
         </if>		
@@ -187,7 +199,7 @@
     left join 
     SMMS_WEB_CASE as ssw
     on ssp.WEB_CASE_RID=ssw.RID
-    where ssp.RECORDSTATE='0'and ssp.RID = #{RID} 
+    where ssp.RECORDSTATE='0' and ssp.RID = #{RID} 
 </select> 
 
 
@@ -203,7 +215,13 @@ select
 		ssp.RECTIFY_TERM as rectify_term,
 		ssp.CLOSE_TERM as close_term,
 		ssp.rid as event_id,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_' || ssp.THREAT_TYPE4  as security_type 
+	</if>		
+		
 from smms_pending_event as ssp 
 left JOIN
 		smms_web_case as swc 
@@ -222,7 +240,13 @@ ssp.WEB_CASE_RID=swc.rid
 	select 
 	ssp.rid as event_id,
 	ssp.url,
-	CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type,
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_' || ssp.THREAT_TYPE4 as security_type,
+	</if>	
+	
 	ssp.THREAT_LEVEL as damage_class,
 	ssp.ACCESS_ID as access_id,
 	ssp.FINAL_RECTIFY_SUGGEST as rectify_suggestion,
@@ -247,7 +271,12 @@ ssp.WEB_CASE_RID=swc.rid
 	select 
 	ssp.rid as event_id,
 	ssp.url,
-	CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type,
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+	    ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_' || ssp.THREAT_TYPE4 as security_type,
+	</if>	
 	ssp.THREAT_LEVEL as damage_class,
 	ssp.ACCESS_ID as access_id,
 	ssp.FINAL_RECTIFY_SUGGEST as rectify_suggestion,
@@ -273,7 +302,13 @@ select
 		ssp.RECTIFY_TERM as rectify_term,
 		ssp.CLOSE_TERM as close_term,
 		ssp.rid as event_id,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+	    ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_' || ssp.THREAT_TYPE4 as security_type 
+	</if>		
+		
 from smms_pending_event as ssp 
 left JOIN
 		smms_web_case as swc 
@@ -284,6 +319,61 @@ where
 and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
 order by ssp.access_id asc
 </select>
+
+<select id="viewToAllJsonIp" parameterType="hashmap" resultType="hashmap">
+select 
+	ssi.ACCESS_IP as IP,
+	ssp.url as DOMAIN
+from smms_pending_event as ssp 
+left JOIN
+		smms_web_case as swc 
+on 
+		ssp.WEB_CASE_RID=swc.rid 
+left join 
+	smms_web_case_ip as ssi
+on 
+	swc.rid=ssi.case_rid
+where 
+		ssp.RECTIFY_STATE='000' 
+and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
+order by ssp.access_id asc
+</select>
+<select id="viewToJsonIp" parameterType="hashmap" resultType="hashmap">
+select 
+	ssi.ACCESS_IP as IP,
+	ssp.url as DOMAIN
+from smms_pending_event as ssp 
+left JOIN
+		smms_web_case as swc 
+on 
+ssp.WEB_CASE_RID=swc.rid 
+left join 
+	smms_web_case_ip as ssi
+on 
+	swc.rid=ssi.case_rid
+<where>
+		 ssp.RECTIFY_STATE='000' and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
+
+        <if test="ridCondition!=null and ridCondition!='' ">   
+             ${ridCondition}
+        </if>	
+</where>
+</select>
+<select id="viewAllMappingMode" parameterType="hashmap" resultType="hashmap">
+select 
+	MAPPING_MODE
+from smms_pending_event as ssp 
+left JOIN
+		smms_web_case as swc 
+on 
+		ssp.WEB_CASE_RID=swc.rid 
+where 
+		ssp.RECTIFY_STATE='000' 
+and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
+
+</select>
+
+
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_PENDING_EVENT as ssp set ssp.RECORDSTATE=#{RECORDSTATE} where ssp.RID=#{RID}
 </update> 
@@ -299,19 +389,14 @@ order by ssp.access_id asc
 
  
 <select id="updateDetail" parameterType="String" resultType="hashmap"> 
-      select <include refid="detailColumns"/> from SMMS_PENDING_EVENT as ssp 
-      left join smms_idc_info as sii
-    	on ssp.ACCESS_ID=sii.IDC_ID
-    	left join 
-    	SMMS_WEB_CASE as ssw
-    	on ssp.WEB_CASE_RID=ssw.RID
-      where ssp.RID = #{RID} 
+      select <include refid="detailColumns"/> from SMMS_PENDING_EVENT  
 </select> 
 
 <insert id="insertSave" parameterType="hashmap" >
 	insert into SMMS_PENDING_EVENT (
             
             <if test="CLIENTNAME != null ">CLIENTNAME,</if>
+             <if test="MAIN_RID != null ">MAIN_RID,</if>
             <if test="REPORT_CITY != null ">REPORT_CITY,</if>
             <if test="REPORT_TIME != null ">REPORT_TIME,</if>
             <if test="OCCUR_TIME != null ">OCCUR_TIME,</if>
@@ -328,7 +413,7 @@ order by ssp.access_id asc
             <if test="CC_DOMAIN != null ">CC_DOMAIN,</if>
             <if test="CC_URL != null ">CC_URL,</if>
             <if test="IP != null ">IP,</if>
-            <if test="DOMAIN != null ">DOMAIN,</if>
+            <if test="DOMAIN_NAME != null ">DOMAIN_NAME,</if>
             
             <if test="KEYWORDS != null ">KEYWORDS,</if>
             <if test="UNIT_INDUSTY != null ">UNIT_INDUSTY,</if>
@@ -352,6 +437,7 @@ order by ssp.access_id asc
             <if test="RECTIFY_STATE != null ">RECTIFY_STATE,</if>
 			<if test="EVENT_SOURCE !=null">EVENT_SOURCE,</if>
 			<if test="WEB_CASE_RID !=null">WEB_CASE_RID,</if>
+			<if test="MAPPING_MODE !=null">MAPPING_MODE,</if>
             IS_FORCE_CLOSE,
             IS_WHITE_LIST,
             <if test="SNAPSHOP !=null">SNAPSHOP,</if>
@@ -362,8 +448,9 @@ order by ssp.access_id asc
             <if test="RID != null ">RID</if>
             )
 	   values (
-          
-           <if test="CLIENTNAME != null ">#{CLIENTNAME},</if>
+	      <if test="CLIENTNAME != null ">#{CLIENTNAME},</if>
+           <if test=" MAIN_RID != null ">#{MAIN_RID},</if>
+           
            <if test="REPORT_CITY != null ">#{REPORT_CITY},</if>
            <if test="REPORT_TIME != null ">#{REPORT_TIME},</if>
            <if test="OCCUR_TIME != null ">#{OCCUR_TIME},</if>
@@ -380,7 +467,7 @@ order by ssp.access_id asc
            <if test="CC_DOMAIN != null ">#{CC_DOMAIN},</if>
            <if test="CC_URL != null ">#{CC_URL},</if>
            <if test="IP != null ">#{IP},</if>
-           <if test="DOMAIN != null ">#{DOMAIN},</if>
+           <if test="DOMAIN_NAME != null ">#{DOMAIN_NAME},</if>
           
           <if test="KEYWORDS != null ">#{KEYWORDS},</if>
            <if test="UNIT_INDUSTY != null ">#{UNIT_INDUSTY},</if>
@@ -404,6 +491,7 @@ order by ssp.access_id asc
            <if test="RECTIFY_STATE != null ">#{RECTIFY_STATE},</if>
            <if test="EVENT_SOURCE !=null">#{EVENT_SOURCE},</if>
            <if test="WEB_CASE_RID !=null">#{WEB_CASE_RID},</if>
+           <if test="MAPPING_MODE !=null">#{MAPPING_MODE},</if>
            <if test="IS_FORCE_CLOSE !=null">#{IS_FORCE_CLOSE},</if><if test="IS_FORCE_CLOSE ==null">2,</if>
            
            <if test="IS_WHITE_LIST !=null">#{IS_WHITE_LIST},</if><if test="IS_WHITE_LIST ==null">2,</if>
@@ -419,7 +507,8 @@ order by ssp.access_id asc
 <update id="updateSave" parameterType="hashmap" > 
 	update SMMS_PENDING_EVENT   
 		<set>
-				    <if test="CLIENTNAME!=null"> CLIENTNAME=#{CLIENTNAME},</if> 
+			<if test="CLIENTNAME!=null"> CLIENTNAME=#{CLIENTNAME},</if> 
+			<if test="MAIN_RID!=null"> MAIN_RID=#{MAIN_RID},</if>   
 		    <if test="REPORT_CITY!=null"> REPORT_CITY=#{REPORT_CITY},</if> 
 		    <if test="REPORT_TIME!=null"> REPORT_TIME=#{REPORT_TIME},</if> 
 		    <if test="OCCUR_TIME!=null"> OCCUR_TIME=#{OCCUR_TIME},</if> 
@@ -438,7 +527,7 @@ order by ssp.access_id asc
 		    <if test="IP!=null"> IP=#{IP},</if> 
 		    
 		     <if test="KEYWORDS!=null"> KEYWORDS=#{KEYWORDS},</if>
-		    <if test="DOMAIN!=null"> DOMAIN=#{DOMAIN},</if> 
+		    <if test="DOMAIN_NAME!=null"> DOMAIN_NAME=#{DOMAIN_NAME},</if> 
 		    <if test="UNIT_INDUSTY!=null"> UNIT_INDUSTY=#{UNIT_INDUSTY},</if> 
 		    <if test="UNIT_NAME!=null"> UNIT_NAME=#{UNIT_NAME},</if> 
 		    <if test="MEMO!=null"> MEMO=#{MEMO},</if> 
@@ -460,6 +549,7 @@ order by ssp.access_id asc
 		    <if test="EVENT_SOURCE !=null">EVENT_SOURCE=#{EVENT_SOURCE},</if>
             <if test="IS_FORCE_CLOSE !=null">IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if>
             <if test="WEB_CASE_RID !=null">WEB_CASE_RID=#{WEB_CASE_RID},</if>
+            <if test="MAPPING_MODE !=null">MAPPING_MODE=#{MAPPING_MODE},</if>
             <if test="IS_WHITE_LIST !=null">IS_WHITE_LIST=#{IS_WHITE_LIST},</if>
             <if test="FORCE_CLOSE_DESCE !=null">FORCE_CLOSE_DESCE=#{FORCE_CLOSE_DESCE},</if>
             <if test="SNAPSHOP !=null">SNAPSHOP=#{SNAPSHOP},</if>
@@ -489,6 +579,16 @@ WHERE RID =#{event_id} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
 		</set>
 	where RID=#{event_id} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='1'and RECORDSTATE='0';
 </update>
+<update id="updateQzgtState" parameterType="hashmap" > 
+	update SMMS_PENDING_EVENT   
+		<set>
+		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
+		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP}</if> 
+		</set>
+	where RID=#{event_id} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='1'and RECORDSTATE='0';
+</update>
+
 <update id="updateWhiteList" parameterType="hashmap">
  		update SMMS_PENDING_EVENT   set IS_WHITE_LIST='1' where RID=#{RID}
  </update>

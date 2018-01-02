@@ -54,10 +54,10 @@
 	select CASE_RID  as RID from SMMS_WEB_CASE_IP  where ACCESS_IP = #{IP} 
 </select> 
 <select id="webCaseRid" parameterType="hashmap" resultType="hashmap">
-	select  swc.rid as swcRid,
-		swc.WEBSITE_NAME as website_name,
-		swc.SPONSER_CASE_NUM as sponser_case_num,
-		swc.WEBSITE_URL as website_url
+	select  swc.rid as SWCRID,
+		swc.WEBSITE_NAME as WEBSITE_NAME,
+		swc.SPONSER_CASE_NUM as SPONSER_CASE_NUM,
+		swc.WEBSITE_URL as WEBSITE_URL
 		  from SMMS_WEB_CASE  as swc where RID=#{RID}
 </select>
 
@@ -74,7 +74,13 @@ select
 		ssp.RECTIFY_TERM as rectify_term,
 		ssp.CLOSE_TERM as close_term,
 		ssp.rid as event_id,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as security_type 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		ssp.THREAT_TYPE1 || '_' || ssp.THREAT_TYPE2 || '_' || ssp.THREAT_TYPE3 || '_' || ssp.THREAT_TYPE4 as security_type 
+	</if>		
+		
 from smms_web_case as swc 
 left JOIN
 		
@@ -111,7 +117,8 @@ swc.rid=ssp.WEB_CASE_RID where ssp.RECTIFY_STATE='000' and RECORDSTATE='0' and s
 <update id="updateSave" parameterType="hashmap" > 
 	update SMMS_WEB_CASE_IP   
 		<set>
-				    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+			<if test="CREATTIME!=null"> CREATTIME=#{CREATTIME},</if> 
+			<if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		    <if test="CASE_RID!=null"> CASE_RID=#{CASE_RID},</if> 
 		    <if test="ACCESS_IP!=null"> ACCESS_IP=#{ACCESS_IP},</if> 

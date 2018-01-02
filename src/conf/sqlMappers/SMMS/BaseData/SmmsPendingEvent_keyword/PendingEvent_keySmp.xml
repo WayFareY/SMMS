@@ -5,6 +5,7 @@
 <sql id="listColumns">
 	
             kyy.RID,
+            kyy.MAIN_RID,
             kyy.EVENT_SOURCE,
             kyy.CLIENTNAME,
             kyy.REPORT_CITY,
@@ -22,7 +23,7 @@
             kyy.CC_DOMAIN,
             kyy.CC_URL,
             kyy.IP,
-            kyy.DOMAIN,
+            kyy.DOMAIN_NAME,
             kyy.URL,
             kyy.UNIT_INDUSTY,
             kyy.UNIT_NAME,
@@ -43,6 +44,7 @@
             kyy.FEEDBACK_TIME,
             kyy.FEEDBACK_TIMESTAMP,
             kyy.WEB_CASE_RID,
+            kyy.MAPPING_MODE,
             kyy.MEMO,
             kyy.LOG_TABLENAME,
             kyy.LOG_RID,
@@ -56,6 +58,7 @@
 <sql id="detailColumns">
 	
             kyy.RID,
+            kyy.MAIN_RID,
             kyy.EVENT_SOURCE,
             kyy.CLIENTNAME,
             kyy.REPORT_CITY,
@@ -73,7 +76,7 @@
             kyy.CC_DOMAIN,
             kyy.CC_URL,
             kyy.IP,
-            kyy.DOMAIN,
+            kyy.DOMAIN_NAME,
             kyy.URL,
             kyy.UNIT_INDUSTY,
             kyy.UNIT_NAME,
@@ -94,6 +97,7 @@
             kyy.FEEDBACK_TIME,
             kyy.FEEDBACK_TIMESTAMP,
             kyy.WEB_CASE_RID,
+            kyy.MAPPING_MODE, 
             kyy.MEMO,
             kyy.SNAPSHOP,
             kyy.LOG_TABLENAME,
@@ -154,7 +158,9 @@
     left join SMMS_WEB_CASE as ssw
     on kyy.WEB_CASE_RID=ssw.RID where kyy.RID = #{RID} 
 </select> 
-
+<select id="selectContentPathByRid" parameterType="hashmap" resultType="hashmap"> 
+	select  ACCESS_ID,ROOM_IDX,SNAPSHOP from SMMS_PENDING_EVENT as kyy  where kyy.RID = #{RID} 
+</select>
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_PENDING_EVENT  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
 </update> 
@@ -183,7 +189,7 @@
             <if test="CC_DOMAIN != null ">CC_DOMAIN,</if>
             <if test="CC_URL != null ">CC_URL,</if>
             <if test="IP != null ">IP,</if>
-            <if test="DOMAIN != null ">DOMAIN,</if>
+            <if test="DOMAIN_NAME != null ">DOMAIN_NAME,</if>
             <if test="URL != null ">URL,</if>
             <if test="UNIT_INDUSTY != null ">UNIT_INDUSTY,</if>
             <if test="UNIT_NAME != null ">UNIT_NAME,</if>
@@ -204,6 +210,7 @@
             <if test="FEEDBACK_TIME != null ">FEEDBACK_TIME,</if>
             <if test="FEEDBACK_TIMESTAMP != null ">FEEDBACK_TIMESTAMP,</if>
             <if test="WEB_CASE_RID != null ">WEB_CASE_RID,</if>
+            <if test="MAPPING_MODE != null ">MAPPING_MODE,</if>
             <if test="MEMO != null ">MEMO,</if>
             <if test="SNAPSHOP != null ">SNAPSHOP,</if>
             <if test="LOG_TABLENAME != null ">LOG_TABLENAME,</if>
@@ -231,7 +238,7 @@
            <if test="CC_DOMAIN != null ">#{CC_DOMAIN},</if>
            <if test="CC_URL != null ">#{CC_URL},</if>
            <if test="IP != null ">#{IP},</if>
-           <if test="DOMAIN != null ">#{DOMAIN},</if>
+           <if test="DOMAIN_NAME != null ">#{DOMAIN_NAME},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="UNIT_INDUSTY != null ">#{UNIT_INDUSTY},</if>
            <if test="UNIT_NAME != null ">#{UNIT_NAME},</if>
@@ -252,6 +259,7 @@
            <if test="FEEDBACK_TIME != null ">#{FEEDBACK_TIME},</if>
            <if test="FEEDBACK_TIMESTAMP != null ">#{FEEDBACK_TIMESTAMP},</if>
            <if test="WEB_CASE_RID != null ">#{WEB_CASE_RID},</if>
+           <if test="MAPPING_MODE != null ">#{MAPPING_MODE},</if>
            <if test="MEMO != null ">#{MEMO},</if>
            <if test="SNAPSHOP != null ">#{SNAPSHOP},</if>
            <if test="LOG_TABLENAME != null ">#{LOG_TABLENAME},</if>
@@ -282,7 +290,7 @@
 		    <if test="CC_DOMAIN!=null"> CC_DOMAIN=#{CC_DOMAIN},</if> 
 		    <if test="CC_URL!=null"> CC_URL=#{CC_URL},</if> 
 		    <if test="IP!=null"> IP=#{IP},</if> 
-		    <if test="DOMAIN!=null"> DOMAIN=#{DOMAIN},</if> 
+		    <if test="DOMAIN_NAME!=null"> DOMAIN_NAME=#{DOMAIN_NAME},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
 		    <if test="UNIT_INDUSTY!=null"> UNIT_INDUSTY=#{UNIT_INDUSTY},</if> 
 		    <if test="UNIT_NAME!=null"> UNIT_NAME=#{UNIT_NAME},</if> 
@@ -303,6 +311,7 @@
 		    <if test="FEEDBACK_TIME!=null"> FEEDBACK_TIME=#{FEEDBACK_TIME},</if> 
 		    <if test="FEEDBACK_TIMESTAMP!=null"> FEEDBACK_TIMESTAMP=#{FEEDBACK_TIMESTAMP},</if> 
 		    <if test="WEB_CASE_RID!=null"> WEB_CASE_RID=#{WEB_CASE_RID},</if> 
+		    <if test="MAPPING_MODE!=null"> MAPPING_MODE=#{MAPPING_MODE},</if> 
 		    <if test="MEMO!=null"> MEMO=#{MEMO},</if> 
 		    <if test="SNAPSHOP!=null"> SNAPSHOP=#{SNAPSHOP},</if> 
 		    <if test="LOG_TABLENAME!=null"> LOG_TABLENAME=#{LOG_TABLENAME},</if> 

@@ -33,7 +33,14 @@
             ssr.ROOM_ADDRESS
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
-	select sii.IDC_NAME as TRANS_IDC_ID,<include refid="listColumns"/>,CONCAT(CONCAT(srii.BEGIN_IP,'_'),srii.END_IP) as DST_IP 
+	select sii.IDC_NAME as TRANS_IDC_ID,<include refid="listColumns"/>,
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		CONCAT(CONCAT(srii.BEGIN_IP,'_'),srii.END_IP) as DST_IP 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		srii.BEGIN_IP || '_' || srii.END_IP  as DST_IP  
+	</if>	
+	
 	from SMMS_ROOM_IPRANGE as srii
     left join SMMS_ROOM_INFO as ssr
     on srii.ACCESS_ID=ssr.ACCESS_ID and srii.ROOM_IDX=ssr.ROOM_IDX

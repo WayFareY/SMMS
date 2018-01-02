@@ -84,7 +84,17 @@
 	<TableModel resource="conf/tables/SMMS/BaseData/SmmsPendingEvent_keyword/PendingEvent_keyTbl.xml"/>
 	<TableModel resource="conf/tables/SMMS/BaseData/SmmsRoomIprange_idcInfo/SmmsRoomIprange_idcTbl.xml"/>
 	<TableModel resource="conf/tables/SMMS/STAT/SmmsRptRecord/SmmsRptRecordTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/STAT/SmmsRptRecord/SmmsRptRecordMonthTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/STAT/SmmsRptRecord/SmmsRptRecordYearTbl.xml"/>
 	<TableModel resource="conf/tables/SMMS/BaseData/SmmsPendingRzjz/SmmsPending_rzjzTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/acLog/SmmsAcProxy/SmmsAcProxyTbl.xml"/>
 	<TableModel resource="conf/tables/SMMS/afLog/SmmsAfLogTwo/SmmsAfLogTwoTbl.xml"/>
 	<TableModel resource="conf/tables/SMMS/BaseData/SmmsPendingEvent_Wba/SmmsPendingEvent_WbaTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/STAT/SmmsDomainFulx/SmmsDomainFulxTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMain/SmmsEventMainTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMain_aqsj/SmmsEventMain_aqsjTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMain_key/SmmsEventMain_keyTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMain_vpn/SmmsEventMain_vpnTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMainWba/SmmsEventMain_WbaTbl.xml"/>
+	<TableModel resource="conf/tables/SMMS/BaseData/SmmsEventMain_rzjz/SmmsEventMain_rzjzTbl.xml"/>
 </TableModels>

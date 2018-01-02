@@ -53,7 +53,14 @@
 	<!-- 查询当前登录用户所在机构的下级机构 -->
 	select ORGID,SUPORGID 
 	from s_org 
-	where locate like CONCAT(CONCAT('%${CURR_ORGID}',','),'%') and ORGID != #{CURR_ORGID} and RECORDSTATE='0'
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+			where locate like CONCAT(CONCAT('%${CURR_ORGID}',','),'%') and ORGID != #{CURR_ORGID} and RECORDSTATE='0'
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+			where locate like '%${CURR_ORGID},%' and ORGID != #{CURR_ORGID} and RECORDSTATE='0'
+	</if>	
+ 
+	
     </select>
     
 	<select id="superOrgIds" parameterType="String" resultType="hashmap"> 	 

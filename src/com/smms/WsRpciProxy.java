@@ -5,10 +5,6 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 
-/**
- * @author 吴立
- * @date 2017年11月29日
- */
 public class WsRpciProxy implements WsRpci_client {
 
 	private String _endpoint = null;
@@ -31,8 +27,7 @@ public class WsRpciProxy implements WsRpci_client {
 				if (this._endpoint != null) {
 					((Stub) this.wsRpci)._setProperty("javax.xml.rpc.service.endpoint.address", this._endpoint);
 				} else {
-					this._endpoint = ((String) ((Stub) this.wsRpci)
-							._getProperty("javax.xml.rpc.service.endpoint.address"));
+					this._endpoint = ((String) ((Stub) this.wsRpci)._getProperty("javax.xml.rpc.service.endpoint.address"));
 				}
 			}
 		} catch (ServiceException localServiceException) {

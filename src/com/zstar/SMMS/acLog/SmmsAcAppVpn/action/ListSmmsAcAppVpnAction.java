@@ -2,10 +2,6 @@ package com.zstar.SMMS.acLog.SmmsAcAppVpn.action;
 
 import com.zstar.fmp.core.frame.action.CommonListAction;
 
-/**
- * @author 吴立
- * @date 2017年11月29日
- */
 public class ListSmmsAcAppVpnAction extends CommonListAction {
 
 	public void afterBiz() throws Exception {

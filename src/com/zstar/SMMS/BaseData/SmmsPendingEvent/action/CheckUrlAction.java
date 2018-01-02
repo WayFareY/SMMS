@@ -31,8 +31,7 @@ public class CheckUrlAction extends FrameAction {
 			List listRoomIdc = this.sqlSession.selectList("SmmsRoomIprange.selectAccesIdByIp", ipMap);
 			if ((listRoomIdc != null) && (listRoomIdc.size() > 0)) {
 				Map roomIdcMap = (Map) listRoomIdc.get(0);
-				List listRoomAndIdc = this.sqlSession.selectList("SmmsPendingEvent.checkAccessIdAndRoomIdx",
-						roomIdcMap);
+				List listRoomAndIdc = this.sqlSession.selectList("SmmsPendingEvent.checkAccessIdAndRoomIdx", roomIdcMap);
 				if ((listRoomAndIdc != null) && (listRoomAndIdc.size() > 0)) {
 					Map roomAndIdcMap = (Map) listRoomAndIdc.get(0);
 					List listSwcIp = this.sqlSession.selectList("SmmsWebCaseIp.selectRidByIp", ipMap);

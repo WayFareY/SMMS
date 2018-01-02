@@ -19,6 +19,8 @@
             SOLUTION,
             EVENT_EVIDENCE,
             CREATTIME,
+            PRIORITY,
+            RELIABILITY,
             RECORDSTATE
 </sql>
 <sql id="detailColumns">
@@ -38,6 +40,8 @@
             SOLUTION,
             EVENT_EVIDENCE,
             CREATTIME,
+            PRIORITY,
+            RELIABILITY,
             RECORDSTATE
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
@@ -120,7 +124,10 @@
             <if test="SOLUTION != null ">SOLUTION,</if>
             <if test="EVENT_EVIDENCE != null ">EVENT_EVIDENCE,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
-            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+            <if test="PRIORITY != null ">PRIORITY,</if>
+            <if test="RELIABILITY != null ">RELIABILITY,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>
+            )
 	   values (
            <if test="RID != null ">#{RID},</if>
            <if test="ID != null ">#{ID},</if>
@@ -137,6 +144,8 @@
            <if test="SOLUTION != null ">#{SOLUTION},</if>
            <if test="EVENT_EVIDENCE != null ">#{EVENT_EVIDENCE},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
+            <if test="PRIORITY != null ">#{PRIORITY},</if>
+            <if test="RELIABILITY != null ">#{RELIABILITY},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -156,6 +165,8 @@
 		    <if test="EVENT_CONTENT!=null"> EVENT_CONTENT=#{EVENT_CONTENT},</if> 
 		    <if test="SOLUTION!=null"> SOLUTION=#{SOLUTION},</if>
 		    <if test="EVENT_EVIDENCE!=null"> EVENT_EVIDENCE=#{EVENT_EVIDENCE},</if>
+		    <if test="PRIORITY!=null"> PRIORITY=#{PRIORITY},</if>
+            <if test="RELIABILITY!=null"> RELIABILITY=#{RELIABILITY},</if>
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

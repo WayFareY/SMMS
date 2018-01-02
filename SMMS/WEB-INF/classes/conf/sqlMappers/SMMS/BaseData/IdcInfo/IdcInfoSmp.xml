@@ -116,7 +116,9 @@
 <select id="checkIdcId" parameterType="hashmap" resultType="hashmap">
 	SELECT  IDC_ID FROM smms_idc_info WHERE IDC_ID = #{IDC_ID}
 </select>
-
+<select id="findIdcNameByIdcId" parameterType="hashmap" resultType="hashmap">
+	SELECT  IDC_NAME AS IDCNAME FROM smms_idc_info WHERE IDC_ID = #{IDC_ID}
+</select>
 <delete id="deleteData" parameterType="hashmap" > 
 	delete from SMMS_IDC_INFO  where RID = #{RID}
 </delete> 
@@ -135,6 +137,10 @@
  
 <select id="updateDetail" parameterType="String" resultType="hashmap"> 
       select <include refid="detailColumns"/> from SMMS_IDC_INFO  where RID = #{RID} 
+</select> 
+
+<select id="viewIdcExist" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_IDC_INFO  where IDC_ID = #{IDC_ID} 
 </select> 
 
 <insert id="insertSave" parameterType="hashmap" >

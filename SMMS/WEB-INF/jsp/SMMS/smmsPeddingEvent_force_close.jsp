@@ -12,8 +12,7 @@
 	WebComponent wff = FMPContex.webFieldFactory;
 %>
 <head>
-<script
-	src="<%=rootPath%>/scripts/fmp/svgWorkFlow/jquery-1.9.0.js"></script>
+<script src="<%=rootPath%>/scripts/fmp/svgWorkFlow/jquery-1.9.0.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <jsp:include
 	page="/WEB-INF/jsp/fmp/frame/common/partialJsp/headinclude.jsp" />
@@ -68,21 +67,20 @@ a {
 					"FORCE_CLOSE_DESCE", "add", request)%></td>
 			</tr>
 		</table>
-</tr>
+	</tr>
 
 
-		<tr>
-			<td><br>
-			<div align="center">
-			<input class="h5button green medium"
-				type="button" onclick="viewUrl(getFieldTrueValue('URL'));"
-				value="页面解析" /> 
-			<input class="h5button green medium" type="button"
-				value="信息比对" onclick="checkUrl();"/> 
-			<input class="h5button orange medium" type="button" onclick="qzgt();" value="强制关停" /></div>
-			<br>
-			</td>
-		</tr>
+	<tr>
+		<td><br>
+		<div align="center"><input class="h5button green medium"
+			type="button" onclick="viewUrl(getFieldTrueValue('URL'));"
+			value="页面解析" /> <input class="h5button green medium" type="button"
+			value="信息比对" onclick="checkUrl();" /> <input
+			class="h5button orange medium" type="button" onclick="qzgt();"
+			value="强制关停" /></div>
+		<br>
+		</td>
+	</tr>
 </table>
 </form>
 <div class="message" id="viewTable"></div>
@@ -97,7 +95,7 @@ var json="";
 		} else {
 			var getUrl = getFieldTrueValue('URL');
 			var ip = getFieldTrueValue('IP');
-			var url = rootPath + "/SMMS/SmmsPendingEventBiz/checkUrl?URL="
+			var url = rootPath + "/SMMS/SmmsEventMainBiz/checkUrl?URL="
 					+ getUrl + "&IP=" + ip;
 			XMLHttp.urlSubmit(url, backCallSendMsg);
 			function backCallSendMsg(msg) {
@@ -106,7 +104,7 @@ var json="";
 
 					$("#viewTable")
 							.append(
-									"<table  id ='table' style='margin-left:180px;border-spacing:10px 20px;' border='0'>"
+									"<table  id ='table' style='margin-left:150px;border-spacing:10px 20px;' border='0'>"
 											+ "<tr>" + "<td class='test'>"
 											+ '运营商名称:'
 											+ "</td>"
@@ -140,22 +138,22 @@ var json="";
 											+ "<td class='test''>"
 											+ '网站首页URL:'
 											+ "</td>"
-											+ "<td class='myTest'><a href='#' id='website_url' onclick='viewUrl()'></a></td>"
+											+ "<td class='myTest'><a href='#' id='website_url' onclick='viewDomain()'></a></td>"
 											+ "</tr>" + "</table>");
 
-					$("#idc_name").text(json.idc_name);
+					$("#idc_name").text(json.IDC_NAME);
 					//机房名称
-					$("#room_name").text(json.room_name);
+					$("#room_name").text(json.ROOM_NAME);
 					//机房序号
-					$("#room_idx").text(json.room_idx);
+					$("#room_idx").text(json.ROOM_IDX);
 					//机房地址
-					$("#room_address").text(json.room_address);
+					$("#room_address").text(json.ROOM_ADDRESS);
 					//主体备案号 
-					$("#sponser_case_num").text(json.sponser_case_num);
+					$("#sponser_case_num").text(json.SPONSER_CASE_NUM);
 					//网站名称
-					$("#website_name").text(json.website_name);
+					$("#website_name").text(json.WEBSITE_NAME);
 					//网站首页
-					$("#website_url").text(json.website_url);
+					$("#website_url").text(json.WEBSITE_URL);
 
 				} else {
 					showMessage('查不到数据');
@@ -164,7 +162,7 @@ var json="";
 		}
 	}
 	function openwinIdcName() {
-		var idcUrl = rootPath + "/SMMS/IdcInfoBiz/DoView?RID=" + json.siiRid
+		var idcUrl = rootPath + "/SMMS/IdcInfoBiz/DoView?RID=" + json.SIIRID
 				+ "&tableModelId=IdcInfo";
 		openWindow(comUrl(idcUrl), "运营商信息");
 
@@ -172,20 +170,20 @@ var json="";
 
 	function openwinRoomAddress() {
 		var roomUrl = rootPath + "/SMMS/SmmsRoomInfoBiz/DoView?RID="
-				+ json.ssrRid + "&tableModelId=SmmsRoomInfo";
+				+ json.SSRRID + "&tableModelId=SmmsRoomInfo";
 		openWindow(comUrl(roomUrl), "机房信息");
 
 	}
 
 	function openwinWebCaseNum() {
 		var sponserCaseNum = rootPath + "/SMMS/WebCaseBiz/DoView?RID="
-				+ json.swcRid + "&tableModelId=WebCase";
+				+ json.SWCRID + "&tableModelId=WebCase";
 		openWindow(comUrl(sponserCaseNum), "主体备案号");
 
 	}
 
 	function openwinWebCaseUrl() {
-		var swcUrl = rootPath + "/SMMS/WebCaseBiz/DoView?RID=" + json.swcRid
+		var swcUrl = rootPath + "/SMMS/WebCaseBiz/DoView?RID=" + json.SWCRID
 				+ "&tableModelId=WebCase";
 		openWindow(comUrl(swcUrl), "网站首页");
 	}
@@ -196,45 +194,57 @@ var json="";
 				&& (getFieldTrueValue('IP') == null || getFieldTrueValue('IP').length == 0)) {
 			showMessage('目标网站URL和目标ip不能同时为空');
 		} else {
-			var form = document.forms[0];
-			var submitUrl = comUrl(rootPath + "/SMMS/SmmsPendingEventBiz/qzgt");
-			XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
+			if(getFieldTrueValue('URL') == null || getFieldTrueValue('URL').length == 0){
+				if(confirm("根据IP匹配备案信息，匹配的备案信息不一定正确，是否继续强制关停操作？")){
+					var form = document.forms[0];
+					var submitUrl = comUrl(rootPath + "/SMMS/SmmsEventMainBiz/qzgt");
+					XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
+		
+					function backCallSendMsg(msg) {
+						var message = msg.substr(0, 3);
+						if (message == '000') {
+							var msg = msg.substr(4, 8);
+							showMessage(msg);
+							setFieldValue('URL', null);
+							setFieldValue('IP', null);
+							setFieldValue('THREAT_NAME', null);
+							setFieldValue('FORCE_CLOSE_DESCE', null);
+						} else {
+							alert(msg);
+						}
+					}
 
-			function backCallSendMsg(msg) {
-				var message = msg.substr(0, 3);
-				if (message == '000') {
-					var msg = msg.substr(4, 8);
-					showMessage(msg);
-					setFieldValue('URL', null);
-					setFieldValue('IP', null);
-					setFieldValue('THREAT_NAME', null);
-					setFieldValue('FORCE_CLOSE_DESCE', null);
-				} else {
-					alert(msg);
 				}
-			}
-
-
-			/*
-			var getUrl = getFieldTrueValue('URL');
-			var ip = getFieldTrueValue('IP');
-			var THREAT_NAME = getFieldTrueValue('THREAT_NAME');
-			var FORCE_CLOSE_DESCE = getFieldTrueValue('FORCE_CLOSE_DESCE');
-			var url = rootPath + "/SMMS/SmmsPendingEventBiz/qzgt?URL=" + getUrl
-					+ "&IP=" + ip + "&THREAT_NAME=" + THREAT_NAME
-					+ "&FORCE_CLOSE_DESCE=" + FORCE_CLOSE_DESCE;
-
-			XMLHttp.urlSubmit(url, backCallSendMsg);
-
-*/
-
+			}else{
+				var form = document.forms[0];
+				var submitUrl = comUrl(rootPath + "/SMMS/SmmsEventMainBiz/qzgt");
+				XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
+	
+				function backCallSendMsg(msg) {
+					var message = msg.substr(0, 3);
+					if (message == '000') {
+						var msg = msg.substr(4, 8);
+						showMessage(msg);
+						setFieldValue('URL', null);
+						setFieldValue('IP', null);
+						setFieldValue('THREAT_NAME', null);
+						setFieldValue('FORCE_CLOSE_DESCE', null);
+					} else {
+						alert(msg);
+					}
+				}
+				}
 		}
 
 	}
+	 function viewDomain(){
+	      var URL=json.WEBSITE_URL;
+		  var urlStr = 'http://' + URL.replace(/^http:\/\//i, '');
+		  openWindow(comUrl(urlStr));
+	}
+	function viewUrl(url) {
 
-	function viewUrl() {
-		var URL=json.website_url;
-		var urlStr = 'http://' + URL.replace(/^http:\/\//i, '');
+		var urlStr = 'http://' + url.replace(/^http:\/\//i, '');
 		openWindow(comUrl(urlStr));
 
 	}

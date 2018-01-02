@@ -29,6 +29,14 @@
 	<include file="conf/bizs/SMMS/BaseData/SmmsRoomIprange_idcInfo/SmmsRoomIprange_idcBiz.xml"/>
 	<include file="conf/bizs/SMMS/STAT/SmmsRptRecord/SmmsRptRecordBiz.xml"/>
 	<include file="conf/bizs/SMMS/BaseData/SmmsPendingRzjz/SmmsPending_rzjzBiz.xml"/>
+	<include file="conf/bizs/SMMS/acLog/SmmsAcProxy/SmmsAcProxyBiz.xml"/>
 	<include file="conf/bizs/SMMS/afLog/SmmsAfLogTwo/SmmsAfLogTwoBiz.xml"/>
 	<include file="conf/bizs/SMMS/BaseData/SmmsPendingEvent_Wba/SmmsPendingEvent_WbaBiz.xml"/>
+	<include file="conf/bizs/SMMS/STAT/SmmsDomainFulx/SmmsDomainFulxBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMain/SmmsEventMainBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMain_aqsj/SmmsEventMain_aqsjBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMain_key/SmmsEventMain_keyBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMain_vpn/SmmsEventMain_vpnBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMainWba/SmmsEventMain_WbaBiz.xml"/>
+	<include file="conf/bizs/SMMS/BaseData/SmmsEventMain_rzjz/SmmsEventMain_rzjzBiz.xml"/>
 </struts>

@@ -17,7 +17,7 @@
             URL,
             KEYWORDS,
             CREATTIME,
-            CONTENTPATH,
+            EVENT_EVIDENCE,
             RECORDSTATE
 </sql>
 <sql id="detailColumns">
@@ -35,7 +35,7 @@
             URL,
             KEYWORDS,
             CREATTIME,
-            CONTENTPATH,
+            EVENT_EVIDENCE,
             RECORDSTATE
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
@@ -92,7 +92,7 @@
             <if test="URL != null ">URL,</if>
             <if test="KEYWORDS != null ">KEYWORDS,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
-            <if test="CONTENTPATH != null ">CONTENTPATH,</if>
+            <if test="EVENT_EVIDENCE != null ">EVENT_EVIDENCE,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="CASE_STATE != null ">#{CASE_STATE},</if>
@@ -108,7 +108,7 @@
            <if test="URL != null ">#{URL},</if>
            <if test="KEYWORDS != null ">#{KEYWORDS},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CONTENTPATH != null ">#{CONTENTPATH},</if>
+           <if test="EVENT_EVIDENCE != null ">#{EVENT_EVIDENCE},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -126,7 +126,7 @@
 		    <if test="TITLE!=null"> TITLE=#{TITLE},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
 		    <if test="KEYWORDS!=null"> KEYWORDS=#{KEYWORDS},</if>  
-		    <if test="CONTENTPATH!=null"> CONTENTPATH=#{CONTENTPATH},</if> 
+		    <if test="EVENT_EVIDENCE!=null"> EVENT_EVIDENCE=#{EVENT_EVIDENCE},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

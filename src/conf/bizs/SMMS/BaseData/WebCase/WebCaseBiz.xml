@@ -25,6 +25,11 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.BaseData.WebCase.action.DeleteWebCaseAction">
-        </action>                    
+        </action>
+        <action  name="infoUpload">
+       		<result>/WEB-INF/jsp/SMMS/baseInput.jsp</result>
+        </action> 
+        <action  name="inputWebcase" class="com.zstar.SMMS.BaseData.WebCase.action.InputWebcaseAction">  
+        </action>           
     </package>
 </struts>

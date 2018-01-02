@@ -138,11 +138,17 @@
 </select>
 <select id="viewDoMainNameAndAccessId" parameterType="hashmap" resultType="hashmap">
 SELECT 
-	 swc.access_id as ACCESS_ID,swc.domain_name as DOMAIN_NAME,swc.SPONSER_ADDRESS as SNAPSHOP,swc.rid as rid
+	 swc.access_id as ACCESS_ID,swc.domain_name as DOMAIN_NAME,swc.SPONSER_ADDRESS as SNAPSHOP,swc.rid as RID
 FROM 
 	smms_web_case swc 
 where 
-	#{URL} like upper(CONCAT('%',swc.domain_name,'%')) and swc.RECORDSTATE='0'
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		#{URL} like upper(CONCAT('%',swc.domain_name,'%')) and swc.RECORDSTATE='0'
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		#{URL} like upper('%' || swc.domain_name || '%') and swc.RECORDSTATE='0' 
+	</if>
+	
 </select>
 
 <select id="judgeUrl" parameterType="hashmap" resultType="hashmap">
@@ -162,12 +168,12 @@ where
 </select> 
 <select id="checkUrl" parameterType="hashmap" resultType="hashmap">
 SELECT 
-	sii.rid as siiRid,
-	sii.IDC_NAME as idc_name,
-	swc.rid as swcRid,
-	swc.WEBSITE_NAME as website_name,
-	swc.SPONSER_CASE_NUM as sponser_case_num,
-	swc.WEBSITE_URL as website_url
+	sii.rid as SIIRID,
+	sii.IDC_NAME as IDC_NAME,
+	swc.rid as SWCRID,
+	swc.WEBSITE_NAME as WEBSITE_NAME,
+	swc.SPONSER_CASE_NUM as SPONSER_CASE_NUM,
+	swc.WEBSITE_URL as WEBSITE_URL
 FROM 
 	smms_web_case as swc 
 left join 
@@ -175,7 +181,12 @@ left join
 on 
 swc.ACCESS_ID=sii.IDC_ID
 where 
-	#{URL} like upper(CONCAT('%',swc.domain_name,'%')) and swc.RECORDSTATE='0'
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		#{URL} like upper(CONCAT('%',swc.domain_name,'%')) and swc.RECORDSTATE='0'
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+		#{URL} like upper('%' || swc.domain_name || '%') and swc.RECORDSTATE='0' 
+	</if>
 </select>
 
 <delete id="deleteData" parameterType="hashmap" > 
@@ -191,7 +202,9 @@ where
 </update> 
  
 <select id="updateDetail" parameterType="String" resultType="hashmap"> 
-      select <include refid="detailColumns"/> from SMMS_WEB_CASE  where a.RID = #{RID} 
+      select <include refid="detailColumns"/> from SMMS_WEB_CASE as a
+      LEFT JOIN smms_idc_info b ON a.ACCESS_ID = b.IDC_ID
+      where a.RID = #{RID} 
 </select> 
 
 <insert id="insertSave" parameterType="hashmap" >
@@ -266,9 +279,9 @@ where
 	UPDATE smms_web_case SET RECORDSTATE =1 WHERE WEBSITE_URL = #{WEBSITE_URL}
 </update> 
 <update id="updateSave" parameterType="hashmap" > 
-	update SMMS_WEB_CASE   
+	update SMMS_WEB_CASE 
 		<set>
-				    <if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
+			<if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
 		    <if test="ACCESS_TENANT!=null"> ACCESS_TENANT=#{ACCESS_TENANT},</if> 
 		    <if test="ACCESS_IP!=null"> ACCESS_IP=#{ACCESS_IP},</if> 
 		    <if test="SERVER_PLACE!=null"> SERVER_PLACE=#{SERVER_PLACE},</if> 

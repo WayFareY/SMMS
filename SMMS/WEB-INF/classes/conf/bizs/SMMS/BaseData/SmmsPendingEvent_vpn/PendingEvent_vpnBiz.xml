@@ -25,6 +25,9 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.BaseData.SmmsPendingEvent_vpn.action.DeletePendingEvent_vpnAction">
-        </action>                    
+        </action> 
+        <!-- 日志举证-->     
+         <action  name="PendingEventVpn" class="com.zstar.SMMS.BaseData.SmmsPendingEvent_vpn.action.RzjzPendingEvent_vpnAction">
+        </action>                   
     </package>
 </struts>

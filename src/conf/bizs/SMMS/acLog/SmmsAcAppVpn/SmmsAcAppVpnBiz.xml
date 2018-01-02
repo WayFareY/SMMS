@@ -25,6 +25,9 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.acLog.SmmsAcVpnKey.action.DeleteSmmsAcVpnKeyAction">
-        </action>                    
+        </action>
+        <!-- 日志举证-->     
+         <action  name="acAppVpnRzjz" class="com.zstar.SMMS.acLog.SmmsAcApp.action.AcAppVpnRzjzAction">
+        </action>                     
     </package>
 </struts>

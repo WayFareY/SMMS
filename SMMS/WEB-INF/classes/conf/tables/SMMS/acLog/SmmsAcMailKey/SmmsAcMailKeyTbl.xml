@@ -16,7 +16,7 @@
 		<TableField id="KEYWORDS" colName="KEYWORDS" desc="命中关键字" dataType="VARCHAR" length="100" cssClass="" listGroupName="" create="LV" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="T" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
 		<TableField id="CREATTIME" colName="CREATTIME" desc="创建时间" dataType="CHAR" length="20" cssClass="" listGroupName="" create="LV" hidden="LV" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="T" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
 		<TableField id="RECORDSTATE" colName="RECORDSTATE" desc="记录状态" dataType="CHAR" length="1" cssClass="" listGroupName="" create="LV" hidden="LV" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="T" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
-		<TableField id="CONTENTPATH" colName="CONTENTPATH" desc="日志举证" dataType="VARCHAR" length="30" cssClass="" listGroupName="" create="LV" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="T" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="EVENT_EVIDENCE" colName="EVENT_EVIDENCE" desc="日志举证" dataType="VARCHAR" length="30" cssClass="" listGroupName="" create="LV" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="T" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
 	</Fields>
 	<SubTableModels>
 	</SubTableModels>

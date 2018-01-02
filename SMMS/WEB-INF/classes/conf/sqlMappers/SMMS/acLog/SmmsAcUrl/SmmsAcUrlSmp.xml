@@ -15,7 +15,6 @@
             ssu.TITLE,
             ssu.URL,
             ssu.CREATTIME,
-            ssu.CONTENTPATH,
             ssu.RECORDSTATE
 </sql>
 <sql id="detailColumns">
@@ -31,20 +30,11 @@
             ssu.TITLE,
             ssu.URL,
             ssu.CREATTIME,
-            ssu.CONTENTPATH,
             ssu.RECORDSTATE
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
  
-	select 
-	ssu.Rid as CONTENTPATH,
-	case WHEN 
-		ssu.CONTENTPATH is not null and ssu.CONTENTPATH!='' 
-	then 
-		'详情' 
-	else 
-		'无' 
-	end  as TRANS_CONTENTPATH,	<include refid="listColumns"/>,
+	select 	<include refid="listColumns"/>,
 	ssc.CRC_VALUE as TRANS_SERV_CRC, ssm.CRC_VALUE as TRANS_APP_CRC
          from SMMS_AC_URL as ssu
 		left  JOIN smms_crc_mapting as ssc
@@ -92,7 +82,7 @@
 		 where ssu.RID = #{RID} and ssu.RECORDSTATE='0'
 </select> 
 <select id="selectContentPathByRid" parameterType="hashmap" resultType="hashmap"> 
-	select  CONTENTPATH	from SMMS_AC_URL as ssu where ssu.RID = #{RID} 
+	select  EVENT_EVIDENCE,GROUPNAME from SMMS_AC_URL as ssu where ssu.RID = #{RID} 
 </select> 
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_AC_URL  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
@@ -116,7 +106,7 @@
             <if test="URL != null ">URL,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
             
-            <if test="CONTENTPATH != null ">CONTENTPATH,</if>
+            <if test="EVENT_EVIDENCE != null ">EVENT_EVIDENCE,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
@@ -130,7 +120,7 @@
            <if test="TITLE != null ">#{TITLE},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CONTENTPATH != null ">#{CONTENTPATH},</if>
+           <if test="EVENT_EVIDENCE != null ">#{EVENT_EVIDENCE},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -146,7 +136,6 @@
 		    <if test="HOST!=null"> HOST=#{HOST},</if> 
 		    <if test="TITLE!=null"> TITLE=#{TITLE},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
-		    <if test="CONTENTPATH!=null"> CONTENTPATH=#{CONTENTPATH},</if>
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

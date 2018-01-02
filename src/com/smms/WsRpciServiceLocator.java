@@ -12,10 +12,6 @@ import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.Service;
 import org.apache.axis.client.Stub;
 
-/**
- * @author 吴立
- * @date 2017年11月29日
- */
 public class WsRpciServiceLocator extends Service implements WsRpciService {
 
 	public WsRpciServiceLocator() {

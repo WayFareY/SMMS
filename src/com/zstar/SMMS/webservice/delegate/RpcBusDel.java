@@ -1,16 +1,3 @@
-/***********************************
- * @文件名：RpcBusDel
- * @文件描述：
- * @功能说明：
- * @作者    ：pzj
- * @创建日期：2017-8-14下午07:38:23
- * @版本    ：v1.0
- * @修改记录：
- * @修改说明：
- * @修改人  ：
- * @修改日期：
- *************************************/
-
 package com.zstar.SMMS.webservice.delegate;
 
 import java.rmi.RemoteException;
@@ -174,9 +161,8 @@ public class RpcBusDel extends BaseDelegate {
 					ipMap.put("CREATTIME", FMPContex.getCurrentTime());
 					ipMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
 					ipMap.put("RECORDSTATE", SMMSConstant.DICKEY_JLZT);
-					this.sqlSession.update("SmmsWebCaseIp.updateState", ipMap);
-					this.sqlSession.insert("SmmsWebCaseIp.insertSave", ipMap);
 
+					this.sqlSession.insert("SmmsWebCaseIp.insertSave", ipMap);
 				}
 			}
 
@@ -193,13 +179,10 @@ public class RpcBusDel extends BaseDelegate {
 					i = this.sqlSession.insert("WebCase.insertSave", dataMap);
 					sum += i;
 					dataMap.clear();
-
 				} else {
 					webCaseErrorMessage += "接入商识别码不匹配";
 				}
-
 			}
-
 		}
 
 		String success = "{\"return_code\":\"000\",\"return_msg\":\"处理成功,insert:" + sum + "条数据\"}";
@@ -247,7 +230,6 @@ public class RpcBusDel extends BaseDelegate {
 			String idc_id = del.getIdcId(json);
 			// 保存数据到远程日志表中
 			del.addRpcLog(SMMSConstant.ZGTS_ITF_NUM, idc_id, json, rtStr, rpc_result);
-
 		}
 
 		return rtStr;
@@ -422,9 +404,41 @@ public class RpcBusDel extends BaseDelegate {
 			// 保存数据到远程日志表中
 			del.addRpcLog(SMMSConstant.WZHF_ITF_NUM, idc_id, json, rtStr, rpc_result);
 		}
-
 		return rtStr;
+	}
 
+	public String rpc2104(String tokenid, String serviecUrl, String json) {
+		String rpc_result = "";
+		WsRpciProxy wrp = new WsRpciProxy();
+		wrp.setEndpoint(serviecUrl);
+		String rtStr = "";
+		String webkey = "bbcKey";
+		try {
+			rtStr = wrp.getWsRpci().wscall(tokenid, "2104", json, null);
+			rpc_result = rtStr;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} finally {
+			del.addRpcLog(SMMSConstant.WEB_KEY_NUM, webkey, json, rtStr, rpc_result);
+		}
+		return rtStr;
+	}
+
+	public String rpc2105(String tokenid, String serviecUrl, String json) {
+		String rpc_result = "";
+		WsRpciProxy wrp = new WsRpciProxy();
+		wrp.setEndpoint(serviecUrl);
+		String rtStr = "";
+		String bbc = "bbc";
+		try {
+			rtStr = wrp.getWsRpci().wscall(tokenid, "2105", json, null);
+			rpc_result = rtStr;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} finally {
+			del.addRpcLog(SMMSConstant.QZGT_KEY_NUM, bbc, json, rtStr, rpc_result);
+		}
+		return rtStr;
 	}
 
 	/**

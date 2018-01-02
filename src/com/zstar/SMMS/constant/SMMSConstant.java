@@ -3,6 +3,8 @@ package com.zstar.SMMS.constant;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zstar.fmp.core.base.FMPContex;
+
 public class SMMSConstant {
 
 	public static Map<String, String> idcServiceUrlMap = new HashMap();
@@ -33,7 +35,7 @@ public class SMMSConstant {
 
 	public static final String EVENT_SOURCE_AC = "1";
 
-	public static final String REPORT_CITY = "深圳";
+	public static final String REPORT_CITY = FMPContex.getSystemProperty("REPORT_CITY");
 
 	public static final String RECTIFY_STATE = "000";
 
@@ -140,4 +142,21 @@ public class SMMSConstant {
 	public static final String MAIL_LOG_FLAG = "050";
 
 	public static final String AF_LOG_FLAG = "060";
+
+	public static final String RECTIFY_STATE_ENGTHIT = "888";
+
+	public static final String SMMS_AC_PROXY = "SMMS_AC_PROXY";
+
+	public static final String PROXY = "proxy";
+
+	public static final String MAPPING_MODE_ZERO = "0";
+
+	public static final String MAPPING_MODE_ONE = "1";
+
+	public static final String MAPPING_MODE_TWO = "2";
+
+	public static final String WEB_KEY_NUM = "2104";
+
+	public static final String QZGT_KEY_NUM = "2105";
+
 }

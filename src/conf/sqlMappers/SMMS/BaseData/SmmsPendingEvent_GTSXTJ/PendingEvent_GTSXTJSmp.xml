@@ -23,7 +23,7 @@
             ssp.CC_DOMAIN,
             ssp.CC_URL,
             ssp.IP,
-            ssp.DOMAIN,
+            ssp.DOMAIN_NAME,
             ssp.URL,
             ssp.UNIT_INDUSTY,
             ssp.UNIT_NAME,
@@ -73,7 +73,7 @@
             ssp.CC_DOMAIN,
             ssp.CC_URL,
             ssp.IP,
-            ssp.DOMAIN,
+            ssp.DOMAIN_NAME,
             ssp.URL,
             ssp.UNIT_INDUSTY,
             ssp.UNIT_NAME,
@@ -105,7 +105,13 @@
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
 	select * from (
 		select <include refid="listColumns"/>,ssw.WEBSITE_NAME as TRANS_WEB_CASE_RID,
+		<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		(cast(FEEDBACK_TIMESTAMP as signed integer)-cast(SEND_TIMESTAMP as signed integer)) as CLOSE_TERM_TIME,
+		</if>
+			<if test='DBTYPE=="POSTGRESQL"'>
+		(to_number(FEEDBACK_TIMESTAMP,'99999999999999999999')-to_number(SEND_TIMESTAMP,'99999999999999999999')) as CLOSE_TERM_TIME,
+		</if>
+		
 		crc1.CRC_VALUE as TRANS_EVENT_TYPE2,crc2.CRC_VALUE as TRANS_EVENT_TYPE3  
 		 from SMMS_PENDING_EVENT  as ssp
 	  left join 
@@ -130,8 +136,12 @@
 <select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
 	select count(*) NUM  from (
 	select <include refid="listColumns"/>,
-	 (cast(FEEDBACK_TIMESTAMP as signed integer)-cast(SEND_TIMESTAMP as signed integer)) 
-	 as CLOSE_TERM_TIME  from SMMS_PENDING_EVENT as ssp
+	 <if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+		(cast(FEEDBACK_TIMESTAMP as signed integer)-cast(SEND_TIMESTAMP as signed integer)) as CLOSE_TERM_TIME,
+		</if>
+			<if test='DBTYPE=="POSTGRESQL"'>
+		(to_number(FEEDBACK_TIMESTAMP,'99999999999999999999')-to_number(SEND_TIMESTAMP,'99999999999999999999')) as CLOSE_TERM_TIME
+		</if> from SMMS_PENDING_EVENT as ssp
 	  left join 
     	SMMS_WEB_CASE as ssw
     	on ssp.WEB_CASE_RID=ssw.RID
@@ -187,7 +197,7 @@
             <if test="CC_DOMAIN != null ">CC_DOMAIN,</if>
             <if test="CC_URL != null ">CC_URL,</if>
             <if test="IP != null ">IP,</if>
-            <if test="DOMAIN != null ">DOMAIN,</if>
+            <if test="DOMAIN_NAME != null ">DOMAIN_NAME,</if>
             <if test="URL != null ">URL,</if>
             <if test="UNIT_INDUSTY != null ">UNIT_INDUSTY,</if>
             <if test="UNIT_NAME != null ">UNIT_NAME,</if>
@@ -235,7 +245,7 @@
            <if test="CC_DOMAIN != null ">#{CC_DOMAIN},</if>
            <if test="CC_URL != null ">#{CC_URL},</if>
            <if test="IP != null ">#{IP},</if>
-           <if test="DOMAIN != null ">#{DOMAIN},</if>
+           <if test="DOMAIN_NAME != null ">#{DOMAIN_NAME},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="UNIT_INDUSTY != null ">#{UNIT_INDUSTY},</if>
            <if test="UNIT_NAME != null ">#{UNIT_NAME},</if>
@@ -286,7 +296,7 @@
 		    <if test="CC_DOMAIN!=null"> CC_DOMAIN=#{CC_DOMAIN},</if> 
 		    <if test="CC_URL!=null"> CC_URL=#{CC_URL},</if> 
 		    <if test="IP!=null"> IP=#{IP},</if> 
-		    <if test="DOMAIN!=null"> DOMAIN=#{DOMAIN},</if> 
+		    <if test="DOMAIN_NAME!=null"> DOMAIN_NAME=#{DOMAIN_NAME},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
 		    <if test="UNIT_INDUSTY!=null"> UNIT_INDUSTY=#{UNIT_INDUSTY},</if> 
 		    <if test="UNIT_NAME!=null"> UNIT_NAME=#{UNIT_NAME},</if> 

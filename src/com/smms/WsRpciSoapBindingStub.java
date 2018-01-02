@@ -3,6 +3,7 @@ package com.smms;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.Vector;
 import javax.xml.namespace.QName;
 import org.apache.axis.AxisFault;
@@ -16,10 +17,6 @@ import org.apache.axis.description.ParameterDesc;
 import org.apache.axis.soap.SOAPConstants;
 import org.apache.axis.utils.JavaUtils;
 
-/**
- * @author 吴立
- * @date 2017年11月29日
- */
 public class WsRpciSoapBindingStub extends Stub implements WsRpci_client {
 
 	private Vector cachedSerClasses = new Vector();
@@ -42,11 +39,11 @@ public class WsRpciSoapBindingStub extends Stub implements WsRpci_client {
 		ParameterDesc param = new ParameterDesc(new QName("http://smms.com", "tokenid"), (byte) 1,
 				new QName("http://www.w3.org/2001/XMLSchema", "string"), String.class, false, false);
 		oper.addParameter(param);
-		param = new ParameterDesc(new QName("http://smms.com", "rpc_code"), (byte) 1,
-				new QName("http://www.w3.org/2001/XMLSchema", "string"), String.class, false, false);
+		param = new ParameterDesc(new QName("http://smms.com", "rpc_code"), (byte) 1, new QName("http://www.w3.org/2001/XMLSchema", "string"),
+				String.class, false, false);
 		oper.addParameter(param);
-		param = new ParameterDesc(new QName("http://smms.com", "rpc_json"), (byte) 1,
-				new QName("http://www.w3.org/2001/XMLSchema", "string"), String.class, false, false);
+		param = new ParameterDesc(new QName("http://smms.com", "rpc_json"), (byte) 1, new QName("http://www.w3.org/2001/XMLSchema", "string"),
+				String.class, false, false);
 		oper.addParameter(param);
 		param = new ParameterDesc(new QName("http://smms.com", "rpc_byte"), (byte) 1,
 				new QName("http://www.w3.org/2001/XMLSchema", "base64Binary"), byte[].class, false, false);
@@ -109,10 +106,11 @@ public class WsRpciSoapBindingStub extends Stub implements WsRpci_client {
 		}
 	}
 
-	public String wscall(String tokenid, String rpc_code, String rpc_json, byte rpc_byte[]) throws RemoteException {
+	public String wscall(String tokenid, String rpc_code, String rpc_json, byte[] rpc_byte) throws RemoteException {
 		Call _call;
-		if (super.cachedEndpoint == null)
+		if (super.cachedEndpoint == null) {
 			throw new NoEndPointException();
+		}
 		_call = createCall();
 		_call.setOperation(_operations[0]);
 		_call.setUseSOAPAction(true);
@@ -126,8 +124,9 @@ public class WsRpciSoapBindingStub extends Stub implements WsRpci_client {
 		setAttachments(_call);
 		Object _resp;
 		_resp = _call.invoke(new Object[] { tokenid, rpc_code, rpc_json, rpc_byte });
-		if (_resp instanceof RemoteException)
+		if (_resp instanceof RemoteException) {
 			throw (RemoteException) _resp;
+		}
 		extractAttachments(_call);
 		try {
 			return (String) _resp;

@@ -79,7 +79,7 @@
             ssr.ROOM_MANAGER as room_manager,
             ssr.MANAGER_TEL as room_manager_tel,
             ssr.MANAGER_MOBILE as room_manager_mobile
-       from SMMS_ROOM_INFO as ssr where RECORDSTATE='0' and ACCESS_ID = #{ACCESS_ID} and ROOM_IDX=#{ROOM_IDX}  
+       from SMMS_ROOM_INFO as ssr where ssr.RECORDSTATE='0' and ACCESS_ID = #{ACCESS_ID} and ROOM_IDX=#{ROOM_IDX}  
 </select>
 
 <delete id="deleteData" parameterType="hashmap" > 
@@ -88,29 +88,31 @@
  <select id="selectRoomNameAndRoomIdx" resultType="hashmap" parameterType="hashmap">
 SELECT ssi.ROOM_NAME as ROOM_NAME,ssi.ROOM_IDX as ROOM_IDX FROM 
 		smms_room_info as ssi 
- where RECORDSTATE='0' and ssi.ACCESS_ID=#{ACCESS_ID} and ROOM_IDX=#{ROOM_IDX}
+ where ssi.RECORDSTATE='0' and ssi.ACCESS_ID=#{ACCESS_ID} and ssi.ROOM_IDX=#{ROOM_IDX}
 </select>
  <select id="selectRoomInfo" resultType="hashmap" parameterType="hashmap">
 SELECT
-	ssr.rid as ssrRid,
-	ssr.ROOM_NAME as room_name,
-	ssr.ROOM_IDX as room_idx,
-	ssr.ROOM_ADDRESS as room_address FROM 
+	ssr.rid as SSRRID,
+	ssr.ROOM_NAME as ROOM_NAME,
+	ssr.ROOM_IDX as ROOM_IDX,
+	ssr.ROOM_ADDRESS as ROOM_ADDRESS FROM 
 		smms_web_case as swc 
 		left join smms_room_info as ssr 
 		on ssr.ACCESS_ID=swc.ACCESS_ID
- where swc.WEBSITE_URL=#{website_url}
+ where swc.WEBSITE_URL=#{WEBSITE_URL}
 </select>
 <select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
 	select <include refid="detailColumns"/>, sii.IDC_NAME as TRANS_IDC_ID from SMMS_ROOM_INFO  as ssr left JOIN smms_idc_info as sii on ssr.ACCESS_ID=sii.IDC_ID where ssr.RID = #{RID} 
 </select> 
 
 <update id="deleteUpdate" parameterType="hashmap" > 
-	update SMMS_ROOM_INFO  set RECORDSTATE=#{RECORDSTATE} as ssr where ssr.RID=#{RID}
+	update SMMS_ROOM_INFO as ssr set SSR.RECORDSTATE=#{RECORDSTATE}  where ssr.RID=#{RID}
 </update> 
  
 <select id="updateDetail" parameterType="String" resultType="hashmap"> 
-      select <include refid="detailColumns"/> from SMMS_ROOM_INFO  as ssr where ssr.RID = #{RID} 
+      select <include refid="detailColumns"/> from SMMS_ROOM_INFO  as ssr 
+      left JOIN smms_idc_info as sii on ssr.ACCESS_ID=sii.IDC_ID
+      where ssr.RID = #{RID} 
 </select> 
 
 <insert id="insertSave" parameterType="hashmap" >
@@ -125,12 +127,7 @@ SELECT
             <if test="MANAGER_TEL != null ">MANAGER_TEL,</if>
             <if test="MANAGER_MOBILE != null ">MANAGER_MOBILE,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
-            <if test="CREATORID != null ">CREATORID,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
-            <if test="MODIFIERID != null ">MODIFIERID,</if>
-            <if test="LIABMAN != null ">LIABMAN,</if>
-            <if test="LIABDEPT != null ">LIABDEPT,</if>
-            <if test="LIABORG != null ">LIABORG,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
@@ -143,17 +140,13 @@ SELECT
            <if test="MANAGER_TEL != null ">#{MANAGER_TEL},</if>
            <if test="MANAGER_MOBILE != null ">#{MANAGER_MOBILE},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CREATORID != null ">#{CREATORID},</if>
+           
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
-           <if test="MODIFIERID != null ">#{MODIFIERID},</if>
-           <if test="LIABMAN != null ">#{LIABMAN},</if>
-           <if test="LIABDEPT != null ">#{LIABDEPT},</if>
-           <if test="LIABORG != null ">#{LIABORG},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
 <update id="updateSave" parameterType="hashmap" > 
-	update SMMS_ROOM_INFO   
+	update SMMS_ROOM_INFO ssr  
 		<set>
 				    <if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
 		    <if test="ROOM_NAME!=null"> ROOM_NAME=#{ROOM_NAME},</if> 
@@ -164,13 +157,9 @@ SELECT
 		    <if test="MANAGER_TEL!=null"> MANAGER_TEL=#{MANAGER_TEL},</if> 
 		    <if test="MANAGER_MOBILE!=null"> MANAGER_MOBILE=#{MANAGER_MOBILE},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
-		    <if test="MODIFIERID!=null"> MODIFIERID=#{MODIFIERID},</if> 
-		    <if test="LIABMAN!=null"> LIABMAN=#{LIABMAN},</if> 
-		    <if test="LIABDEPT!=null"> LIABDEPT=#{LIABDEPT},</if> 
-		    <if test="LIABORG!=null"> LIABORG=#{LIABORG},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
-	where RID=#{RID}
+	where ssr.RID=#{RID}
 </update> 
 
 </mapper>

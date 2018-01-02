@@ -1,6 +1,12 @@
 package com.zstar.SMMS.constant;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 public class FileOperateUtil {
 
@@ -72,7 +78,7 @@ public class FileOperateUtil {
 					isr.close();
 				if (fis != null)
 					fis.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

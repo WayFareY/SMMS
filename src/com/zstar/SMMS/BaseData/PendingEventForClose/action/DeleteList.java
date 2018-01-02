@@ -1,6 +1,5 @@
 package com.zstar.SMMS.BaseData.PendingEventForClose.action;
 
-import com.strutsframe.db.DBSqlSession;
 import com.zstar.fmp.core.frame.action.FrameAction;
 import com.zstar.fmp.log.FMPLog;
 import java.util.HashMap;

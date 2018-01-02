@@ -12,6 +12,7 @@
 		<TableField id="STAT_DATE" colName="STAT_DATE" desc="统计日期" dataType="CHAR" length="10" cssClass="" listGroupName="" tableAlias="rtr" create="LVUA" groupEnd="F" isSearch="T" fuzzy="F" orderInList="T" order="DESC" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F"/>
 		<TableField id="LOG_COUNT" colName="LOG_COUNT" desc="日志记录数" dataType="INTEGER" length="10" cssClass="" listGroupName="" tableAlias="rtr" create="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F"/>
 		<TableField id="MODIFIEDTIME" colName="MODIFIEDTIME" desc="最后修改时间" dataType="CHAR" length="20" cssClass="" listGroupName="" tableAlias="rtr" create="LVUA" hidden="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F"/>
+		<TableField id="CREATTIME" colName="CREATTIME" desc="创建时间" dataType="CHAR" length="20" cssClass="" listGroupName="" create="LVUA" hidden="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
 		<TableField id="RECORDSTATE" colName="RECORDSTATE" desc="记录状态" dataType="CHAR" length="1" cssClass="" listGroupName="" tableAlias="rtr" create="LVUA" hidden="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F"/>
 	</Fields>
 	<SubTableModels>

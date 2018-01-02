@@ -25,6 +25,9 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.BaseData.SmmsRoomInfo.action.DeleteSmmsRoomInfoAction">
-        </action>                    
+        </action>  
+        <!--导入机房信息操作-->
+        <action  name="inputRoomInfo" class="com.zstar.SMMS.BaseData.SmmsRoomInfo.action.InputRoomInfoAction">  
+        </action>                      
     </package>
 </struts>

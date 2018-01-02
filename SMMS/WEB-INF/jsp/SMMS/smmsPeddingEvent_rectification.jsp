@@ -97,7 +97,7 @@ var json="";
 		} else {
 			var getUrl = getFieldTrueValue('URL');
 			var ip = getFieldTrueValue('IP');
-			var url = rootPath + "/SMMS/SmmsPendingEventBiz/checkUrl?URL="
+			var url = rootPath + "/SMMS/SmmsEventMainBiz/checkUrl?URL="
 					+ getUrl + "&IP=" + ip;
 			XMLHttp.urlSubmit(url, backCallSendMsg);
 			function backCallSendMsg(msg) {
@@ -106,7 +106,7 @@ var json="";
 
 					$("#viewTable")
 							.append(
-									"<table  id ='table' style='margin-left:180px;border-spacing:10px 20px;' border='0'>"
+									"<table  id ='table' style='margin-left:150px;border-spacing:10px 20px;' border='0'>"
 											+ "<tr>" + "<td class='test'>"
 											+ '运营商名称:'
 											+ "</td>"
@@ -140,22 +140,22 @@ var json="";
 											+ "<td class='test''>"
 											+ '网站首页URL:'
 											+ "</td>"
-											+ "<td class='myTest'><a href='#' id='website_url' onclick='viewUrl()'></a></td>"
+											+ "<td class='myTest'><a href='#' id='website_url' onclick='viewDomain()'></a></td>"
 											+ "</tr>" + "</table>");
 
-					$("#idc_name").text(json.idc_name);
+					$("#idc_name").text(json.IDC_NAME);
 					//机房名称
-					$("#room_name").text(json.room_name);
+					$("#room_name").text(json.ROOM_NAME);
 					//机房序号
-					$("#room_idx").text(json.room_idx);
+					$("#room_idx").text(json.ROOM_IDX);
 					//机房地址
-					$("#room_address").text(json.room_address);
+					$("#room_address").text(json.ROOM_ADDRESS);
 					//主体备案号 
-					$("#sponser_case_num").text(json.sponser_case_num);
+					$("#sponser_case_num").text(json.SPONSER_CASE_NUM);
 					//网站名称
-					$("#website_name").text(json.website_name);
+					$("#website_name").text(json.WEBSITE_NAME);
 					//网站首页
-					$("#website_url").text(json.website_url);
+					$("#website_url").text(json.WEBSITE_URL);
 
 				} else {
 					showMessage('查不到数据');
@@ -164,7 +164,7 @@ var json="";
 		}
 	}
 	function openwinIdcName() {
-		var idcUrl = rootPath + "/SMMS/IdcInfoBiz/DoView?RID=" + json.siiRid
+		var idcUrl = rootPath + "/SMMS/IdcInfoBiz/DoView?RID=" + json.SIIRID
 				+ "&tableModelId=IdcInfo";
 		openWindow(comUrl(idcUrl), "运营商信息");
 
@@ -172,20 +172,20 @@ var json="";
 
 	function openwinRoomAddress() {
 		var roomUrl = rootPath + "/SMMS/SmmsRoomInfoBiz/DoView?RID="
-				+ json.ssrRid + "&tableModelId=SmmsRoomInfo";
+				+ json.SSRRID + "&tableModelId=SmmsRoomInfo";
 		openWindow(comUrl(roomUrl), "机房信息");
 
 	}
 
 	function openwinWebCaseNum() {
 		var sponserCaseNum = rootPath + "/SMMS/WebCaseBiz/DoView?RID="
-				+ json.swcRid + "&tableModelId=WebCase";
+				+ json.SWCRID + "&tableModelId=WebCase";
 		openWindow(comUrl(sponserCaseNum), "主体备案号");
 
 	}
 
 	function openwinWebCaseUrl() {
-		var swcUrl = rootPath + "/SMMS/WebCaseBiz/DoView?RID=" + json.swcRid
+		var swcUrl = rootPath + "/SMMS/WebCaseBiz/DoView?RID=" + json.SWCRID
 				+ "&tableModelId=WebCase";
 		openWindow(comUrl(swcUrl), "网站首页");
 	}
@@ -197,7 +197,7 @@ var json="";
 			showMessage('目标网站URL和目标ip不能同时为空');
 		} else {
 			var form = document.forms[0];
-			var submitUrl = comUrl(rootPath + "/SMMS/SmmsPendingEventBiz/rectification");
+			var submitUrl = comUrl(rootPath + "/SMMS/SmmsEventMainBiz/rectification");
 			XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
 
 			function backCallSendMsg(msg) {
@@ -210,7 +210,7 @@ var json="";
 					setFieldValue('THREAT_NAME', null);
 					setFieldValue('FORCE_CLOSE_DESCE', null);
 				} else {
-					alert(msg);
+					showMessage(msg);
 				}
 			}
 
@@ -218,13 +218,17 @@ var json="";
 
 	}
 
-	function viewUrl() {
-		var URL=json.website_url;
+	function viewDomain() {
+		var URL=json.WEBSITE_URL;
 		var urlStr = 'http://' + URL.replace(/^http:\/\//i, '');
 		openWindow(comUrl(urlStr));
 
 	}
+	function viewUrl(url) {
+		var urlStr = 'http://' + url.replace(/^http:\/\//i, '');
+		openWindow(comUrl(urlStr));
 
+	}
 </script>
 
 

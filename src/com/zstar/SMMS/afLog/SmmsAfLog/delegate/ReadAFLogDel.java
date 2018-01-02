@@ -1,8 +1,10 @@
 package com.zstar.SMMS.afLog.SmmsAfLog.delegate;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.zstar.SMMS.BaseData.SmmsEventMain.action.delegate.EventMainDel;
 import com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate.PendingEventDel;
 import com.zstar.SMMS.constant.FileOperateUtil;
+import com.zstar.SMMS.constant.SMMSConstant;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.base.delegate.BaseDelegate;
 import com.zstar.fmp.log.FMPLog;
@@ -22,12 +24,14 @@ public class ReadAFLogDel extends BaseDelegate {
 		String fileFormat;
 		long currPos;
 		PendingEventDel del;
+		EventMainDel mainDel;
 		InputStreamReader isr;
 		BufferedReader in;
 		filePath = FMPContex.getSystemProperty("AF_LOG_FILE");
 		fileFormat = FMPContex.getSystemProperty("AF_LOG_FORMAT");
 		currPos = filePos;
 		del = new PendingEventDel(contex);
+		mainDel = new EventMainDel(contex);
 		isr = null;
 		in = null;
 		try {
@@ -35,7 +39,7 @@ public class ReadAFLogDel extends BaseDelegate {
 			in = new BufferedReader(isr);
 			String str = null;
 			in.skip(filePos);
-			while ((str = in.readLine()) != null) {
+			while ((str = in.readLine()) != null)
 				try {
 					currPos += str.length();
 					if (str.startsWith("[inavigator:][ [")) {
@@ -94,15 +98,19 @@ public class ReadAFLogDel extends BaseDelegate {
 							ip = (String) jsonMap.get("SRC_IP");
 						}
 						jsonMap.put("IP", ip);
-						insertMap = del.selectInsertPendingInfoByIpOrUrl(jsonMap);
+						insertMap = mainDel.selectInsertPendingInfoByIpOrUrl(jsonMap);
+						if (!insertMap.containsKey("MAPPING_MODE")) {
+							insertMap.put("MAPPING_MODE", SMMSConstant.MAPPING_MODE_ZERO);
+						}
 						insertMap.put("IP", ip);
 						insertMap.put("SNAPSHOP", jsonMap.get("EVENT_EVIDENCE"));
 						insertMap.put("OCCUR_TIME", jsonMap.get("START_TIME"));
 						insertMap.put("THREAT_TYPE1", jsonMap.get("TYPE"));
 						insertMap.put("THREAT_TYPE2", jsonMap.get("SUB_TYPE"));
-						insertMap.put("THREAT_LEVEL", jsonMap.get("LEVEL"));
-						insertMap.put("CLIENTNAME", "未知");
-						insertMap.put("EVENT_SOURCE", "1");
+						insertMap.put("THREAT_LEVEL", jsonMap.get("RELIABILITY"));
+						insertMap.put("CLIENTNAME", SMMSConstant.CLIENTNAME);
+						insertMap.put("EVENT_SOURCE", SMMSConstant.EVENT_SOURCE_AC);
+						insertMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE);
 						String accessId = "";
 						accessId = String.valueOf(jsonMap.get("BRANCH"));
 						if (accessId.indexOf("/") != -1) {
@@ -110,14 +118,42 @@ public class ReadAFLogDel extends BaseDelegate {
 							insertMap.put("ACCESS_ID", kv[0]);
 							insertMap.put("ROOM_IDX", kv[1]);
 							List list = sqlSession.selectList("SmmsRoomInfo.selectRoomNameAndRoomIdx", insertMap);
-							if (list.size() > 0 && list != null) {
+							if (list.size() > 0 && list != null)
 								insertMap.put("ROOM_NAME", ((Map) list.get(0)).get("ROOM_NAME"));
-							}
 						}
 						insertMap.put("LOG_TABLENAME", "SMMS_AF_LOG");
 						insertMap.put("LOG_RID", rid);
+						String mainRid = "";
 						if (i == 1) {
-							del.insertSmmsPendingEvent(insertMap);
+							if (insertMap.containsKey("WEB_CASE_RID")) {
+								Map webRidMap = (Map) sqlSession.selectOne("SmmsEventMain.countWebCaseRidTotal", insertMap);
+								Long webCaseTotal = (Long) webRidMap.get("WEBCASETOTAL");
+								if (webCaseTotal.longValue() == 0L) {
+									mainRid = mainDel.insertSmmsEventMain(insertMap);
+								} else {
+									mainRid = (String) webRidMap.get("MAIN_RID");
+								}
+							} else if (insertMap.containsKey("DOMAIN_NAME")) {
+								Map domainMap = (Map) sqlSession.selectOne("SmmsEventMain.countDomainTotal", insertMap);
+								Long domainTotal = (Long) domainMap.get("DOMAINTOTAL");
+								if (domainTotal.longValue() == 0L) {
+									mainRid = mainDel.insertSmmsEventMain(insertMap);
+								} else {
+									mainRid = (String) domainMap.get("MAIN_RID");
+								}
+							} else if (insertMap.containsKey("IP")) {
+								Map ipMap = (Map) sqlSession.selectOne("SmmsEventMain.countIpTotal", insertMap);
+								Long ipTotal = (Long) ipMap.get("IPTOTAL");
+								if (ipTotal.longValue() == 0L) {
+									mainRid = mainDel.insertSmmsEventMain(insertMap);
+								} else {
+									mainRid = (String) ipMap.get("MAIN_RID");
+								}
+							}
+							if (!"".equals(mainRid)) {
+								insertMap.put("MAIN_RID", mainRid);
+								del.insertSmmsPendingEvent(insertMap);
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -127,17 +163,18 @@ public class ReadAFLogDel extends BaseDelegate {
 					FileOperateUtil.createFiles(filePath, err, fileFormat);
 					e.printStackTrace();
 				}
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				isr.close();
+				if (in != null) {
+					in.close();
+					in = null;
+				}
+				if (isr != null) {
+					isr.close();
+					isr = null;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

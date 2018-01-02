@@ -21,7 +21,7 @@
             CC_DOMAIN,
             CC_URL,
             IP,
-            DOMAIN,
+            DOMAIN_NAME,
             URL,
             UNIT_INDUSTY,
             UNIT_NAME,
@@ -66,7 +66,7 @@
             CC_DOMAIN,
             CC_URL,
             IP,
-            DOMAIN,
+            DOMAIN_NAME,
             URL,
             UNIT_INDUSTY,
             UNIT_NAME,
@@ -152,7 +152,7 @@
             <if test="CC_DOMAIN != null ">CC_DOMAIN,</if>
             <if test="CC_URL != null ">CC_URL,</if>
             <if test="IP != null ">IP,</if>
-            <if test="DOMAIN != null ">DOMAIN,</if>
+            <if test="DOMAIN_NAME != null ">DOMAIN_NAME,</if>
             <if test="URL != null ">URL,</if>
             <if test="UNIT_INDUSTY != null ">UNIT_INDUSTY,</if>
             <if test="UNIT_NAME != null ">UNIT_NAME,</if>
@@ -195,7 +195,7 @@
            <if test="CC_DOMAIN != null ">#{CC_DOMAIN},</if>
            <if test="CC_URL != null ">#{CC_URL},</if>
            <if test="IP != null ">#{IP},</if>
-           <if test="DOMAIN != null ">#{DOMAIN},</if>
+           <if test="DOMAIN_NAME != null ">#{DOMAIN_NAME},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="UNIT_INDUSTY != null ">#{UNIT_INDUSTY},</if>
            <if test="UNIT_NAME != null ">#{UNIT_NAME},</if>
@@ -241,7 +241,7 @@
 		    <if test="CC_DOMAIN!=null"> CC_DOMAIN=#{CC_DOMAIN},</if> 
 		    <if test="CC_URL!=null"> CC_URL=#{CC_URL},</if> 
 		    <if test="IP!=null"> IP=#{IP},</if> 
-		    <if test="DOMAIN!=null"> DOMAIN=#{DOMAIN},</if> 
+		    <if test="DOMAIN_NAME!=null"> DOMAIN_NAME=#{DOMAIN_NAME},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
 		    <if test="UNIT_INDUSTY!=null"> UNIT_INDUSTY=#{UNIT_INDUSTY},</if> 
 		    <if test="UNIT_NAME!=null"> UNIT_NAME=#{UNIT_NAME},</if> 

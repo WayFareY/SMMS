@@ -2,6 +2,7 @@ package com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate.copy;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.zstar.SMMS.BaseData.IdcInfo.delegate.IdcInfoDel;
+import com.zstar.SMMS.constant.SMMSConstant;
 import com.zstar.SMMS.webservice.delegate.RpcBusDel;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.base.delegate.BaseDelegate;
@@ -43,7 +44,7 @@ public class PendingEventDel extends BaseDelegate {
 		int i = 0;
 		if ("000".equals((String) messageJson.get("return_msg"))) {
 			for (Map ridMap : sendList) {
-				ridMap.put("RECTIFY_STATE", "010");
+				ridMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
 				ridMap.put("SEND_TIME", FMPContex.getCurrentTime());
 				ridMap.put("FEEDBACK_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
 				i = this.sqlSession.update("SmmsPendingEvent.updateRectifyState", ridMap);

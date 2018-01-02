@@ -25,6 +25,9 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.BaseData.SmmsPendingEvent_keyword.action.DeletePendingEvent_keyAction">
-        </action>                    
+        </action>
+        <!-- 日志举证-->     
+         <action  name="PendingEventKey" class="com.zstar.SMMS.BaseData.SmmsPendingEvent_keyword.action.RzjzPendingEvent_keyAction">
+        </action>                     
     </package>
 </struts>

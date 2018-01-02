@@ -52,12 +52,25 @@
              order by ${order}
         </if>				
 </select> 
-<select id="selectKeywordLevel" parameterType="String" resultType="hashmap"> 
-  select max(KEYWORD_LEVEL) from SMMS_KEYWORD   where  #{keys} like CONCAT('%',KEYWORD,'%');   
+<select id="selectKeywordLevel" parameterType="hashmap" resultType="hashmap"> 
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+			select max(KEYWORD_LEVEL) from SMMS_KEYWORD   where  #{KEYS} like CONCAT('%',KEYWORD,'%'); 
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+			select max(KEYWORD_LEVEL) from SMMS_KEYWORD   where  #{KEYS} like '%'|| KEYWORD || '%'; 
+	</if>	
+    
 </select> 
-<select id="selectKeywordType" parameterType="String" resultType="hashmap"> 
-      select DISTINCT KEYWORD_TYPE 
-from SMMS_KEYWORD b where #{keys} like CONCAT('%',KEYWORD,'%');
+<select id="selectKeywordType" parameterType="hashmap" resultType="hashmap"> 
+   select DISTINCT KEYWORD_TYPE 
+	from SMMS_KEYWORD b
+	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
+			where #{KEYS} like CONCAT('%',KEYWORD,'%');
+	</if>	
+	<if test='DBTYPE=="POSTGRESQL"'>
+			where #{KEYS} like '%' || KEYWORD || '%'
+	</if>		 
+	
 </select> 
 <select id="selectKeywordInfo" parameterType="String" resultType="hashmap"> 
       select DISTINCT KEYWORD_TYPE,

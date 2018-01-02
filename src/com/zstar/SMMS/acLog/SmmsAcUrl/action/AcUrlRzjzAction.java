@@ -1,5 +1,6 @@
 package com.zstar.SMMS.acLog.SmmsAcUrl.action;
 
+import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.frame.action.FrameAction;
 import com.zstar.fmp.log.FMPLog;
 import java.io.*;
@@ -22,7 +23,10 @@ public class AcUrlRzjzAction extends FrameAction {
 		Map ridMap = new HashMap();
 		ridMap.put("RID", rid);
 		Map map = (Map) sqlSession.selectOne("SmmsAcUrl.selectContentPathByRid", ridMap);
-		String fileName = (String) map.get("CONTENTPATH");
+		String groupName = (String) map.get("GROUPNAME");
+		String filePath = (new StringBuilder(String.valueOf(FMPContex.getSystemProperty("AC_LOG_PATH")))).append(groupName).append("\\")
+				.append("htm").append("\\").toString();
+		String fileName = (new StringBuilder(String.valueOf(filePath))).append((String) map.get("EVENT_EVIDENCE")).toString();
 		FMPLog.printLog((new StringBuilder("test:")).append(fileName).toString());
 		if (fileName == null || fileName.length() <= 0) {
 			FMPLog.printErr("fileName == null || fileName.length() <= 0");
@@ -35,14 +39,17 @@ public class AcUrlRzjzAction extends FrameAction {
 			return "empty";
 		}
 		response.setContentLength((int) outFile.length());
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
 		out = null;
 		fis = null;
 		try {
 			fis = new FileInputStream(outFile);
 			out = response.getOutputStream();
 			byte b[] = new byte[1024];
-			for (int i = 0; (i = fis.read(b)) > 0;)
+			for (int i = 0; (i = fis.read(b)) > 0;) {
 				out.write(b, 0, i);
+			}
 
 			fis.close();
 			out.flush();
@@ -50,17 +57,13 @@ public class AcUrlRzjzAction extends FrameAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-					fis = null;
-				}
-				if (out != null) {
-					out.close();
-					out = null;
-				}
-			} catch (Exception exception1) {
-				exception1.printStackTrace();
+			if (fis != null) {
+				fis.close();
+				fis = null;
+			}
+			if (out != null) {
+				out.close();
+				out = null;
 			}
 		}
 		return null;

@@ -15,7 +15,6 @@
             bbs.TITLE,
             bbs.URL,
             bbs.CREATTIME,
-            bbs.CONTENTPATH,
             bbs.RECORDSTATE
 </sql>
 <sql id="detailColumns">
@@ -31,19 +30,10 @@
             bbs.TITLE,
             bbs.URL,
             bbs.CREATTIME,
-            bbs.CONTENTPATH,
             bbs.RECORDSTATE
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
-	select
-	bbs.Rid as CONTENTPATH,
-	case WHEN 
-		bbs.CONTENTPATH is not null and bbs.CONTENTPATH!='' 
-	then 
-		'详情' 
-	else 
-		'无' 
-	end  as TRANS_CONTENTPATH, <include refid="listColumns"/> ,crc1.CRC_VALUE as TRANS_SERV_CRC,
+	select <include refid="listColumns"/> ,crc1.CRC_VALUE as TRANS_SERV_CRC,
 	crc2.CRC_VALUE as TRANS_APP_CRC
 	from SMMS_AC_BBS as bbs
 	left join smms_crc_mapting as crc1
@@ -98,7 +88,7 @@
          
 </select> 
 <select id="selectContentPathByRid" parameterType="hashmap" resultType="hashmap"> 
-	select CONTENTPATH  from SMMS_AC_BBS as bbs where bbs.RID = #{RID} 
+	select EVENT_EVIDENCE,GROUPNAME from SMMS_AC_BBS as bbs where bbs.RID = #{RID} 
 </select> 
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_AC_BBS  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
@@ -121,7 +111,6 @@
             <if test="TITLE != null ">TITLE,</if>
             <if test="URL != null ">URL,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>     
-            <if test="CONTENTPATH != null ">CONTENTPATH,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
@@ -135,7 +124,6 @@
            <if test="TITLE != null ">#{TITLE},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CONTENTPATH != null ">#{CONTENTPATH},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -151,7 +139,6 @@
 		    <if test="CONTENT!=null"> CONTENT=#{CONTENT},</if> 
 		    <if test="TITLE!=null"> TITLE=#{TITLE},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
-		    <if test="CONTENTPATH!=null"> CONTENTPATH=#{CONTENTPATH},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

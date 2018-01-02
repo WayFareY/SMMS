@@ -11,7 +11,7 @@ import org.quartz.JobExecutionException;
 public class Load_AF_App_LogFile extends BaseJob {
 
 	public void jobExcute(String arg0) throws JobExecutionException {
-		FMPLog.printErr("执行装载AF的任务。。。。。。");
+		FMPLog.printErr("执行装载AF的任务。。。。。。。");
 
 		ReadAFLogDel del = new ReadAFLogDel(getContex());
 		String filePath = FMPContex.getSystemProperty("AF_LOG_FILE");

@@ -1,6 +1,7 @@
 package com.zstar.SMMS.BaseData.SmmsPendingEvent.action;
 
 import com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate.PendingEventDel;
+import com.zstar.SMMS.constant.SMMSConstant;
 import com.zstar.fmp.core.frame.action.FrameAction;
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +33,13 @@ public class RectificationSmmsPendingEventAction extends FrameAction {
 
 			insertMap.put("CLIENTNAME", getWebData("CURR_USERID"));
 
-			insertMap.put("IS_FORCE_CLOSE", "2");
+			insertMap.put("IS_FORCE_CLOSE", SMMSConstant.IS_FORCE_CLOSE_TWO);
 
-			insertMap.put("THREAT_LEVEL", "3");
+			insertMap.put("THREAT_LEVEL", SMMSConstant.THREAT_LEVEL);
 
-			insertMap.put("EVENT_SOURCE", "3");
+			insertMap.put("EVENT_SOURCE", SMMSConstant.EVENT_SOURCE);
 			if ("".equals(threat_name)) {
-				insertMap.put("THREAT_NAME", "未知");
+				insertMap.put("THREAT_NAME", SMMSConstant.THREAT_NAME);
 			}
 			rid = del.insertSmmsPendingEvent(insertMap);
 		}

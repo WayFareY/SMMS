@@ -1,5 +1,6 @@
 package com.zstar.SMMS.BaseData.SmmsPendingEvent.action;
 
+import com.zstar.SMMS.constant.SMMSConstant;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.frame.action.CommonSaveAction;
 import java.util.HashMap;
@@ -16,21 +17,21 @@ public class SaveSmmsPendingEventAction extends CommonSaveAction {
 		if ("add".equals(getWebData("opMode"))) {
 			setWebData("RID", FMPContex.getNewUUID());
 
-			setWebData("EVENT_SOURCE", "3");
+			setWebData("EVENT_SOURCE", SMMSConstant.EVENT_SOURCE);
 
 			setWebData("KEYWORDS", "test");
 
 			setWebData("CLIENTNAME", (String) getWebData("CURR_USERID"));
 
-			setWebData("REPORT_CITY", "深圳");
+			setWebData("REPORT_CITY", SMMSConstant.REPORT_CITY);
 
 			setWebData("REPORT_TIME", FMPContex.getCurrentTime());
 
 			setWebData("OCCUR_TIME", FMPContex.getCurrentTime());
 
-			setWebData("IS_WHITE_LIST", "2");
+			setWebData("IS_WHITE_LIST", SMMSConstant.IS_WHITE_LIST);
 
-			setWebData("RECTIFY_STATE", "000");
+			setWebData("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE);
 		}
 		String url = (String) getWebData("URL");
 		Map urlMap = new HashMap();
@@ -63,8 +64,7 @@ public class SaveSmmsPendingEventAction extends CommonSaveAction {
 				if ((listWebCaseInfo != null) && (listWebCaseInfo.size() > 0)) {
 					Map webCaseInfoMap = (Map) listWebCaseInfo.get(0);
 					setWebData("WEB_CASE_RID", webCaseInfoMap.get("RID"));
-					Map webCaseMap = (Map) this.sqlSession.selectOne("WebCase.getDomainNameAndWebstiteUrlByRid",
-							webCaseInfoMap);
+					Map webCaseMap = (Map) this.sqlSession.selectOne("WebCase.getDomainNameAndWebstiteUrlByRid", webCaseInfoMap);
 					setWebData("SNAPSHOP", webCaseMap.get("SNAPSHOP"));
 					setWebData("DOMAIN_NAME", webCaseMap.get("DOMAIN_NAME"));
 					setWebData("URL", webCaseMap.get("WEBSITE_URL"));

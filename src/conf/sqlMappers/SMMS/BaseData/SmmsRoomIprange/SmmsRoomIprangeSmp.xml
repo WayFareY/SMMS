@@ -44,6 +44,7 @@
 <select id="selectAccesIdByIp" resultType="hashmap" parameterType="hashmap"> 
 select ACCESS_ID, ROOM_IDX from smms_room_iprange as ssr
 where
+<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 substring_index(#{IP},'.',3) = substring_index(ssr.BEGIN_IP,'.',3)
 and cast(substring_index(#{IP},'.',-1) as signed integer )
 &gt;=
@@ -52,6 +53,18 @@ and
 cast(substring_index(#{IP},'.',-1) as signed integer )
 &lt;=
 cast(substring_index(ssr.END_IP,'.',-1) as signed integer ) and RECORDSTATE='0'
+</if>
+<if test='DBTYPE=="POSTGRESQL"'>
+	split_part(#{IP}, '.', 1)|| '.' || split_part(#{IP}, '.', 2) ||'.'|| split_part(#{IP}, '.', 3) = split_part(ssr.BEGIN_IP, '.', 1)|| '.' || split_part(ssr.BEGIN_IP, '.', 2) ||'.'|| split_part(ssr.BEGIN_IP, '.', 3)
+and to_number(split_part(#{IP}, '.', 4),'999')
+&gt;=
+ to_number(split_part(ssr.BEGIN_IP, '.', 4),'999')
+
+and
+to_number(split_part(#{IP}, '.', 4),'999')
+&lt;=
+to_number(split_part(ssr.END_IP, '.', 4),'999') and RECORDSTATE='0'
+</if>
 </select>
 
 <select id="selectAccesIdByDstIp" resultType="hashmap" parameterType="hashmap"> 
@@ -119,28 +132,18 @@ cast(substring_index(ssr.END_IP,'.',-1) as signed integer ) and RECORDSTATE='0'
 	insert into SMMS_ROOM_IPRANGE (
             <if test="RID != null ">RID,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
-            <if test="CREATORID != null ">CREATORID,</if>
             <if test="BEGIN_IP != null ">BEGIN_IP,</if>
             <if test="END_IP != null ">END_IP,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
-            <if test="MODIFIERID != null ">MODIFIERID,</if>
-            <if test="LIABMAN != null ">LIABMAN,</if>
-            <if test="LIABDEPT != null ">LIABDEPT,</if>
-            <if test="LIABORG != null ">LIABORG,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE,</if>
             <if test="ACCESS_ID != null ">ACCESS_ID,</if>
             <if test="ROOM_IDX != null ">ROOM_IDX</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CREATORID != null ">#{CREATORID},</if>
            <if test="BEGIN_IP != null ">#{BEGIN_IP},</if>
            <if test="END_IP != null ">#{END_IP},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
-           <if test="MODIFIERID != null ">#{MODIFIERID},</if>
-           <if test="LIABMAN != null ">#{LIABMAN},</if>
-           <if test="LIABDEPT != null ">#{LIABDEPT},</if>
-           <if test="LIABORG != null ">#{LIABORG},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE},</if>
            <if test="ACCESS_ID != null ">#{ACCESS_ID},</if>
            <if test="ROOM_IDX != null ">#{ROOM_IDX}</if>)
@@ -151,11 +154,7 @@ cast(substring_index(ssr.END_IP,'.',-1) as signed integer ) and RECORDSTATE='0'
 		<set>
 				    <if test="BEGIN_IP!=null"> BEGIN_IP=#{BEGIN_IP},</if> 
 		    <if test="END_IP!=null"> END_IP=#{END_IP},</if> 
-		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
-		    <if test="MODIFIERID!=null"> MODIFIERID=#{MODIFIERID},</if> 
-		    <if test="LIABMAN!=null"> LIABMAN=#{LIABMAN},</if> 
-		    <if test="LIABDEPT!=null"> LIABDEPT=#{LIABDEPT},</if> 
-		    <if test="LIABORG!=null"> LIABORG=#{LIABORG},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if>  
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		    <if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
 		    <if test="ROOM_IDX!=null"> ROOM_IDX=#{ROOM_IDX},</if> 

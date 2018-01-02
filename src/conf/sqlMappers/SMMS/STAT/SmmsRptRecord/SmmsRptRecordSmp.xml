@@ -14,7 +14,8 @@
             rtr.LOG_COUNT,
             rtr.MODIFIEDTIME,
             rtr.RECORDSTATE,
-            ssr.ROOM_NAME
+            rtr.CREATTIME,
+            ssr.ROOM_NAME,
             sii.IDC_NAME
 </sql>
 <sql id="detailColumns">
@@ -29,21 +30,21 @@
             rtr.LOG_COUNT,
             rtr.MODIFIEDTIME,
             rtr.RECORDSTATE,
-            ssr.ROOM_NAME
+            rtr.CREATTIME,
+            ssr.ROOM_NAME,
             sii.IDC_NAME
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
-		select rtr.RID,
+		select 
 	            rtr.IDC_ID,
 	            rtr.ROOM_IDX,
-	            rtr.LOG_FLAG,
-	            rtr.STAT_YEAR,
-	            rtr.STAT_MONTH,
-	            rtr.STAT_DATE,
+	            max(rtr.LOG_FLAG) as LOG_FLAG,
+	            max(rtr.STAT_YEAR) as STAT_YEAR,
+	            max(rtr.STAT_MONTH) as STAT_MONTH,
+	            max(rtr.STAT_DATE) as STAT_DATE,
 	            SUM(rtr.LOG_COUNT) as LOG_COUNT,
-	            rtr.MODIFIEDTIME,
-	            rtr.RECORDSTATE,
-	    sii.IDC_NAME as TRANS_IDC_ID,ssr.ROOM_NAME as TRANS_ROOM_IDX
+	    		max(sii.IDC_NAME) as TRANS_IDC_ID,
+	    		max(ssr.ROOM_NAME) as TRANS_ROOM_IDX
 		from SMMS_RPT_RECORD rtr
 	    left join SMMS_ROOM_INFO as ssr
 	    on rtr.ROOM_IDX = ssr.ROOM_IDX and  rtr.IDC_ID = ssr.ACCESS_ID
@@ -141,6 +142,7 @@
             <if test="LOG_COUNT != null ">LOG_COUNT,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE,</if>
+            <if test="CREATTIME != null ">CREATTIME,</if>
             <if test="RID != null ">RID</if>)
 	   values ( 
            <if test="ACCESS_ID != null ">#{ACCESS_ID},</if>
@@ -152,6 +154,7 @@
            <if test="LOG_COUNT != null ">#{LOG_COUNT},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE},</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
            <if test="RID != null ">#{RID}</if>)
 </insert> 
 
@@ -167,7 +170,8 @@
 		    <if test="STAT_DATE!=null"> STAT_DATE=#{STAT_DATE},</if> 
 		    <if test="LOG_COUNT!=null"> LOG_COUNT=#{LOG_COUNT},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
-		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		    <if test="CREATTIME!=null"> CREATTIME=#{CREATTIME},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE}</if> 
 		</set>
 	where RID=#{RID}
 </update> 

@@ -2,10 +2,6 @@ package com.smms;
 
 import java.rmi.RemoteException;
 
-/**
- * @author 吴立
- * @date 2017年11月29日
- */
 public class WsRpci_client_impl implements WsRpci_client {
 
 	public String wscall(String tokenid, String rpcCode, String rpcJson, byte[] rpcByte) throws RemoteException {
@@ -25,7 +21,7 @@ public class WsRpci_client_impl implements WsRpci_client {
 		json = json + " \"room_manager\": \"负责人01\",";
 		json = json + " \"room_manager_tel\": \"232323\",";
 		json = json + "\"room_manager_mobile\": \"131023\",";
-		json = json + " \"machine_room_place\": \"广东省深圳市x\",";
+		json = json + " \"machine_room_place\": \"广东省珠海市x\",";
 		json = json + "\"total\": 2,";
 		json = json + " \"rows\": [";
 		json = json + "     {";

@@ -16,7 +16,6 @@
             VPN_PROXY,
             CASE_STATE,
             CREATTIME,
-            CONTENTPATH,
             RECORDSTATE
 </sql>
 <sql id="detailColumns">
@@ -33,7 +32,6 @@
             VPN_PROXY,
             CASE_STATE,
             CREATTIME,
-            CONTENTPATH,
             RECORDSTATE
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
@@ -58,7 +56,9 @@
         </if>	
 	</where>
 </select> 
-
+<select id="selectContentPathByRid" parameterType="hashmap" resultType="hashmap"> 
+	select  EVENT_EVIDENCE,GROUPNAME from SMMS_AC_APP_VPN  where RID = #{RID} 
+</select> 
 <delete id="deleteData" parameterType="hashmap" > 
 	delete from SMMS_AC_APP_VPN  where RID = #{RID}
 </delete> 
@@ -89,7 +89,7 @@
             <if test="VPN_PROXY != null ">VPN_PROXY,</if>
             <if test="CASE_STATE != null ">CASE_STATE,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
-            <if test="CONTENTPATH != null ">CONTENTPATH,</if>
+          
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
@@ -104,7 +104,6 @@
            <if test="VPN_PROXY != null ">#{VPN_PROXY},</if>
            <if test="CASE_STATE != null ">#{CASE_STATE},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
-           <if test="CONTENTPATH != null ">#{CONTENTPATH},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -121,7 +120,6 @@
 		    <if test="DES_PORT!=null"> DES_PORT=#{DES_PORT},</if> 
 		    <if test="VPN_PROXY!=null"> KEYWORDS=#{VPN_PROXY},</if> 
 		    <if test="CASE_STATE!=null"> CASE_STATE=#{CASE_STATE},</if> 
-		    <if test="CONTENTPATH!=null"> CONTENTPATH=#{CONTENTPATH},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

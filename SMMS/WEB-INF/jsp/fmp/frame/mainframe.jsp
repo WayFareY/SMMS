@@ -17,7 +17,7 @@
 %>
 <html>
 <head>
-<title>IDC安全管理系统</title>
+<title>珠海市公安局IDC安全管理系统</title>
 <META http-equiv="X-UA-Compatible" content="IE=10" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="<%=rootPath%>/styles/fmp/frameStyle.css" rel="stylesheet"

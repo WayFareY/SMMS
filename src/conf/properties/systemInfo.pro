@@ -10,7 +10,7 @@ ROOT_PATH=/SMMS
 
 #系统生成权限文件的存放路径
 #AUTHOR_FILE_PATH=/usr/project/SMMS/conf/author/
-AUTHOR_FILE_PATH=D:\\Workspace\\SMMS\\SMMS\\SMMS\\conf\\author\\
+AUTHOR_FILE_PATH=D:\\Workspace\\SMMS_Github\\SMMS\\SMMS\\conf\\author\\
 #生成权限文件的编码策略    用TEST测试
 AUTHOR_FILE_ENCODE=
 
@@ -31,7 +31,7 @@ AttachmentFileDir=/usr/project/SMMS/ExportFiles/
 AttachmentFileUrl=http://localhost:8080/SMMS/ExportFiles/
 
 #数据库类型(MYSQL/ORACLE)
-DBType=MYSQL
+DBType=POSTGRESQL
 
 #系统日志级别  1=debug   2=log     3=error
 LogLevel=1
@@ -47,7 +47,10 @@ AC_LOG_PATH=/home/netmonitor/action/
 AC_LOG_KEY_PATH=/home/netmonitor/keyword/
 #AC日志备份目录
 AC_LOG_BACKUP_PATH=/home/netmonitor/backup/
-
+#ACserviceUrlhttp://172.18.2.88:8000/bbc/idc/ws?wsdl
+DOMAIN_SERVICE=http://172.44.32.36:8000/bbc/idc/ws?wsdl
+#BBCtokenid
+TOKENID=4233e79f-f6b7-4b50-9216-05de1490b429
 #AF日志目录
 AF_LOG_FILE=/var/log/sangfor_log/sangfor_sis_log
 
@@ -55,3 +58,5 @@ AF_LOG_FILE=/var/log/sangfor_log/sangfor_sis_log
 AF_LOG_ERR=sangfor_sis_log
 #AF日志错误信息的文件的后缀名
 AF_LOG_FORMAT=.err
+#报告默认城市
+REPORT_CITY=珠海

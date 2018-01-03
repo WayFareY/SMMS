@@ -7,26 +7,99 @@
 <html lang="zh-CN">
 <head>
 <script src="<%=rootPath%>/scripts/fmp/forbid.js" type="text/javascript" language="javascript"></script>
-<script type="text/javascript" >
-	function onClickReset(){
-		//调用表单reset()方法
-		document.getElementById("signOn").reset();
-	}
-	function setCursorStyle(Obj){
-		//设置光标为小手
-		if(Obj){
-			Obj.style.cursor="hand";	
-		}
-	}
-</script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="<%=rootPath%>/styles/fmp/frameStyle.css" rel="stylesheet" type="text/css" />
 <style>
-body { 
-	background-image: url(<%=rootPath%>/images/zscrd/login/beijing.jpg); 
-	background-color:#FFF; 
-	background-repeat:no-repeat; 
-	background-position:top center;
+html, body {
+	height: 100%;
+	width: 100%;
+	background: url(<%=rootPath%>/images/zscrd/kuangjia/Login_bg.png);
+	background-size: 100% 100%;
+	margin: 0;
+}
+
+html, body, input {
+	font-family: "Microsoft YaHei", "Microsoft JhengHei", STHeiti,
+		MingLiu !important;
+}
+
+.Login_container {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -165px;
+	width: 330px;
+	height: auto;
+	margin-top: -220px;
+}
+
+.Login_logo {
+	text-align: center;
+	width: 330px;
+	height: auto;
+}
+
+.user, .password {
+	height: 38px;
+	width: 310px;
+	margin-top: 20px;
+	background-image: url(<%=rootPath%>/images/zscrd/kuangjia/login_input_bg.png);
+}
+
+.input_text {
+	width: 290px;
+	height: 90%;
+	border: none;
+	color: #fafafa;
+	background-color: transparent !important;
+	padding-left: 20px;
+}
+
+.input_text:focus {
+	outline: none;
+}
+
+.Login_btn {
+	width: 310px;
+	height: 38px;
+	margin-top: 20px;
+}
+
+.btn_text {
+	background-image: url(<%=rootPath%>/images/zscrd/kuangjia/Login_btn_bg.png);
+	width: 310px;
+	height: 38px;
+	padding: 0;
+	border: none;
+	color: #fefefe;
+	background-color: transparent;
+	outline: none;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+input:-webkit-autofill {
+	margin: 3px 3px 15px 10px;
+	height: 32px !important;
+	line-height: 32px !important;
+	border-radius: 20px 20px 20px 20px;
+	transition: background-color 86400s ease-in-out 0s;
+	color: #ffffff000;
+}
+
+.chrdown {
+	height: auto;
+	width: 100%;
+	text-align: center;
+	font-size: 12px;
+}
+
+.chrdown a {
+	color: #F2F2F2;
+}
+
+.chrdown a:hover {
+	text-decoration: none;
+	color: #F00;
 }
 
 </style>
@@ -35,48 +108,48 @@ body {
 
 
 <body>
-<div id="login">
-<ul>
-<li class="login_1">denglu_2.jpg</li>
-<li class="login_2">
-	<form id="signOn" action="<%=rootPath%>/fmp/base/Login" method="POST">
-		<div style="margin:80px 0px 80px 80px;">
-			<TABLE align="center" width="300px">
-				<TR>
-					<TD align="right">用户名： <input type="text" name="loginCode" class="login_div_input"/></TD>
-				</TR>
-				<TR>
-				
-					<TD align="right">密&nbsp;&nbsp;&nbsp;码： <input type="text" name="loginPassword" class="login_div_input" autocomplete="off" onfocus="this.type='password'"/></TD>
-				</TR>
-				<!-- 
-				<tr>
-					<td align="right" >验证码： 
-		                <input type="text" id="validCode" name="validCode" maxlength="4" class="login_div_input_validCode">
-		               <img src ="<%=rootPath%>/fmp/base/Login/ValidCodeImage" id="codeimage" onclick="this.src='<%=rootPath%>/fmp/base/Login/ValidCodeImage?random='+Math.random()" alt="图片看不清，点击重新获取" style="cursor:hand;">
-	                </td>
-	            </tr>
-	             -->
-				<TR>
-					<TD style="padding-left: 45px;">
-					<br/><br/>
-		
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="image" src="<%=rootPath%>/images/zscrd/login/login_ico.gif"   />
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-			
-					<img  id="resetImage" src="<%=rootPath%>/images/zscrd/login/login_ico1.gif"  onclick="onClickReset()" onmouseover="setCursorStyle(this)"></img>
-					</TD>
-				</TR>
-			</TABLE>
+<div class="Login_container">
+	<form id="signOn" action="<%=rootPath%>/fmp/base/Login" method="POST" >
+		<div class="Login_logo">
+			<img src="<%=rootPath%>/images/zscrd/kuangjia/Login_logo.png" />
 		</div>
+		<div class="Login_logo">
+			<img src="<%=rootPath%>/images/zscrd/kuangjia/Login_title.png" />
+		</div>
+		<TABLE style="margin-top:10px; margin-left:10px; height:auto">
+			<TR>
+				<TD>
+					<div class="user">
+						<input class="input_text" type="text" name="loginCode" placeholder="请输入账号" autocomplete="off" />
+					</div>
+				</TD>
+			</TR>
+			<TR>
+				<TD>
+					<div class="password">
+						<input class="input_text" type="password" name="loginPassword" placeholder="请输入密码" autocomplete ="new-password" />
+					</div>
+				</TD>
+			</TR>
+			<TR>
+				<TD>
+					<div class="Login_btn">
+						<input class="btn_text" type="submit" name="button" value="登&nbsp;&nbsp;录" />
+					</div>
+				</TD>
+			</TR>
+		</TABLE>
 	</form>
-	</li>
-
-<li class="login_3">denglu_3.jpg</li>
-</ul>
-
-<div class="bottom_link"><a href="<%=rootPath%>/fileDownLoad/Chrome_Setup.exe">下载google chrome浏览器</a></div>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<div class="chrdown">
+		<a href="<%=rootPath%>/fileDownLoad/Chrome_Setup.exe">下载 Google Chrome 浏览器</a>
+	</div>
 </div>
+
+
 
 </body>
 <script>

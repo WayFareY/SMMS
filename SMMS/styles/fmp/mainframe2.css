@@ -1,6 +1,6 @@
 /**** CSS for China Constuction Bank perbank ****/
 /**** First created on 2007.02.13 ****/
-/**** Page Structure / Ò³ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½ ****/
+/**** Page Structure / Ò³Ãæ½á¹¹ÉèÖÃ ****/
 * { 
 margin:0; 
 padding:0;
@@ -11,7 +11,7 @@ border:0;
 }
 
 body,div,td,span,input,select,p {
-font:12px "ï¿½ï¿½ï¿½ï¿½",Tahoma;
+font:12px "ËÎÌå",Tahoma;
 color: #373737;
 }
 
@@ -23,7 +23,7 @@ margin:0;
 }
 
 .mainbody{
-	font:12px "ï¿½ï¿½ï¿½ï¿½",Tahoma;
+	font:12px "ËÎÌå",Tahoma;
 	width: 100%;
     overflow-x:hidden;	
     overflow-y:hidden;	
@@ -39,7 +39,7 @@ width:100%;
 
 
 .logo_background {
-background:url(../../images/zscrd/kuangjia/main_topbg.png) right top repeat-x;
+background:url(../../images/logo_background.jpg) right top repeat-x;
 background-color:#dee8f1;	
 width:100%;
 height:55px;
@@ -48,24 +48,19 @@ height:55px;
 
 /** use as pic **/
 .logo_icon {
-background:url(../../images/zscrd/kuangjia/main_top_logo2.png) left top no-repeat;
+background:url(../../images/zscrd/logo.jpg) left top no-repeat;
 width:100%;
 height:55px;
 }
 
 .logo_area {
 	float: right;
+	padding-top: 0px;
 	position: relative;
 	color:#373737; 
 	height:55px;
-	background:url(../../images/zscrd/kuangjia/main_top_right.png) left top no-repeat;
 }
-#logo_version{
-	float: left;
-	height:15px;
-	margin-left:310px;
-	margin-top:20px;
-}
+
 
 .logo_icon_bottom {
 background:url(../../images/blueidea/logo_icon_bottom.gif) left bottom no-repeat;
@@ -103,15 +98,15 @@ div.menubar_lv2{
 	color: #ffffff;
 }
 
-/** Ò»ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½Ê½ **/
+/** Ò»¼¶²Ëµ¥ÌõÑùÊ½ **/
 .table_menu_lv1{
 	border-collapse: collapse;
 	border-spacing: 0;
 	border-width: 0px;
-	height:50px;
 }
+
 .banner_div {
-	padding-top:auto;
+	padding-top:25px;
 	float: right;
 	text-display:inline;
 	line-height:25px;
@@ -132,46 +127,29 @@ div.menubar_lv2{
 .userInfoBar_left {
 	width: 44px;
 	height: 30px;
-	background: url(../../images/zscrd/kuangjia/main_06.png) right bottom no-repeat;
+	background: url(../../images/zscrd/left5.png) right bottom no-repeat;
 }
 
 div.userInfoBar{
 	height: 30px;
 	font-size: 12px;
-	color:#ffffff;
+	color: #455c6f;
 	vertical-align:bottom;
 	line-height:10px;
-	background: url(../../images/zscrd/kuangjia/main_07.png) right bottom repeat-x;
+	
+	background: url(../../images/zscrd/right4.jpg) right bottom repeat-x;
 }
 div.userButtonBar{
  
 	height: 30px;
 	font-size: 12px;
 	color: #455c6f;
+	
 	/*vertical-align:bottom;
 	line-height:-10px;*/
-	background: url(../../images/zscrd/kuangjia/main_07.png) right bottom repeat-x;
+	background: url(../../images/zscrd/right4.jpg) right bottom repeat-x;
 }
 
-#userButtonBar_div{
-	float: right;
-	height: 21px;
-	width: 65px;
-	line-height: 21px;
-}
-#userButtonBar_a{
-	text-decoration: none;
-	color: #FFF;
-}
-#userButtonBar_a:hover{
-	color: #F00;
-	text-decoration: underline;
-}
-.userInfoBar_right {
-	width: 44px;
-	height: 30px;
-	background: url(../../images/zscrd/kuangjia/main_08.png) left bottom no-repeat;
-}
 /*
 div.userInfoBar a{
 	font-size: 12px;
@@ -185,64 +163,35 @@ div.userInfoBar font{
 }
 */
 
-/** ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½Ê½ **/
+/** ¶þ¼¶²Ëµ¥ÏîÑùÊ½ **/
 .menu2_off {
-/* 	color: #000000; */
-/* 	float: left; */
-/* 	line-height:22px; */
-/*  	width:188px; */
-/*  	height:22px; */
-/*  	border:1px solid red; */
- 	
- 	background:url(../../images/zscrd/kuangjia/main_46.png); 
- 	width:192px; 
- 	height:24px; 
- 	line-height:24px; 
- 	text-indent:20px; 
- 	font-size:14px; 
- 	color:#2f2f2f; 
- 	border-bottom:#4e627b solid 1px; 
- 	border-top:#4e627b solid 1px;
-}
-#twolevel{
-	margin-top:5px;
+	color: #000000;
+	float: left;
+	line-height:22px;
+ 
 }
 
-/* .menu2_off div:link,.menu2_off div:visited {
+.menu2_off a:link,.menu2_off a:visited {
 	text-decoration: none;
 	display: block;
 	color: #014f89;
 	padding: 7px 12px 4px 12px;
-} */
-.menu2_off:hover{
-	cursor: pointer;
-}
-.menu2_on {
-/* 	background: url(../../images/zscrd/daohang_2.gif) left bottom no-repeat; */
-/* 	float: left; */
-	
-	background:url(../../images/zscrd/kuangjia/main_24.png); 
-	width:192px; 
-	height:24px; 
-	line-height:24px; 
-	text-indent:20px; 
-	font-size:14px; 
-	color:#2f2f2f; 
-	border-bottom:#4e627b solid 1px;
-	border-top:#4e627b solid 1px;
 }
 
-/* .menu2_on div:link,.menu2_on div:visited {
+.menu2_on {
+	background: url(../../images/zscrd/daohang_2.gif) left bottom no-repeat;
+	float: left;
+}
+
+.menu2_on a:link,.menu2_on a:visited {
 	display: block;
 	background: url(../../images/zscrd/daohang_3.gif) right bottom no-repeat;
 	text-decoration: none;
 	font-weight: bold;		
 	color: white;
 	padding: 11px 10px 6px 10px;
-} */
-.menu2_on:hover {
-	cursor: pointer;
 }
+
 
 
 /** other frames **/
@@ -265,32 +214,23 @@ border-left:2px solid #4499ee;
 #Page_left_tree{
 background-color:white;
 border:1px solid #a5c2d6;
-margin:0px 0px 0px 0px;
+margin:4px 0px 0px 4px;
 padding:0px;
-width:100%;
+width:98%;
 height:99%;
 
-/* padding: 11px 10px 6px 10px;
+/*padding: 11px 10px 6px 10px;
 cellpadding:20;
-cellspacing:5; */
+cellspacing:5;*/
 }
 
-/* #Page_left_tree_tr{
+#Page_left_tree_tr{
 	background:url(../../images/tree/up.gif) left top repeat-x;
 	height: 26px;
 	width:100%;
 	margin:0px;
-} */
-#Page_left_tree_tr{
-	width:100%; 
-	height:28px; 
-	background:url(../../images/zscrd/kuangjia/menu_bg.png) repeat-x; 
-	line-height:28px; 
-	font-size:14px; 
-	color:#ffffff; 
-	text-indent:15px;
-	border:1px solid red;
 }
+
 #Page_right_tree_tr{
 	float:left;
 	width:100%;
@@ -395,7 +335,7 @@ float:right;
 
 
 
-/*******************************  Ô­moneystyle.cssï¿½ï¿½Ê½  ****************************************/
+/*******************************  Ô­moneystyle.cssÑùÊ½  ****************************************/
 .money {
 	text-align: right;
 }
@@ -409,10 +349,10 @@ li {
 	float: left;
 }
 
-#mycontent { /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-	border-left: 1px solid #76a0d0; /* ï¿½ï¿½ß¿ï¿½ */
-	border-right: 2px solid #76a0d0; /* ï¿½Ò±ß¿ï¿½ */
-	border-bottom: 2px solid #76a0d0; /* ï¿½Â±ß¿ï¿½ */
+#mycontent { /* ¾ßÌåÄÚÈÝ */
+	border-left: 1px solid #76a0d0; /* ×ó±ß¿ò */
+	border-right: 2px solid #76a0d0; /* ÓÒ±ß¿ò */
+	border-bottom: 2px solid #76a0d0; /* ÏÂ±ß¿ò */
 	padding: 10px;
 	padding-top: 5px;
 	padding-bottom: 10px;
@@ -431,10 +371,10 @@ li {
 	LETTER-SPACING: 1pt;
 }
 
-#mycontent1 { /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-	border-left: 1px solid #76a0d0; /* ï¿½ï¿½ß¿ï¿½ */
-	border-right: 2px solid #76a0d0; /* ï¿½Ò±ß¿ï¿½ */
-	border-bottom: 2px solid #76a0d0; /* ï¿½Â±ß¿ï¿½ */
+#mycontent1 { /* ¾ßÌåÄÚÈÝ */
+	border-left: 1px solid #76a0d0; /* ×ó±ß¿ò */
+	border-right: 2px solid #76a0d0; /* ÓÒ±ß¿ò */
+	border-bottom: 2px solid #76a0d0; /* ÏÂ±ß¿ò */
 	padding: 10px;
 	padding-top: 5px;
 	padding-bottom: 10px;
@@ -457,9 +397,9 @@ ul#tabnav {
 	list-style-type: none;
 	margin-left: 4px;
 	margin-right: 4px;
-	padding-left: 10px; /* ï¿½ï¿½ï¿½ï¿½Þ¿ï¿½Ï¶ */
+	padding-left: 10px; /* ×ó²àÎÞ¿ÕÏ¶ */
 	padding-bottom: 23px;
-	border-bottom: 1px solid #76a0d0; /* ï¿½Ëµï¿½ï¿½ï¿½ï¿½Â±ß¿ï¿½ */
+	border-bottom: 1px solid #76a0d0; /* ²Ëµ¥µÄÏÂ±ß¿ò */
 	font: bold 12px verdana, arial;
 }
 
@@ -473,7 +413,7 @@ ul#tabnav li {
 }
 
 ul#tabnav a:link,ul#tabnav a:visited {
-	display: block; /* ï¿½ï¿½Ôªï¿½ï¿½ */ /*color:#006eb3;*/
+	display: block; /* ¿éÔªËØ */ /*color:#006eb3;*/
 	color: #333333;
 	text-decoration: none;
 	padding: 5px 10px 3px 10px;
@@ -486,7 +426,7 @@ ul#tabnav a:hover {
 
 
 .pageon {
-	border-bottom: 1px solid #FFFFFF; /* ï¿½ï¿½É«ï¿½Â±ß¿ò£¬¸ï¿½ï¿½ï¿½<ul>ï¿½Ðµï¿½ï¿½ï¿½É«ï¿½Â±ß¿ï¿½ */
+	border-bottom: 1px solid #FFFFFF; /* °×É«ÏÂ±ß¿ò£¬¸²¸Ç<ul>ÖÐµÄÀ¶É«ÏÂ±ß¿ò */
 	color: #000000;
 	background-color: #FFFFFF;
 }
@@ -520,10 +460,10 @@ ul#tabnav a:hover {
 	padding: 0 3px 0 0;
 }
 
-#up_donwdiv { /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-	border-left: 1px solid #76a0d0; /* ï¿½ï¿½ß¿ï¿½ */
-	border-right: 1px solid #76a0d0; /* ï¿½Ò±ß¿ï¿½ */
-	border-bottom: 1px solid #76a0d0; /* ï¿½Â±ß¿ï¿½ */
+#up_donwdiv { /* ¾ßÌåÄÚÈÝ */
+	border-left: 1px solid #76a0d0; /* ×ó±ß¿ò */
+	border-right: 1px solid #76a0d0; /* ÓÒ±ß¿ò */
+	border-bottom: 1px solid #76a0d0; /* ÏÂ±ß¿ò */
 	border-top: 1px solid #76a0d0;
 	/*padding:10px;
 	padding-top:2px;
@@ -535,13 +475,13 @@ ul#tabnav a:hover {
 }
 
 #up_donwdiv table {
-	width: 100%;
+	width: 93%;
 }
 
-#up_donwdivlist { /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-	border-left: 1px solid #76a0d0; /* ï¿½ï¿½ß¿ï¿½ */
-	border-right: 1px solid #76a0d0; /* ï¿½Ò±ß¿ï¿½ */
-	border-bottom: 1px solid #76a0d0; /* ï¿½Â±ß¿ï¿½ */
+#up_donwdivlist { /* ¾ßÌåÄÚÈÝ */
+	border-left: 1px solid #76a0d0; /* ×ó±ß¿ò */
+	border-right: 1px solid #76a0d0; /* ÓÒ±ß¿ò */
+	border-bottom: 1px solid #76a0d0; /* ÏÂ±ß¿ò */
 	border-top: 1px solid #76a0d0;
 	padding: 10px;
 	padding-top: 2px;
@@ -598,9 +538,9 @@ ul#tabnav a:hover {
 	padding-bottom: 30px;
 	padding-left: 10px;
 	padding-right: 10px;
-	border-left: 1px solid #76a0d0; /* ï¿½ï¿½ß¿ï¿½ */
-	border-right: 3px solid #76a0d0; /* ï¿½Ò±ß¿ï¿½ */
-	border-bottom: 2px solid #76a0d0; /* ï¿½Â±ß¿ï¿½ */
+	border-left: 1px solid #76a0d0; /* ×ó±ß¿ò */
+	border-right: 3px solid #76a0d0; /* ÓÒ±ß¿ò */
+	border-bottom: 2px solid #76a0d0; /* ÏÂ±ß¿ò */
 	border-top: 1px solid #76a0d0;
 	height: 460px;
 }
@@ -675,7 +615,7 @@ ul#tabnav a:hover {
 	border-right: 1px solid #ffffff;
 }
 
-/*current positon style ï¿½ï¿½Ç°Î»ï¿½Ãµï¿½style*/
+/*current positon style µ±Ç°Î»ÖÃµÄstyle*/
 .current_postion {
 	font-weight: 100;
 	font-size: 13px;
@@ -723,7 +663,7 @@ ul#tabnav a:hover {
 
 
 
-/** Ò»ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½Ê½ **/
+/** Ò»¼¶²Ëµ¥ÏîÑùÊ½ **/
 .menu1_on {
 	height: 30px;
 	float: left;
@@ -834,10 +774,9 @@ ul#tabnav a:hover {
    }  
  
 
-/*******************************  Ô­moneystyle.cssï¿½ï¿½Ê½  ****************************************/
+/*******************************  Ô­moneystyle.cssÑùÊ½  ****************************************/
 
 .versionTitle{
   font: bold 22px microsoft yahei;
   color: red;
 }
-

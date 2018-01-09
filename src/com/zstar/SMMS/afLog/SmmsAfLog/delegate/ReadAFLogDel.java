@@ -39,7 +39,7 @@ public class ReadAFLogDel extends BaseDelegate {
 			in = new BufferedReader(isr);
 			String str = null;
 			in.skip(filePos);
-			while ((str = in.readLine()) != null)
+			while ((str = in.readLine()) != null) {
 				try {
 					currPos += str.length();
 					if (str.startsWith("[inavigator:][ [")) {
@@ -163,6 +163,7 @@ public class ReadAFLogDel extends BaseDelegate {
 					FileOperateUtil.createFiles(filePath, err, fileFormat);
 					e.printStackTrace();
 				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

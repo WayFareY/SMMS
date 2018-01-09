@@ -3,43 +3,28 @@ var menuTree;	      //存放该用户的菜单结构
 var customTree;       //自定义快捷菜单树结构
 var userMenuUrl="";
 var lastMenuSpanId="";
+/*
+ * currentTree点击目录对应的树，生成位置在该点击目录与下一目录中间位置。
+ */
+var currentTree;
+var tempTree;
+
+
+var PreId="";
 
 function getMenuData(sUrl){	
 	userMenuUrl = sUrl;
 	var divNode = document.getElementById("TreeTopDiv");
-	var ctrlLink = " &nbsp; &nbsp;  <img style='vertical-align:bottom' src='../../images/tree/unfold.gif' />&nbsp;<a style='text-decoration: none' href='javascript: "+"menuTree."
-	+"openAllItems(0);'>全部展开</a> &nbsp; &nbsp; <img style='vertical-align:bottom' src='../../images/tree/pack up.gif' />&nbsp;<a style='text-decoration: none' href='javascript: "
-	+"menuTree.closeAllItems(0);'>全部收起</a>"
+	var ctrlLink = "<span style='color:#fff;font-size:14px;margin-left:1px;'>菜单导航</span>";
 	divNode.innerHTML = ctrlLink;//+menuTree.toString();
 	//trees[lv2ItemId] = dtree;			
 	loadMenuXML("TreeContainDiv",sUrl);
 	
 };
 
-function buidTreeFromXML(divID, url){
-	var xmlHttp;
-	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-		xmlHttp = new XMLHttpRequest();
-	} else {// code for IE6, IE5
-		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	xmlHttp.onreadystatechange = function() {
-		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-			var xmlTxt = xmlHttp.responseText;
-			xmlTxt = HTMLDecode(xmlTxt);
-			var tree =new dhtmlXTreeObject(divID,"100%","100%",0); 
-			tree.setImagePath("../../images/maintreeimage/csh_scbrblue/");
-			tree.loadXMLString(xmlTxt);
-			tree.enableCheckBoxes(0);
-			tree.enableThreeStateCheckboxes(true);			
-		}
-
-	}
-	xmlHttp.open("POST", url, true);
-	xmlHttp.send();	
-}
 
 function loadMenuXML(divID, url) {
+	
 	var xmlHttp;
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlHttp = new XMLHttpRequest();
@@ -48,198 +33,70 @@ function loadMenuXML(divID, url) {
 	}
 	xmlHttp.onreadystatechange = function() {
 		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			
 			var xmlTxt = xmlHttp.responseText;
 			xmlTxt = HTMLDecode(xmlTxt);
 			hiddenMenuTree =new dhtmlXTreeObject("hiddenTreeBox","100%","100%",0); 
 			hiddenMenuTree.setSkin('dhx_skyblue');
 			hiddenMenuTree.setImagePath("../../images/maintreeimage/csh_scbrblue/");			
 			hiddenMenuTree.loadXMLString(xmlTxt);
-			hiddenMenuTree.closeAllItems(0);
+			hiddenMenuTree.openAllItems(0);
 			hiddenMenuTree.enableCheckBoxes(0);
-			hiddenMenuTree.enableThreeStateCheckboxes(true);	
-			//hiddenMenuTree.closeAllItems(0);
-			menuTree=new dhtmlXTreeObject(divID,"100%","100%",0);
-			menuTree.setSkin('dhx_skyblue');
-			menuTree.setImagePath("../../images/maintreeimage/csh_scbrblue/");	
-			//menuTree.loadXMLString(xmlTxt);
-			menuTree.enableCheckBoxes(0);
-			menuTree.enableThreeStateCheckboxes(true);
-			/**
-			 * 对当前菜单及其所有父菜单的记录总数做清零处理
+			hiddenMenuTree.enableThreeStateCheckboxes(true);
+			
+			//hiddenMenuTree.closeAllItems(0);			
+			
+			/*
+			 * 
+			 * tempTree 是存放被剪贴整个点击目录的节点树。
+			 * 
 			 */
-			menuTree.clearAllParentRecordCount = function(treeObj,parentObj){ 
-				if (parentObj && typeof(parentObj) != "undefined"){
-					parentObj.recordCount = 0;
-					treeObj.clearAllParentRecordCount(treeObj,parentObj.parentObject);
-				}
-			};
-			/**
-			 * 重新处理所有父菜单的记录总数
-			 */
-			menuTree.resetParentRecordCount = function(treeObj,parentObj,addRecord){ 
-				if (typeof(parentObj) != "undefined"){
-					var oldText = treeObj.getUserData(parentObj.id,"oldText");
-					if (typeof(oldText) != "undefined" && oldText != "" ){
-						if (typeof(parentObj.recordCount) == "undefined"){
-							parentObj.recordCount = 0;
-						}
-						parentObj.recordCount += addRecord;
-						if (!isNaN(parentObj.recordCount)){
-							treeObj.setItemText(parentObj.id,oldText+"<font color='green'>("+parentObj.recordCount+")</font>");
-							if(parentObj){
-								treeObj.resetParentRecordCount(treeObj,parentObj.parentObject,parentObj.recordCount);
-							}
-						}
-					}
-				}
-			};
-			/**
-			 * 重新处理当前父菜单的记录总数
-			 */
-			menuTree.setRecordCount = function(treeObj,id){  
-				var oldText = treeObj.getUserData(id,"oldText");
-				if (typeof(oldText) != "undefined" && oldText != ""){
-					var url = treeObj.getUserData(id,"URL");	
-					if(url!="" && url!="-"){
-						XMLHttp.urlSubmit(rootPath+HTMLDecode(url)+"&getRecordCountOnly=true",callbackfunc);
-						function callbackfunc(msg){
-							if (msg != "0" && !isNaN(msg)){
-								treeObj.setItemText(id,treeObj.getUserData(id,"oldText")+"<font color='green'>("+msg+")</font>");
-								var menuObj = treeObj._globalIdStorageFind(id);
-								if(menuObj){
-									treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
-								}
-							}else{
-								treeObj.setItemText(id,treeObj.getUserData(id,"oldText"));
-								var menuObj = treeObj._globalIdStorageFind(id);
-								if(menuObj){
-									treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
-								}
-							}
-						}
-					}	
-				}
-			};
-			function attachEventListen(obj, e, fun){
-		         obj.attachEvent ? obj.attachEvent("on"+e, fun) : obj.addEventListener(e, fun, false);
-		    } 
-			attachEventListen(menuTree, "Click", function(id){  
-				var url = menuTree.getUserData(id,"URL");
-				closeAllDivWindow();
-				if (url=="-"){
-					window.open(rootPath+"/fmp/FrameBiz/GetModuleDesc?moduleId="+id,'infoframe','');
-				}else if(url!=""){
-					url = HTMLDecode(url);
-					if (url.indexOf("http://")!=0){
-						main_ShowProgressDiv();
-						url = rootPath+url;
-					}
-					window.open(url,'infoframe','');	
-				}
-			});
+			tempTree=new dhtmlXTreeObject("tempTreeBox","100%","100%",0);
+			tempTree.setSkin('dhx_skyblue');
+			tempTree.setImagePath("../../images/maintreeimage/csh_scbrblue/");	
+			//tempTree.loadXMLString(xmlTxt);
+			tempTree.enableCheckBoxes(0);
+			tempTree.enableThreeStateCheckboxes(true);
+		
+//			function attachEventListen(obj, e, fun){
+//		         obj.attachEvent ? obj.attachEvent("on"+e, fun) : obj.addEventListener(e, fun, false);
+//		    } 
+//			attachEventListen(currentTree, "Click", function(id){ 
+//				
+//				var url = currentTree.getUserData(id,"URL");
+//				closeAllDivWindow();
+//				if (url=="-"){
+//					window.open(rootPath+"/fmp/FrameBiz/GetModuleDesc?moduleId="+id,'infoframe','');
+//				}else if(url!=""){
+//					url = HTMLDecode(url);
+//					if (url.indexOf("http://")!=0){
+//						main_ShowProgressDiv();
+//						url = rootPath+url;
+//					}
+//					window.open(url,'infoframe','');	
+//				}
+//			});
+			
+			
+			//menuTree是原来的整个点击节点的树。
+
 			
 			doShowMenuBar();
-			loadCustomXml();
-			menuTree.openAllItems(0);	
+			
+			//menuTree.openAllItems(0);	
 			
 		}
 	}
 	xmlHttp.open("POST", url, true);
 	xmlHttp.send();
+	
 }
 
 /**
  * 创建自定义快捷菜单树
  * @return
  */
-function loadCustomXml(){                       
-	var url = rootPath+"/fmp/author/customModule/SCustomModuleBiz/GetCustomModuleTree";
-	var xmlHttp;
-	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-		xmlHttp = new XMLHttpRequest();
-	} else {// code for IE6, IE5
-		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	xmlHttp.onreadystatechange = function() {
-		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-			var xmlTxt = xmlHttp.responseText;
-			xmlTxt = HTMLDecode(xmlTxt);			
-			customTree=new dhtmlXTreeObject("customTreeBox","100%","100%",0);
-			customTree.setImagePath("../../images/maintreeimage/csh_scbrblue/");	
-			customTree.loadXMLString(xmlTxt);
-			customTree.closeAllItems(0);
-			customTree.enableCheckBoxes(0);
-			customTree.enableThreeStateCheckboxes(true);	
 
-			/**
-			 * 对当前菜单及其所有父菜单的记录总数做清零处理
-			 */
-			customTree.clearAllParentRecordCount = function(treeObj,parentObj){ 
-				if (parentObj && typeof(parentObj) != "undefined"){
-					parentObj.recordCount = 0;
-					treeObj.clearAllParentRecordCount(treeObj,parentObj.parentObject);
-				}
-			};
-			/**
-			 * 重新处理所有父菜单的记录总数
-			 */
-			customTree.resetParentRecordCount = function(treeObj,parentObj,addRecord){ 
-				if (typeof(parentObj) != "undefined"){
-					var oldText = treeObj.getUserData(parentObj.id,"oldText");
-					if (typeof(oldText) != "undefined" && oldText != "" ){
-						if (typeof(parentObj.recordCount) == "undefined"){
-							parentObj.recordCount = 0;
-						}
-						parentObj.recordCount += addRecord;
-						if (!isNaN(parentObj.recordCount)){
-							treeObj.setItemText(parentObj.id,oldText+"<font color='green'>("+parentObj.recordCount+")</font>");
-							treeObj.resetParentRecordCount(treeObj,parentObj.parentObject,parentObj.recordCount);
-						}
-					}
-				}
-			};
-			/**
-			 * 重新处理当前父菜单的记录总数
-			 */
-			customTree.setRecordCount = function(treeObj,id){  
-				var oldText = treeObj.getUserData(id,"oldText");
-				if (typeof(oldText) != "undefined" && oldText != ""){
-					var url = treeObj.getUserData(id,"URL");	
-					if(url!="" && url!="-"){
-						XMLHttp.urlSubmit(rootPath+HTMLDecode(url)+"&getRecordCountOnly=true",callbackfunc);
-						function callbackfunc(msg){
-							if (msg != "0" && !isNaN(msg)){
-								treeObj.setItemText(id,treeObj.getUserData(id,"oldText")+"<font color='green'>("+msg+")</font>");
-								var menuObj = treeObj._globalIdStorageFind(id);
-								treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
-							}else{
-								treeObj.setItemText(id,treeObj.getUserData(id,"oldText"));
-								var menuObj = treeObj._globalIdStorageFind(id);
-								treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
-							}
-						}
-					}	
-				}
-			};					
-			
-			//topWin.menuTree.clearAllParentRecordCount(topWin.menuTree,menuObj);
-			//topWin.refreshRecordCount(topWin.menuTree,topWin.menuTree.getSelectedItemId());	
-			//alert(customTree.htmlNode.childNodes[0].label);
-			//
-			var childNum = customTree.hasChildren(0);
-			var menuId;
-			for (var i = 0; i < childNum; i++){
-				//复制自定义快捷菜单到系统菜单中我的快捷菜单模块
-				menuId = customTree.htmlNode.childNodes[0].id;
-				customTree.doCutById(menuId);
-				customTree.doPasteOtherTree(menuTree,"s_md_custommodule");
-			}
-			refreshRecordCount(menuTree,menuId);
-		}
-	}
-	xmlHttp.open("POST", url, true);
-	xmlHttp.send();
-}
 
 /**
  * 显示一级菜单
@@ -251,12 +108,14 @@ function doShowMenuBar() {
 	//divNode.id = menuId+"_subMenu";	
 	menuBar.appendChild(divNode);
 	var c = hiddenMenuTree.hasChildren(0);
+	//alert("主目录下一共有几个目录："+c);
 	for (var i = 0; i<c; i++){
 		var menuId = hiddenMenuTree.htmlNode.childNodes[i].id;
 		var menuText = hiddenMenuTree.getItemText(menuId);
+		//alert("menuText:"+menuText+"\tmenuId:"+menuId);
 		createMenuBar(divNode,menuId,menuText);
 	}
-	showSubTree(hiddenMenuTree.htmlNode.childNodes[0].id);
+	//showSubTree(hiddenMenuTree.htmlNode.childNodes[0].id);
 };
 
 /**
@@ -267,18 +126,31 @@ function doShowMenuBar() {
  * @return
  */
 function createMenuBar(divNode,menuId,menuText) {
-	var spanNode = document.createElement("SPAN");
+//	var urlLink = "<span style='padding-right:10px;'><img src='../../images/zscrd/kuangjia/arrow.png'></span>";
+	var spanNode = document.createElement("div");
 	spanNode.id = menuId+"_span";
 	spanNode.className = "menu2_off";
 	divNode.appendChild(spanNode);
 	var textNode = document.createTextNode(menuText);//item.label
-	var linkNode = document.createElement("A");
-	linkNode.href="#";
-	linkNode.id = "2a";//item.id+"_a";
+	var linkNode = document.createElement("div");
+//	linkNode.href="#";
+	linkNode.id = "twolevel";//item.id+"_a";
 	linkNode.itemid = "2";//item.id;
 	linkNode.onclick = Function("showSubTree('"+menuId+"')");//"+level+""+item.id+"
 	spanNode.appendChild(linkNode);
-	linkNode.appendChild(textNode);		
+//	linkNode.innerHTML=urlLink;
+	linkNode.appendChild(textNode);	
+	
+	
+	/*
+	 * 增加一个div:treeShow***************************************
+	 * */
+	var treeShow = document.createElement("div");
+	treeShow.id = menuId+"_treeShow";
+	treeShow.className = "treeShow";
+	treeShow.display="visible";
+	divNode.appendChild(treeShow);
+	
 }
 
 /**
@@ -289,29 +161,147 @@ function createMenuBar(divNode,menuId,menuText) {
 function showSubTree(menuId){
 	var menuSpan = document.getElementById(menuId+"_span");
 	backSubTree();
-	menuSpan.className = "menu2_on";
-	hiddenMenuTree.openItem(menuId);
-	hiddenMenuTree.doCutById(menuId);
-	hiddenMenuTree.doPasteOtherTree(menuTree,'0');	
-	refreshRecordCount(menuTree,menuId);
-	menuTree.openAllItems(0);	
+	if(menuId!=PreId){
+		menuSpan.className = "menu2_on";
+	}
+	
+	/*
+	 * 生成对应点击目录下的节点树
+	 */
+	var currentSpan = document.getElementById(menuId+"_treeShow");
+	currentTree=new dhtmlXTreeObject(currentSpan,"100%","100%",0);
+	currentTree.setSkin('dhx_skyblue');
+	currentTree.setImagePath("../../images/maintreeimage/csh_scbrblue/");	
+	currentTree.enableCheckBoxes(0);
+	currentTree.enableThreeStateCheckboxes(true);
+	currentTree.clearAllParentRecordCount = function(treeObj,parentObj){ 
+		if (parentObj && typeof(parentObj) != "undefined"){
+			parentObj.recordCount = 0;
+			treeObj.clearAllParentRecordCount(treeObj,parentObj.parentObject);
+		}
+	};
+	
+	
+	/**
+	 * 重新处理所有父菜单的记录总数
+	 */
+	currentTree.resetParentRecordCount = function(treeObj,parentObj,addRecord){ 
+		if (typeof(parentObj) != "undefined"){
+			var oldText = treeObj.getUserData(parentObj.id,"oldText");
+			if (typeof(oldText) != "undefined" && oldText != "" ){
+				if (typeof(parentObj.recordCount) == "undefined"){
+					parentObj.recordCount = 0;
+				}
+				parentObj.recordCount += addRecord;
+				if (!isNaN(parentObj.recordCount)){
+					treeObj.setItemText(parentObj.id,oldText+"<font color='green'>("+parentObj.recordCount+")</font>");
+					if(parentObj){
+						treeObj.resetParentRecordCount(treeObj,parentObj.parentObject,parentObj.recordCount);
+					}
+				}
+			}
+		}
+	};
+	/**
+	 * 重新处理当前父菜单的记录总数
+	 */
+	currentTree.setRecordCount = function(treeObj,id){  
+		var oldText = treeObj.getUserData(id,"oldText");
+		if (typeof(oldText) != "undefined" && oldText != ""){
+			var url = treeObj.getUserData(id,"URL");	
+			if(url!="" && url!="-"){
+				XMLHttp.urlSubmit(rootPath+HTMLDecode(url)+"&getRecordCountOnly=true",callbackfunc);
+				function callbackfunc(msg){
+					
+					if (msg != "0" && !isNaN(msg)){
+						treeObj.setItemText(id,treeObj.getUserData(id,"oldText")+"<font color='green'>("+msg+")</font>");
+						var menuObj = treeObj._globalIdStorageFind(id);
+						if(menuObj){
+							treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
+						}
+					}else{
+						treeObj.setItemText(id,treeObj.getUserData(id,"oldText"));
+						var menuObj = treeObj._globalIdStorageFind(id);
+						if(menuObj){
+							treeObj.resetParentRecordCount(treeObj,menuObj.parentObject,parseInt(msg));
+						}
+					}
+				}
+			}	
+		}
+	};
+	if(menuId!=PreId){
+		var menuObj = hiddenMenuTree._globalIdStorageFind(menuId);
+		if(menuObj){
+			var childCount = menuObj.childNodes.length;
+			hiddenMenuTree.openItem(menuId);
+			hiddenMenuTree.doCutById(menuId);
+			hiddenMenuTree.doPasteOtherTree(tempTree,'0');
+			
+			if (childCount>0){
+				for (var i = 0; i<childCount; i++){
+					var id=menuObj.childNodes[0].id;
+					PreId=menuId;	
+					tempTree.openItem(menuObj.childNodes[0].id);
+					tempTree.doCutById(menuObj.childNodes[0].id);
+					tempTree.doPasteOtherTree(currentTree,'0');
+					refreshRecordCount(currentTree,id);
+//					currentTree.closeAllItems(0);
+				}
+			}
+			$("#"+menuId+"_treeShow").css("margin-bottom","10px");
+			$("#"+menuId+"_treeShow").css("margin-top","3px");
+		}
+	}else{
+		PreId="";
+	}
+	
+	
+	function attachEventListen(obj, e, fun){
+        obj.attachEvent ? obj.attachEvent("on"+e, fun) : obj.addEventListener(e, fun, false);
+   } 
+	attachEventListen(currentTree, "Click", function(id){ 
+		
+		var url = currentTree.getUserData(id,"URL");
+		closeAllDivWindow();
+		if (url=="-"){
+			window.open(rootPath+"/fmp/FrameBiz/GetModuleDesc?moduleId="+id,'infoframe','');
+			
+		}else if(url!=""){
+			url = HTMLDecode(url);
+			if (url.indexOf("http://")!=0){
+				main_ShowProgressDiv();
+				url = rootPath+url;
+			}
+			window.open(url,'infoframe','');	
+		}
+	});
+	
+	
+	
+	
+	
 }
 
 /**
  * 根据菜单ID刷新菜单的记录数提示
  */
+
 function refreshRecordCount(treeObj,menuId){ 
+	
 	var menuObj = treeObj._globalIdStorageFind(menuId);
 	if(menuObj){
+		//alert("存在");
 		var childCount = menuObj.childNodes.length;
-
 		menuObj.recordCount = 0;
+		//alert("recordCount:"+childCount);
 		if (childCount>0){
 			for (var i = 0; i<childCount; i++){
 				refreshRecordCount(treeObj,menuObj.childNodes[i].id);
 			}			
 		}else{
-			treeObj.setRecordCount(treeObj,menuId);
+			currentTree.setRecordCount(treeObj,menuId);
+			
 		}
 
 
@@ -325,12 +315,23 @@ function refreshRecordCount(treeObj,menuId){
  * 备份子树
  * @return
  */
-function backSubTree(){
-	if (menuTree.htmlNode.childNodes[0]){
-		var menuSpan = document.getElementById(menuTree.htmlNode.childNodes[0].id+"_span");
+function backSubTree(){	
+	$("#"+PreId+"_treeShow").css("margin-bottom","0px");
+	$("#"+PreId+"_treeShow").css("margin-top","0px");
+	if (currentTree!=undefined && PreId!=""){
+		
+		var childCount=currentTree.htmlNode.childNodes.length;
+		for (var i = 0; i<childCount; i++){
+		currentTree.doCutById(currentTree.htmlNode.childNodes[0].id);
+		currentTree.doPasteOtherTree(tempTree,PreId);
+		}
+			
+		var menuSpan = document.getElementById(PreId+"_span");
 		menuSpan.className = "menu2_off";
-		menuTree.doCutById(menuTree.htmlNode.childNodes[0].id);
-		menuTree.doPasteOtherTree(hiddenMenuTree, '0');		
+			
+		tempTree.doCutById(tempTree.htmlNode.childNodes[0].id);
+		tempTree.doPasteOtherTree(hiddenMenuTree, '0');	
+				
 	}
 }
 

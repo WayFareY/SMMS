@@ -17,7 +17,7 @@
 %>
 <html>
 <head>
-<title>IDC安全管理系统</title>
+<title>珠海市公安局IDC安全管理系统</title>
 <META http-equiv="X-UA-Compatible" content="IE=10" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="<%=rootPath%>/styles/fmp/frameStyle.css" rel="stylesheet"
@@ -235,19 +235,17 @@
 	function loadContent(){
 		//document.getElementById("Page_middle").style.height="780px";
 	    document.getElementById("sessionExceptionUrl").value="${context.sessionExceptionUrl}";
-	    getMenuData("<%=rootPath%>/fmp/FrameBiz/GetMenuXML");
+		getMenuData("<%=rootPath%>/fmp/FrameBiz/GetMenuXML");
 		//alert(document.all["TreeContainDiv"].style);
-// 		document.all["TreeContainDiv"].style.height = 470;
-// 		document.all["TreeContainDiv"].style.width = 200;
+		//document.all["TreeContainDiv"].style.height = 470;
+		//document.all["TreeContainDiv"].style.width = 200;
 		//startClock();
 		var url = '${context.loginUrl}';
 		var urlForChangeSys='${context.address}&&loginUrl=${context.loginUrl}';
 		var urlChangeSys='${context.address}&&loginUrl=${context.loginUrl}';
 		url = encodeURI(url);
 
-		//版本号写入
-		document.getElementById("logo_version").innerHTML = "<div style='color:#ffffff;'>1.0.2.0103_beta</div>";
-		
+			
 		document.getElementById("menu_lv1").innerHTML=
 			 '<table class="table_menu_lv1">'
 			 +'<tr>'
@@ -256,22 +254,17 @@
 			 	+'</td>'
 			 	+'<td  >'
 					 +'<div class="userInfoBar" onmouseover="showRoleInfo()" onmouseout="hideRoleInfo()" onmousemove="showRoleInfo()">'
-			 			+ '<br><a>当前用户: <span style="color:#ffd800;">${CURR_USERNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-			 			+ '所属部门: <span style="color:#ffd800;">${CURR_DEPTNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+			 			+ '<br><a>当前用户: ${CURR_USERNAME}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+			 			+ '所属部门: ${CURR_DEPTNAME}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
 			 			+'<div id="hint" style="position:absolute;display:none;width:100px; "></div>  '
 			 		+ '</div>'
 			 	+'</td>'
 			 	+'<td style="width:140px" >'
 			 		+'<div class="userButtonBar"  > <div style=" padding-top:6px; ">'
-			 			/* +'<div style=" float: left; height: 21px;width: 75px;color:#fff;"><a style=" color:#fff;text-decoration: none;font-size:8px;" onclick="quit()" href="#" > &nbsp;&nbsp;[ 退出系统 ]</a></div>'
-	         			+'<div style=" float: left; height: 21px;width: 56px;color:#fff;"><a onclick="lockWindow()" href="#" style="  color:#fff;font-size:8px;text-decoration: none;">&nbsp;&nbsp; [ 锁屏 ]</a></div>' */
-	         			+'<div id="userButtonBar_div" ><a id="userButtonBar_a" onclick="quit()" href="#"> [ 退出系统 ]</a></div>'
-	         			+'<div id="userButtonBar_div" ><a onclick="lockWindow()" href="#" id="userButtonBar_a">[ 锁屏 ]</a></div>'
+			 			+'<div style=" float: left;   background: url(<%=rootPath%>/images/bar/quit.gif) right repeat-x;  height: 21px;width: 65px;color:#0050ac;"><a style=" color:#0050ac;text-decoration: none;" onclick="quit()" href="#" > &nbsp;&nbsp;退出系统</a></div>'
+	         			+'<div style=" float: right;   background: url(<%=rootPath%>/images/bar/locking.gif) right repeat-x; height: 21px;width: 46px;color:#dd5f0b;"><a onclick="lockWindow()" href="#" style="  color:#dd5f0b;text-decoration: none;">&nbsp;&nbsp; 锁屏</a></div>'
 	         		+'</div></div>'
 	         	+'</td>'
-	         	+'<td style="width:10px;align:right">'
-		 		+'<div class="userInfoBar_right"></div>'
-		 		+'</td>'
 	         	+'</tr></table>';
 		//初始化框架大小 add by jgf
 		//window.open("www.baidu.com");
@@ -1049,17 +1042,16 @@ title="点击查看版本更新信息"
 	  <!-- logo填充背景 -->
 	  <div class="logo_background">
 		  <div class="logo_icon">
-		  	<div id="logo_version"></div>
 		    <div class="logo_area">
-		    	<!--<div id="userInfoBar" class="banner_label"></div>	 -->
+		    	<!--<div id="userInfoBar" class="banner_label"></div>	 --> 
 			    <div  id="menu_lv1" class="banner_div"></div> 
-			    
 					<!-- 一级菜单 -->
 			  </div>  
 		  </div>
 	  </div>
 		<!-- 二级菜单 -->
-		<!-- <div id="menu_lv2" class="menubar_lv2" style="display: none;"></div> -->
+		<div id="menu_lv2" class="menubar_lv2">
+		</div>
 		<div style="clear:both" ></div>
 	</div>
 	<div id="wrapdiv" class="wrapdiv">
@@ -1067,13 +1059,12 @@ title="点击查看版本更新信息"
 		<table id="Page_left_tree" >
 			<tr id="Page_left_tree_tr">
 				<td style="border:0px solid #4499ee;">
-					<div id="TreeTopDiv"></div>
+					<div id="TreeTopDiv"  ></div>
 				</td>
 			</tr>
-			<tr id="Page_right_tree_tr" style="width:193px;margin-top:-3px;">
-				<td style="width:193px;">
-					<div id="menu_lv2"></div>
-<!-- 					<div id="TreeContainDiv" style="width:0px; height:0px;display:none;"></div> -->
+			<tr id="Page_right_tree_tr">
+				<td>
+					<div id="TreeContainDiv"></div>
 				</td>
 			</tr>
 		</table>
@@ -1102,7 +1093,8 @@ title="点击查看版本更新信息"
     <div id="Page_right">
  		<!-- iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/fmp/system/notice/NoticeBiz/ShowNotice?moduleId=s_md_fhzy&tableModelId=SAffiche" frameborder="0" scrolling="auto" > -->
 		   
-		<iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/SMMS/SmmsPendingEventBiz/forceEntering" frameborder="0" scrolling="auto" ></iframe>
+		<iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/SMMS/SmmsPendingEventBiz/forceEntering" frameborder="0" scrolling="auto" >
+		</iframe>
 	</div>
 	</div>
 	
@@ -1113,6 +1105,5 @@ title="点击查看版本更新信息"
 </div>
 <div id="hiddenTreeBox" style="width:0px; height:0px;display:none;"></div>
 <div id="customTreeBox" style="width:0px; height:0px;display:none;"></div>
-<div id="tempTreeBox" style="width:0px; height:0px;display:none;"></div>
 </body>
 </html>

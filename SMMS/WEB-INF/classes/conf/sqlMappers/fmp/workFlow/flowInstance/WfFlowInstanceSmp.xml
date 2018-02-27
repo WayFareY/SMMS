@@ -181,6 +181,14 @@
 	where RID=#{RID}
 </update> 
 
+<update id="updatefApprovestate" parameterType="hashmap" > 
+	update WF_FLOWINSTANCE  
+		<set>
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="APPROVERSET!=null"> APPROVERSET=#{APPROVERSET},</if> 
+		</set>
+	where BIZRID=#{BIZRID}
+</update>
 <update id="updateNodeAndState" parameterType="hashmap" > 
 	update WF_FLOWINSTANCE  
 		<set>

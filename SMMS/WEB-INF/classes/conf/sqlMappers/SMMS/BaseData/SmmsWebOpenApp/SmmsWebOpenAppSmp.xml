@@ -7,9 +7,14 @@
             a.RID,
             a.EVENT_RID,
             a.ACCESS_ID,
+            a.OPEN_APP_TIME,
+            a.CHECK_RESULT,
             a.RECTIFY_MEASURE,
             a.RECTIFY_RESULT,
             a.RESTORE_REASON,
+            a.APP_LEVEL,
+            a.IS_ACCEPT,
+            a.REJECT_REASON,
             a.APP_USERID,
             a.APP_TIME,
             a.APP_OPINION,
@@ -18,6 +23,9 @@
             a.SEND_TIME,
             a.CREATTIME,
             a.RECORDSTATE,
+            a.LIABMAN,
+            a.LIABDEPT,
+            a.LIABORG,
             b.IDC_ID,
             b.IDC_NAME
 </sql>
@@ -26,9 +34,14 @@
             a.RID,
             a.EVENT_RID,
             a.ACCESS_ID,
+            a.OPEN_APP_TIME,
+            a.CHECK_RESULT,
             a.RECTIFY_MEASURE,
             a.RECTIFY_RESULT,
             a.RESTORE_REASON,
+            a.APP_LEVEL,
+            a.IS_ACCEPT,
+            a.REJECT_REASON,
             a.APP_USERID,
             a.APP_TIME,
             a.APP_OPINION,
@@ -37,6 +50,9 @@
             a.SEND_TIME,
             a.CREATTIME,
             a.RECORDSTATE,
+            a.LIABMAN,
+            a.LIABDEPT,
+            a.LIABORG,
             b.IDC_ID,
              b.IDC_NAME
 </sql>
@@ -54,6 +70,8 @@
             swo_app.SEND_TIME,
             swo_app.CREATTIME,
             swo_app.RECORDSTATE,
+            swo_app.CHECK_RESULT,
+            swo_app.OPEN_APP_TIME,
             sii.RID
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
@@ -68,7 +86,38 @@
              order by ${order}
         </if>				
 </select> 
-
+<select id="getFlowParams" parameterType="hashmap" resultType="hashmap"> 
+select swo.RID as RID,
+        EVENT_RID, 
+        case when sse.IP is null or sse.IP=''  then '无' ELSE sse.IP end  as IP,
+        case when sse.DOMAIN_NAME is null or sse.DOMAIN_NAME=''  then '无' ELSE sse.DOMAIN_NAME end  as DOMAIN_NAME,
+        swo.ACCESS_ID as ACCESS_ID,
+		ssi.IDC_NAME as IDC_NAME,
+		IS_ACCEPT,
+        RESTORE_REASON,
+        APP_LEVEL,
+        swo.LIABMAN as LIABMAN,
+        swo.LIABDEPT as LIABDEPT,
+        swo.LIABORG as LIABORG,
+        case when WEB_CASE_RID is null or WEB_CASE_RID=''  then '无' ELSE WEB_CASE_RID end as WEB_CASE_RID,	
+		case when WEBSITE_NAME is null or WEBSITE_NAME=''  then '无' ELSE WEBSITE_NAME end as WEBSITE_NAME
+        from SMMS_WEB_OPEN_APP as swo 
+left join smms_event_main as sse
+on swo.event_rid=sse.rid
+LEFT JOIN
+		smms_idc_info as ssi on sse.access_id=ssi.idc_id
+LEFT JOIN  smms_web_case as ssw
+on sse.web_case_rid=ssw.rid  where  swo.RID = #{RID} 
+</select>
+<select id ="webOpenInfo" parameterType="hashmap" resultType="hashmap">
+ SELECT EVENT_RID as RID,RECTIFY_MEASURE,IS_ACCEPT FROM smms_web_open_app WHERE RID=#{RID}
+</select>
+<select id ="OpenAppResult" parameterType="hashmap" resultType="hashmap">
+ SELECT APP_RESULT FROM smms_web_open_app WHERE RID=#{RID}
+</select>
+<update id="updateAppResult" parameterType="hashmap" > 
+	update SMMS_WEB_OPEN_APP  set APP_RESULT=#{APP_RESULT} where RID=#{RID}
+</update> 
 <select id ="sendList" parameterType="hashmap" resultType="hashmap">
 SELECT * FROM 
 smms_web_open_app swo_app WHERE swo_app.ISSUE_STATE ='0' AND (APP_RESULT = '1' OR APP_RESULT ='9') 
@@ -76,7 +125,7 @@ order by ACCESS_ID ASC
 </select>
 
 <select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
-	select count(*) NUM  from SMMS_WEB_OPEN_APP a LEFT JOIN smms_idc_info b ON a.ACCESS_ID = b.IDC_ID
+	select count(*) NUM  from SMMS_WEB_OPEN_APP as a LEFT JOIN smms_idc_info as b ON a.ACCESS_ID = b.IDC_ID
 	<where>
 		a.RECORDSTATE='0'
         <if test="whereCondition!=null and whereCondition!='' ">   
@@ -111,14 +160,40 @@ WHERE EVENT_RID =#{EVENT_RID}
       select <include refid="detailColumns"/> from SMMS_WEB_OPEN_APP  where RID = #{RID} 
 </select> 
 
+<select id="selectOpenTime" resultType="hashmap"> 
+      select RID,EVENT_RID,OPEN_APP_TIME,ACCESS_ID,APP_RESULT from SMMS_WEB_OPEN_APP 
+      where CHECK_RESULT = '0' 
+      and (APP_RESULT = '0' or APP_RESULT = '1' or APP_RESULT = '8')
+</select> 
+
+<select id="dealWebOpen" parameterType="hashmap" resultType="hashmap"> 
+   select RID, MAIN_RID, CLIENTNAME, REPORT_CITY, REPORT_TIME, OCCUR_TIME 
+   from smms_pending_event
+   where MAIN_RID = #{EVENT_RID} 
+    <![CDATA[AND #{OPEN_APP_TIME} < OCCUR_TIME ]]> 
+</select> 
+
+<update id="updateResult" parameterType="hashmap">
+ 	UPDATE smms_web_open_app SET CHECK_RESULT = #{CHECK_RESULT} WHERE RID = #{RID}
+</update>	
+
+<update id="updateCount" parameterType="hashmap">
+ 	UPDATE SMMS_ENFORCE_HIS SET ENFORCE_COUNT = ENFORCE_COUNT+'1' WHERE EVENT_MAINRID = #{EVENT_RID}
+</update>	
+
 <insert id="insertSave" parameterType="hashmap" >
 	insert into SMMS_WEB_OPEN_APP (
             <if test="RID != null ">RID,</if>
             <if test="EVENT_RID != null ">EVENT_RID,</if>
             <if test="ACCESS_ID != null ">ACCESS_ID,</if>
+            <if test="OPEN_APP_TIME != null ">OPEN_APP_TIME,</if>
+            <if test="CHECK_RESULT != null ">CHECK_RESULT,</if>
             <if test="RECTIFY_MEASURE != null ">RECTIFY_MEASURE,</if>
             <if test="RECTIFY_RESULT != null ">RECTIFY_RESULT,</if>
             <if test="RESTORE_REASON != null ">RESTORE_REASON,</if>
+            <if test="APP_LEVEL != null ">APP_LEVEL,</if>
+            <if test="IS_ACCEPT != null ">IS_ACCEPT,</if>
+            <if test="REJECT_REASON != null ">REJECT_REASON,</if>
             <if test="APP_USERID != null ">APP_USERID,</if>
             <if test="APP_TIME != null ">APP_TIME,</if>
             <if test="APP_OPINION != null ">APP_OPINION,</if>
@@ -126,21 +201,34 @@ WHERE EVENT_RID =#{EVENT_RID}
             <if test="ISSUE_STATE != null ">ISSUE_STATE,</if>
             <if test="SEND_TIME != null ">SEND_TIME,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="LIABMAN != null ">LIABMAN,</if>
+            <if test="LIABDEPT != null ">LIABDEPT,</if>
+            <if test="LIABORG != null ">LIABORG,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
            <if test="EVENT_RID != null ">#{EVENT_RID},</if>
+            
            <if test="ACCESS_ID != null ">#{ACCESS_ID},</if>
+           <if test="OPEN_APP_TIME != null ">#{OPEN_APP_TIME},</if>
+           <if test="CHECK_RESULT != null ">#{CHECK_RESULT},</if>
            <if test="RECTIFY_MEASURE != null ">#{RECTIFY_MEASURE},</if>
            <if test="RECTIFY_RESULT != null ">#{RECTIFY_RESULT},</if>
            <if test="RESTORE_REASON != null ">#{RESTORE_REASON},</if>
+           <if test="APP_LEVEL != null ">#{APP_LEVEL},</if>
+           <if test="IS_ACCEPT != null ">#{IS_ACCEPT},</if>
+           <if test="REJECT_REASON != null ">#{REJECT_REASON},</if>
            <if test="APP_USERID != null ">#{APP_USERID},</if>
            <if test="APP_TIME != null ">#{APP_TIME},</if>
            <if test="APP_OPINION != null ">#{APP_OPINION},</if>
            <if test="APP_RESULT != null ">#{APP_RESULT},</if>
            <if test="ISSUE_STATE != null ">#{ISSUE_STATE},</if>
            <if test="SEND_TIME != null ">#{SEND_TIME},</if>
+         
            <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="LIABMAN != null ">#{LIABMAN},</if>
+           <if test="LIABDEPT != null ">#{LIABDEPT},</if>
+           <if test="LIABORG != null ">#{LIABORG},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -149,14 +237,21 @@ WHERE EVENT_RID =#{EVENT_RID}
 		<set>
 				    <if test="EVENT_RID!=null"> EVENT_RID=#{EVENT_RID},</if> 
 		    <if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
+		    <if test="CHECK_RESULT!=null"> CHECK_RESULT=#{CHECK_RESULT},</if> 
+		    <if test="OPEN_APP_TIME!=null"> OPEN_APP_TIME=#{OPEN_APP_TIME},</if> 
 		    <if test="RECTIFY_MEASURE!=null"> RECTIFY_MEASURE=#{RECTIFY_MEASURE},</if> 
 		    <if test="RECTIFY_RESULT!=null"> RECTIFY_RESULT=#{RECTIFY_RESULT},</if> 
 		    <if test="RESTORE_REASON!=null"> RESTORE_REASON=#{RESTORE_REASON},</if> 
+		    <if test="APP_LEVEL!=null"> APP_LEVEL=#{APP_LEVEL},</if> 
+		    <if test="IS_ACCEPT!=null"> IS_ACCEPT=#{IS_ACCEPT},</if> 
+		    <if test="REJECT_REASON!=null"> REJECT_REASON=#{REJECT_REASON},</if> 
 		    <if test="APP_USERID!=null"> APP_USERID=#{APP_USERID},</if> 
 		    <if test="APP_TIME!=null"> APP_TIME=#{APP_TIME},</if> 
 		    <if test="APP_OPINION!=null"> APP_OPINION=#{APP_OPINION},</if> 
 		    <if test="APP_RESULT!=null"> APP_RESULT=#{APP_RESULT},</if> 
 		    <if test="ISSUE_STATE!=null"> ISSUE_STATE=#{ISSUE_STATE},</if> 
+		    <if test="CHECK_RESULT!=null"> CHECK_RESULT=#{CHECK_RESULT},</if> 
+		    <if test="OPEN_APP_TIME!=null"> OPEN_APP_TIME=#{OPEN_APP_TIME},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>

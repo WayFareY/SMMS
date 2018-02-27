@@ -209,7 +209,7 @@
 					.mousedown(function(e){
 						if( e.which == 3 ) { //右键绑定
 							_canvas.find('#leipi_active_id').val(row.id);
-							contextmenu.bindings = defaults.processMenus
+							contextmenu.bindings = defaults.processMenus;
 							$(this).contextMenu('processMenu', contextmenu);
 						}
 					});
@@ -222,9 +222,11 @@
 
 		var timeout = null;
 		//点击或双击事件,这里进行了一个单击事件延迟，因为同时绑定了双击事件
-		$(".process-step").on('click',function(){
-			//激活  
-		}).on('dblclick',function(){
+		$(".process-step").bind('click',function(){
+
+		});
+		
+		$(".process-step").on('dblclick',function(){
 			var opMode=getQueryString("opMode");
 			if(opMode!="view")
 			{
@@ -243,7 +245,7 @@
 
 		//绑定添加连接操作。画线-input text值  拒绝重复连接
 		jsPlumb.bind("jsPlumbConnection", function(info) {
-			setConnections(info.connection)
+			setConnections(info.connection);
 		});
 		//绑定删除connection事件
 		jsPlumb.bind("jsPlumbConnectionDetached", function(info) {
@@ -395,7 +397,7 @@
 							return ;
 						}
 					}
-				})
+				});
 			});
 		}//_canvas_design end reset 
 		_canvas_design();
@@ -410,9 +412,23 @@
 function delProcess(activeId) {
 	if (activeId <= 0)
 		return false;
+	for(var i=jsondata.lines.length-1;i>=0;i--)
+	{
+		if(jsondata.lines[i].FROMNODE==activeId || jsondata.lines[i].TONODE==activeId)
+		{		
+			//jsPlumb.remove(1,2);
+//			alert(jsondata.lines[i].FROMNODE);
+//			alert(jsondata.lines[i].TONODE);
+			//del(jsondata.lines[i].FROMNODE,jsondata.lines[i].TONODE);
+			//alert(i);
+			//jsondata.lines.splice(i, 1);
+			showMessage("请先删除节点对应的连线，再删除节点！","","error");
+			return false;
+		}
+	}	
+	
 	var g = null;
-	var s = document.getElementById("leipi_process_info")
-	.getElementsByTagName("input");
+	var s = document.getElementById("leipi_process_info").getElementsByTagName("input");
 	$("#window" + activeId).remove();
 	for ( var i = 0; i < s.length; i++) {
 		var ts = s[i].value;
@@ -790,6 +806,14 @@ function addProcess(row) {
 	});
 	var FLOWTEMPID=getQueryString("FLOWTEMPID");
 	//配置新的节点数据保存在JSON流里面
+	var nodetype="1";
+	if(row.id=="000")
+	{
+		nodetype="0";
+	}else if(row.id=="999")
+	{
+		nodetype="2";
+	}
 	var newnode={
 			"NODEBIZTYPE":"",
 			"CREATORID":"",
@@ -809,7 +833,7 @@ function addProcess(row) {
 			"SMSSENDCOND":"",
 			"DEPTNAMESET":"",
 			"TRANSACTDAYS":"",
-			"NODETYPE":"",
+			"NODETYPE":nodetype,
 			"process_name":row.process_name,
 			"DEPTEXTSET":"",
 			"NODEDESC":"",

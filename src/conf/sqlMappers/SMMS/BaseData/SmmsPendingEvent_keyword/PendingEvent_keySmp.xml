@@ -34,7 +34,7 @@
             kyy.FINAL_RECTIFY_SUGGEST,
             kyy.IS_FORCE_CLOSE,
             kyy.IS_WHITE_LIST,
-            kyy.FORCE_CLOSE_DESCE,
+            kyy.FORCE_CLOSE_DESC,
             kyy.RECTIFY_TERM,
             kyy.CLOSE_TERM,
             kyy.SEND_TIME,
@@ -48,10 +48,12 @@
             kyy.MEMO,
             kyy.LOG_TABLENAME,
             kyy.LOG_RID,
+            kyy.LOG_FILENAME,
             kyy.CREATTIME,
             kyy.MODIFIEDTIME,
             kyy.RECORDSTATE,
             kyy.KEYWORDS,
+            kyy.PRIORITY,
             kye.IDC_ID,
             kye.IDC_NAME
 </sql>
@@ -87,7 +89,7 @@
             kyy.FINAL_RECTIFY_SUGGEST,
             kyy.IS_FORCE_CLOSE,
             kyy.IS_WHITE_LIST,
-            kyy.FORCE_CLOSE_DESCE,
+            kyy.FORCE_CLOSE_DESC,
             kyy.RECTIFY_TERM,
             kyy.CLOSE_TERM,
             kyy.SEND_TIME,
@@ -102,10 +104,12 @@
             kyy.SNAPSHOP,
             kyy.LOG_TABLENAME,
             kyy.LOG_RID,
+            kyy.LOG_FILENAME,
             kyy.CREATTIME,
             kyy.MODIFIEDTIME,
             kyy.RECORDSTATE,
             kyy.KEYWORDS,
+            kyy.PRIORITY,
             kye.IDC_ID,
             kye.IDC_NAME
 </sql>
@@ -200,7 +204,7 @@
             <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
             <if test="IS_WHITE_LIST != null ">IS_WHITE_LIST,</if>
-            <if test="FORCE_CLOSE_DESCE != null ">FORCE_CLOSE_DESCE,</if>
+            <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
             <if test="RECTIFY_TERM != null ">RECTIFY_TERM,</if>
             <if test="CLOSE_TERM != null ">CLOSE_TERM,</if>
             <if test="SEND_TIME != null ">SEND_TIME,</if>
@@ -215,6 +219,7 @@
             <if test="SNAPSHOP != null ">SNAPSHOP,</if>
             <if test="LOG_TABLENAME != null ">LOG_TABLENAME,</if>
             <if test="LOG_RID != null ">LOG_RID,</if>
+            <if test="LOG_FILENAME != null ">LOG_FILENAME,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
             <if test="KEYWORDS != null ">KEYWORDS,</if>
@@ -249,7 +254,7 @@
            <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if>
-           <if test="FORCE_CLOSE_DESCE != null ">#{FORCE_CLOSE_DESCE},</if>
+           <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
            <if test="RECTIFY_TERM != null ">#{RECTIFY_TERM},</if>
            <if test="CLOSE_TERM != null ">#{CLOSE_TERM},</if>
            <if test="SEND_TIME != null ">#{SEND_TIME},</if>
@@ -264,6 +269,7 @@
            <if test="SNAPSHOP != null ">#{SNAPSHOP},</if>
            <if test="LOG_TABLENAME != null ">#{LOG_TABLENAME},</if>
            <if test="LOG_RID != null ">#{LOG_RID},</if>
+           <if test="LOG_FILENAME != null ">#{LOG_FILENAME},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
            <if test="KEYWORDS != null ">#{KEYWORDS},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
@@ -301,7 +307,7 @@
 		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
-		    <if test="FORCE_CLOSE_DESCE!=null"> FORCE_CLOSE_DESCE=#{FORCE_CLOSE_DESCE},</if> 
+		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
 		    <if test="RECTIFY_TERM!=null"> RECTIFY_TERM=#{RECTIFY_TERM},</if> 
 		    <if test="CLOSE_TERM!=null"> CLOSE_TERM=#{CLOSE_TERM},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
@@ -316,8 +322,10 @@
 		    <if test="SNAPSHOP!=null"> SNAPSHOP=#{SNAPSHOP},</if> 
 		    <if test="LOG_TABLENAME!=null"> LOG_TABLENAME=#{LOG_TABLENAME},</if> 
 		    <if test="LOG_RID!=null"> LOG_RID=#{LOG_RID},</if> 
+		    <if test="LOG_FILENAME!=null"> LOG_FILENAME=#{LOG_FILENAME},</if> 
 		    <if test="KEYWORDS!=null"> KEYWORDS=#{KEYWORDS},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="PRIORITY!=null"> PRIORITY=#{PRIORITY},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

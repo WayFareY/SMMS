@@ -31,6 +31,26 @@
         </action> 
           <!--全部下发-->
           <action  name="SandAll" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.SandAllSmmsWebOpenAppAction">
-        </action>                      
+        </action> 
+        
+        <!--idc的安全事件管理新增页面 -->
+        <action  name="IDCAdd" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.IDCAddSmmsWebOpenAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/CommonAdd.jsp</result>
+        </action>     
+        
+        <!--进入审批界面 -->
+        <action  name="DoApproveView" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.ViewSmmsWebOpenAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/CommonApproveView.jsp</result>
+        </action>    
+        
+        <!--查看审批历史 -->
+        <action  name="DoApproveHisView" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.ViewSmmsWebOpenAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/CommonApvHisView.jsp</result>
+        </action>  
+        
+        <!--全部下发-->
+          <action  name="submitExam" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.SubmitExamAction">
+        </action> 
+                                 
     </package>
 </struts>

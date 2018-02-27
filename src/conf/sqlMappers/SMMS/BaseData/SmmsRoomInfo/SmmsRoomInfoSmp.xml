@@ -70,6 +70,9 @@
 <select id="CountByAccessId" parameterType="hashmap" resultType="String">
 	select count(*) from SMMS_ROOM_INFO where ACCESS_ID = #{ACCESS_ID} and RECORDSTATE='0'
 </select>
+<select id="getIdcRoomIdxCount" parameterType="hashmap" resultType="hashMap">
+select count(room_idx) as ROOM_COUNT from smms_room_info where RECORDSTATE='0'
+</select>
 <select id="findRoomInfo" parameterType="hashmap" resultType="hashmap">
 	select  ssr.ACCESS_ID as access_id,
             ssr.ROOM_NAME as machine_room_name,

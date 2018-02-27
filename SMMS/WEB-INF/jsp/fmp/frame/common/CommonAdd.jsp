@@ -224,7 +224,7 @@ function doSubmit(canclose){
 					if (msg.substr(0,4) == "RID="){
 						var rid = msg.substr(4);
 						if(typeof doAfterSubmit!='undefined'&& doAfterSubmit instanceof Function){          
-							doAfterSubmit(); 
+							doAfterSubmit(msg); 
 						}else{						
 							showMessage("MSG0054");//新增数据成功！
 							doRefreshList();
@@ -234,8 +234,12 @@ function doSubmit(canclose){
 						}
 						location.href = comUrl("DoUpdate?RID="+rid);
 					}else{
-						showMessage(msg);
-						document.getElementById("DoAddSave").disabled = false; 
+						if(typeof doAfterSubmit!='undefined'&& doAfterSubmit instanceof Function){          
+							doAfterSubmit(msg); 
+						}else{							
+							showMessage(msg);
+							document.getElementById("DoAddSave").disabled = false; 
+						}
 					}
 					
 				}

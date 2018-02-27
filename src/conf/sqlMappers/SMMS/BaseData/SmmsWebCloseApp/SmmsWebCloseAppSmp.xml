@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SmmsWebCloseApp"> 
+<sql id="listColumns">
+	
+            RID,
+            EVENT_RID,
+            ACCESS_ID,
+            CLOSE_REASON,
+            APP_LEVEL,
+            APP_USERID,
+            APP_TIME,
+            APP_OPINION,
+            APP_RESULT,
+            ISSUE_STATE,
+            SEND_TIME,
+            CREATTIME,
+            LIABMAN,
+            LIABDEPT,
+            LIABORG,
+            RECORDSTATE
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            EVENT_RID,
+            ACCESS_ID,
+            CLOSE_REASON,
+            APP_LEVEL,
+            APP_USERID,
+            APP_TIME,
+            APP_OPINION,
+            APP_RESULT,
+            ISSUE_STATE,
+            SEND_TIME,
+            CREATTIME,
+            LIABMAN,
+            LIABDEPT,
+            LIABORG,
+            RECORDSTATE
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SMMS_WEB_CLOSE_APP 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="getFlowParams" parameterType="hashmap" resultType="hashmap"> 
+select swc.RID as RID,
+        EVENT_RID,
+        case when sse.IP is null or sse.IP=''  then '无' ELSE sse.IP end  as IP,
+        case when sse.DOMAIN_NAME is null or sse.DOMAIN_NAME=''  then '无' ELSE sse.DOMAIN_NAME end  as DOMAIN_NAME,
+        swc.ACCESS_ID as ACCESS_ID,
+        APP_LEVEL,
+		ssi.IDC_NAME as IDC_NAME,
+        swc.LIABMAN as LIABMAN,
+        swc.LIABDEPT as LIABDEPT,
+        swc.LIABORG as LIABORG,
+        case when WEB_CASE_RID is null or WEB_CASE_RID=''  then '无' ELSE WEB_CASE_RID end as WEB_CASE_RID,	
+		case when WEBSITE_NAME is null or WEBSITE_NAME=''  then '无' ELSE WEBSITE_NAME end as WEBSITE_NAME
+        from SMMS_WEB_CLOSE_APP as swc 
+left join smms_event_main as sse
+on swc.event_rid=sse.rid
+LEFT JOIN
+		smms_idc_info as ssi on sse.access_id=ssi.idc_id
+LEFT JOIN  smms_web_case as ssw
+on sse.web_case_rid=ssw.rid  where  swc.RID = #{RID} 
+</select> 
+<select id="selectEventRid" parameterType="hashmap" resultType="hashmap"> 
+select EVENT_RID from SMMS_WEB_CLOSE_APP  where RID = #{RID}
+</select> 
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SMMS_WEB_CLOSE_APP 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SMMS_WEB_CLOSE_APP  where RID = #{RID}
+</delete> 
+
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SMMS_WEB_CLOSE_APP  where RID = #{RID} 
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SMMS_WEB_CLOSE_APP  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_WEB_CLOSE_APP  where RID = #{RID} 
+</select> 
+<select id ="webCloseInfo" parameterType="hashmap" resultType="hashmap">
+ SELECT EVENT_RID as RID FROM smms_web_close_app WHERE RID=#{RID}
+</select>
+<update id="updateAppResult" parameterType="hashmap" > 
+	update SMMS_WEB_CLOSE_APP  set APP_RESULT=#{APP_RESULT} where RID=#{RID}
+</update> 
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SMMS_WEB_CLOSE_APP (
+            
+            <if test="EVENT_RID != null ">EVENT_RID,</if>
+            <if test="ACCESS_ID != null ">ACCESS_ID,</if>
+            <if test="CLOSE_REASON != null ">CLOSE_REASON,</if>
+            <if test="APP_LEVEL != null ">APP_LEVEL,</if>
+            <if test="APP_USERID != null ">APP_USERID,</if>
+            <if test="APP_TIME != null ">APP_TIME,</if>
+            <if test="APP_OPINION != null ">APP_OPINION,</if>
+            <if test="APP_RESULT != null ">APP_RESULT,</if>
+            <if test="ISSUE_STATE != null ">ISSUE_STATE,</if>
+            <if test="SEND_TIME != null ">SEND_TIME,</if>
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="LIABMAN != null ">LIABMAN,</if>
+            <if test="LIABDEPT != null ">LIABDEPT,</if>
+            <if test="LIABORG != null ">LIABORG,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE,</if>
+            <if test="RID != null ">RID</if>)
+	   values (
+           
+           <if test="EVENT_RID != null ">#{EVENT_RID},</if>
+           <if test="ACCESS_ID != null ">#{ACCESS_ID},</if>
+           <if test="CLOSE_REASON != null ">#{CLOSE_REASON},</if>
+           <if test="APP_LEVEL != null ">#{APP_LEVEL},</if>
+           <if test="APP_USERID != null ">#{APP_USERID},</if>
+           <if test="APP_TIME != null ">#{APP_TIME},</if>
+           <if test="APP_OPINION != null ">#{APP_OPINION},</if>
+           <if test="APP_RESULT != null ">#{APP_RESULT},</if>
+           <if test="ISSUE_STATE != null ">#{ISSUE_STATE},</if>
+           <if test="SEND_TIME != null ">#{SEND_TIME},</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="LIABMAN != null ">#{LIABMAN},</if>
+           <if test="LIABDEPT != null ">#{LIABDEPT},</if>
+           <if test="LIABORG != null ">#{LIABORG},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE},</if>
+           <if test="RID != null ">#{RID}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SMMS_WEB_CLOSE_APP   
+		<set>
+				    <if test="EVENT_RID!=null"> EVENT_RID=#{EVENT_RID},</if> 
+		    <if test="ACCESS_ID!=null"> ACCESS_ID=#{ACCESS_ID},</if> 
+		    <if test="CLOSE_REASON!=null"> CLOSE_REASON=#{CLOSE_REASON},</if> 
+		    <if test="APP_LEVEL!=null"> APP_LEVEL=#{APP_LEVEL},</if> 
+		    <if test="APP_USERID!=null"> APP_USERID=#{APP_USERID},</if> 
+		    <if test="APP_TIME!=null"> APP_TIME=#{APP_TIME},</if> 
+		    <if test="APP_OPINION!=null"> APP_OPINION=#{APP_OPINION},</if> 
+		    <if test="APP_RESULT!=null"> APP_RESULT=#{APP_RESULT},</if> 
+		    <if test="ISSUE_STATE!=null"> ISSUE_STATE=#{ISSUE_STATE},</if> 
+		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
+		    <if test="LIABMAN!=null"> LIABMAN=#{LIABMAN},</if> 
+		    <if test="LIABDEPT!=null"> LIABDEPT=#{LIABDEPT},</if> 
+		    <if test="LIABORG!=null"> LIABORG=#{LIABORG},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

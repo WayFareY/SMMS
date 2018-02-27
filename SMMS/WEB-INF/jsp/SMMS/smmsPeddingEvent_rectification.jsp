@@ -65,7 +65,7 @@ a {
 			</tr>
 			<tr>
 				<td><%=wff.getWebFieldCode("SmmsPendingEvent",
-					"FORCE_CLOSE_DESCE", "add", request)%></td>
+					"FINAL_RECTIFY_SUGGEST", "add", request)%></td>
 			</tr>
 		</table>
 </tr>
@@ -197,23 +197,28 @@ var json="";
 			showMessage('目标网站URL和目标ip不能同时为空');
 		} else {
 			var form = document.forms[0];
-			var submitUrl = comUrl(rootPath + "/SMMS/SmmsEventMainBiz/rectification");
-			XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
-
-			function backCallSendMsg(msg) {
-				var message = msg.substr(0, 3);
-				if (message == '000') {
-					var msg = msg.substr(4, 8);
-					showMessage(msg);
-					setFieldValue('URL', null);
-					setFieldValue('IP', null);
-					setFieldValue('THREAT_NAME', null);
-					setFieldValue('FORCE_CLOSE_DESCE', null);
-				} else {
-					showMessage(msg);
+			var result =checkAll(form);
+			if (result){
+				var submitUrl = comUrl(rootPath + "/SMMS/SmmsEventMainBiz/rectification");
+				XMLHttp.formSubmit(form, submitUrl, backCallSendMsg);
+	
+				function backCallSendMsg(msg) {
+					var message = msg.substr(0, 3);
+					if (message == '000') {
+						var msg = msg.substr(4, 8);
+						showMessage(msg);
+						setFieldValue('URL', null);
+						setFieldValue('IP', null);
+						setFieldValue('THREAT_NAME', null);
+						setFieldValue('FORCE_CLOSE_DESC', null);
+					} else {
+						showMessage(msg);
+					}
 				}
-			}
-
+			}else{
+				showMessage("MSG1019");//请检查信息是否填写完整！
+				return;
+				}
 		}
 
 	}

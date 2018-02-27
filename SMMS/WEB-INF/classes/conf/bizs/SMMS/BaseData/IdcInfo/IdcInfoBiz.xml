@@ -28,6 +28,9 @@
         </action>   
          <!--刷新服务器状态-->     
          <action  name="refreshWebserviceState" class="com.zstar.SMMS.BaseData.IdcInfo.action.RefreshWebserviceStateAction">
-        </action>                  
+        </action>     
+        <!--根据idc运营商信息插入数据-->
+        <action  name="InsertSUser" class="com.zstar.SMMS.BaseData.IdcInfo.action.InsertSUserAction" > 
+		</action>             
     </package>
 </struts>

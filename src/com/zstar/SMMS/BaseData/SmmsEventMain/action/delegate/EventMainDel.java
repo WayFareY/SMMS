@@ -528,11 +528,201 @@ public class EventMainDel extends BaseDelegate {
 		return (new StringBuilder("无法连接")).append(idcNameErr).append("IDC服务器").toString();
 	}
 
-	public String findDomain(String url) {
-		int j = url.indexOf("/");
-		String str2 = url.substring(j + 2, url.length());
-		int k = str2.indexOf("/");
-		String domain = str2.substring(0, k);
-		return domain;
-	}
+  public String findDomain(String url)
+  {
+    String domainName = "";
+    try
+    {
+      URL domain = new URL(url);
+      return domain.getHost();
+    }
+    catch (MalformedURLException e)
+    {
+      e.printStackTrace();
+      domainName = url;
+    }
+    return domainName;
+  }
+  
+  public String getIsClose(Map afMap, String keyWordType)
+  {
+    String isForceClose = FMPContex.getSystemParameter("BIZ3");
+    if ("1".equals(isForceClose))
+    {
+      if ((!"".equals(keyWordType)) && (keyWordType != null) && (!"null".equals(keyWordType)))
+      {
+        if ((keyWordType.indexOf("010") != -1) || (keyWordType.indexOf("020") != -1) || (keyWordType.indexOf("030") != -1)) {
+          return "1";
+        }
+        return "2";
+      }
+      boolean priority = afMap.containsKey("PRIORITY");
+      
+      boolean reliability = afMap.containsKey("RELIABILITY");
+      
+      String sxqd = (String)afMap.get("PRIORITY");
+      String wxdj = (String)afMap.get("RELIABILITY");
+      if (("3".equals(sxqd)) && ("3".equals(wxdj))) {
+        return "1";
+      }
+      return "2";
+    }
+    return "2";
+  }
+  
+  public Map getSuggestMap(String isClose)
+  {
+    Map insertMap = new HashMap();
+    
+    String isApprove = FMPContex.getSystemParameter("BIZ5");
+    if ("1".equals(isClose))
+    {
+      if ("1".equals(isApprove))
+      {
+        insertMap.put("SYS_RECTIFY_SUGGEST", "2");
+        
+        insertMap.put("FINAL_RECTIFY_SUGGEST", "0");
+      }
+      else
+      {
+        insertMap.put("SYS_RECTIFY_SUGGEST", "2");
+        insertMap.put("FINAL_RECTIFY_SUGGEST", "2");
+      }
+    }
+    else
+    {
+      insertMap.put("SYS_RECTIFY_SUGGEST", "1");
+      insertMap.put("FINAL_RECTIFY_SUGGEST", "1");
+    }
+    return insertMap;
+  }
+  
+  public Map checkEventMain(Map insertMap, Long total, Map resultMap, Map map)
+  {
+    Map eventMap = new HashMap();
+    Map ridMap = new HashMap();
+    
+    String mainRid = "";
+    Long detialCount = null;
+    String detailRid = FMPContex.getNewUUID();
+    
+    insertMap.put("DETAIL_RID", detailRid);
+    if (insertMap.containsKey("WEB_CASE_RID"))
+    {
+      resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.countWebCaseRidTotal", insertMap);
+      
+      total = (Long)resultMap.get("WEBCASETOTAL");
+      if (total.longValue() == 0L)
+      {
+        insertMap.put("DETIAL_COUNT", Integer.valueOf(1));
+        
+        insertMap.put("ENFORCE_COUNT", Integer.valueOf(0));
+        mainRid = insertSmmsEventMain(insertMap);
+        ridMap.put("RID", mainRid);
+        resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.findEventMainInfo", ridMap);
+      }
+      else
+      {
+        mainRid = (String)resultMap.get("MAIN_RID");
+        detialCount = (Long)resultMap.get("DETIAL_COUNT");
+        detialCount = Long.valueOf(detialCount.longValue() + 1L);
+        map.put("DETIAL_COUNT", detialCount);
+        
+        map.put("MODIFIEDTIME", FMPContex.getCurrentTime());
+        map.put("RID", mainRid);
+        this.sqlSession.update("SmmsEventMain.updateDetialCount", map);
+      }
+    }
+    else if ((insertMap.containsKey("DOMAIN_NAME")) && (!"".equals(insertMap.get("DOMAIN_NAME"))) && (insertMap.get("DOMAIN_NAME") != null))
+    {
+      resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.countDomainTotal", insertMap);
+      
+      total = (Long)resultMap.get("DOMAINTOTAL");
+      if (total.longValue() == 0L)
+      {
+        insertMap.put("DETIAL_COUNT", Integer.valueOf(1));
+        
+        insertMap.put("ENFORCE_COUNT", Integer.valueOf(0));
+        mainRid = insertSmmsEventMain(insertMap);
+        ridMap.put("RID", mainRid);
+        resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.findEventMainInfo", ridMap);
+      }
+      else
+      {
+        mainRid = (String)resultMap.get("MAIN_RID");
+        detialCount = (Long)resultMap.get("DETIAL_COUNT");
+        detialCount = Long.valueOf(detialCount.longValue() + 1L);
+        map.put("DETIAL_COUNT", detialCount);
+        map.put("MODIFIEDTIME", FMPContex.getCurrentTime());
+        map.put("RID", mainRid);
+        this.sqlSession.update("SmmsEventMain.updateDetialCount", map);
+      }
+    }
+    else if (insertMap.containsKey("IP"))
+    {
+      resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.countIpTotal", insertMap);
+      
+      total = (Long)resultMap.get("IPTOTAL");
+      if (total.longValue() == 0L)
+      {
+        insertMap.put("DETIAL_COUNT", Integer.valueOf(1));
+        
+        insertMap.put("ENFORCE_COUNT", Integer.valueOf(0));
+        mainRid = insertSmmsEventMain(insertMap);
+        ridMap.put("RID", mainRid);
+        resultMap = (Map)this.sqlSession.selectOne("SmmsEventMain.findEventMainInfo", ridMap);
+      }
+      else
+      {
+        mainRid = (String)resultMap.get("MAIN_RID");
+        detialCount = (Long)resultMap.get("DETIAL_COUNT");
+        detialCount = Long.valueOf(detialCount.longValue() + 1L);
+        map.put("DETIAL_COUNT", detialCount);
+        map.put("MODIFIEDTIME", FMPContex.getCurrentTime());
+        map.put("RID", mainRid);
+        this.sqlSession.update("SmmsEventMain.updateDetialCount", map);
+      }
+    }
+    eventMap.put("DETAIL_RID", detailRid);
+    eventMap.put("MAIN_RID", mainRid);
+    eventMap.put("RECTIFY_STATE", resultMap.get("RECTIFY_STATE"));
+    eventMap.put("CREATTIME", resultMap.get("CREATTIME"));
+    eventMap.put("ENFORCE_COUNT", resultMap.get("ENFORCE_COUNT"));
+    eventMap.put("THREAT_TYPE4", resultMap.get("THREAT_TYPE4"));
+    eventMap.put("THREAT_TYPE1", resultMap.get("THREAT_TYPE1"));
+    eventMap.put("THREAT_TYPE2", resultMap.get("THREAT_TYPE2"));
+    eventMap.put("KEYWORDS", resultMap.get("KEYWORDS"));
+    eventMap.put("IS_FORCE_CLOSE", resultMap.get("IS_FORCE_CLOSE"));
+    eventMap.put("PRIORITY", resultMap.get("PRIORITY"));
+    eventMap.put("THREAT_LEVEL", resultMap.get("THREAT_LEVEL"));
+    eventMap.put("FINAL_RECTIFY_SUGGEST", resultMap.get("FINAL_RECTIFY_SUGGEST"));
+    return eventMap;
+  }
+  
+  public Map checkForece(Map eventMap, Map insertMap)
+  {
+    Map checkMap = new HashMap();
+    String selectClose = (String)eventMap.get("IS_FORCE_CLOSE");
+    String isClose = (String)insertMap.get("IS_FORCE_CLOSE");
+    if (selectClose.compareTo(isClose) >= 0) {
+      checkMap.put("IS_FORCE_CLOSE", isClose);
+    }
+    return checkMap;
+  }
+  
+  public boolean checkTime(Map eventMap)
+  {
+    Date date = new Date();
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    String createDate = sdf.format(date);
+    String createTime = (String)eventMap.get("CREATTIME");
+    
+    createTime = createTime.substring(0, 10);
+    if (createDate.equals(createTime)) {
+      return true;
+    }
+    return false;
+  }
 }

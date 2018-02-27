@@ -246,33 +246,34 @@
 		url = encodeURI(url);
 
 		//版本号写入
-		document.getElementById("logo_version").innerHTML = "<div style='color:#ffffff;'>1.0.2.0103_beta</div>";
+		document.getElementById("logo_version").innerHTML = "<div style='color:#ffffff;margin-top:20px;margin-left:200px;'>1.0.10_bate</div>";
 		
-		document.getElementById("menu_lv1").innerHTML=
-			 '<table class="table_menu_lv1">'
-			 +'<tr>'
-			 	+'<td style="width:10px;align:right">'
-			 		+'<div class="userInfoBar_left"></div>'
-			 	+'</td>'
-			 	+'<td  >'
-					 +'<div class="userInfoBar" onmouseover="showRoleInfo()" onmouseout="hideRoleInfo()" onmousemove="showRoleInfo()">'
-			 			+ '<br><a>当前用户: <span style="color:#ffd800;">${CURR_USERNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-			 			+ '所属部门: <span style="color:#ffd800;">${CURR_DEPTNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
-			 			+'<div id="hint" style="position:absolute;display:none;width:100px; "></div>  '
-			 		+ '</div>'
-			 	+'</td>'
-			 	+'<td style="width:140px" >'
-			 		+'<div class="userButtonBar"  > <div style=" padding-top:6px; ">'
-			 			/* +'<div style=" float: left; height: 21px;width: 75px;color:#fff;"><a style=" color:#fff;text-decoration: none;font-size:8px;" onclick="quit()" href="#" > &nbsp;&nbsp;[ 退出系统 ]</a></div>'
-	         			+'<div style=" float: left; height: 21px;width: 56px;color:#fff;"><a onclick="lockWindow()" href="#" style="  color:#fff;font-size:8px;text-decoration: none;">&nbsp;&nbsp; [ 锁屏 ]</a></div>' */
-	         			+'<div id="userButtonBar_div" ><a id="userButtonBar_a" onclick="quit()" href="#"> [ 退出系统 ]</a></div>'
-	         			+'<div id="userButtonBar_div" ><a onclick="lockWindow()" href="#" id="userButtonBar_a">[ 锁屏 ]</a></div>'
-	         		+'</div></div>'
-	         	+'</td>'
-	         	+'<td style="width:10px;align:right">'
-		 		+'<div class="userInfoBar_right"></div>'
-		 		+'</td>'
-	         	+'</tr></table>';
+// 		document.getElementById("menu_lv1").innerHTML=
+// 			 '<table class="table_menu_lv1">'
+// 			 +'<tr>'
+// 			 	+'<td style="width:10px;align:right">'
+// 			 		+'<div class="userInfoBar_left"></div>'
+// 			 	+'</td>'
+// 			 	+'<td  >'
+// 					 +'<div class="userInfoBar" onmouseover="showRoleInfo()" onmouseout="hideRoleInfo()" onmousemove="showRoleInfo()">'
+// 			 			+ '<br><a>当前用户: <span style="color:#ffd800;">${CURR_USERNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+// 			 			+ '所属部门: <span style="color:#ffd800;">${CURR_DEPTNAME}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+// // 			 			+'<div id="hint" style="position:absolute;display:none;width:100px; "></div>  '
+// 			 		+ '</div>'
+// 			 	+'</td>'
+// 			 	+'<td style="width:200px" >'
+// 			 		+'<div class="userButtonBar"  > <div style=" padding-top:7px; ">'
+// 			 			/* +'<div style=" float: left; height: 21px;width: 75px;color:#fff;"><a style=" color:#fff;text-decoration: none;font-size:8px;" onclick="quit()" href="#" > &nbsp;&nbsp;[ 退出系统 ]</a></div>'
+// 	         			+'<div style=" float: left; height: 21px;width: 56px;color:#fff;"><a onclick="lockWindow()" href="#" style="  color:#fff;font-size:8px;text-decoration: none;">&nbsp;&nbsp; [ 锁屏 ]</a></div>' */
+// 	         			+'<div id="userButtonBar_div"><a id="userButtonBar_a" onclick="quit()" href="#"> [ 退出系统 ]</a></div>'
+// 	         			+'<div id="userButtonBar_div"><a onclick="lockWindow()" href="#" id="userButtonBar_a">[ 锁屏 ]</a></div>'
+// 	         			+'<div id="userButtonBar_div"><a onclick="backHome()" href="#" id="userButtonBar_a">[ Home ]</a></div>'
+// 	         		+'</div></div>'
+// 	         	+'</td>'
+// 	         	+'<td style="width:10px;align:right">'
+// 		 		+'<div class="userInfoBar_right"></div>'
+// 		 		+'</td>'
+// 	         	+'</tr></table>';
 		//初始化框架大小 add by jgf
 		//window.open("www.baidu.com");
 		resizeEleWH();
@@ -354,11 +355,11 @@
 	/* 防止框架变形 */
 	function resizeEleWH() {
 		var width = document.body.clientWidth; //浏览器宽度
- 
+//  	alert(width);
 		var height = $("#bottonCopyright0").position().top+25;//document.body.clientHeight; //整页高度
-		//alert(height);
+// 		alert(height);
 		var headerHeight = document.getElementById('Header').offsetHeight; //页头高度
-		//alert(headerHeight);
+// 		alert(headerHeight);
 		//alert($("#bottonCopyright0").position().top);
 		
 		if (width<960){
@@ -1030,7 +1031,11 @@
 	if (window.parent.document.getElementById("infoFrame")){
 		window.parent.location.reload();
 	}
- 
+	
+	//返回首页
+	function backHome(){
+		window.parent.location.reload();
+	}
  
 </script>
 
@@ -1049,10 +1054,24 @@ title="点击查看版本更新信息"
 	  <!-- logo填充背景 -->
 	  <div class="logo_background">
 		  <div class="logo_icon">
-		  	<div id="logo_version"></div>
+		  	<div id="logo_version" onclick="backHome()"></div>
 		    <div class="logo_area">
 		    	<!--<div id="userInfoBar" class="banner_label"></div>	 -->
-			    <div  id="menu_lv1" class="banner_div"></div> 
+			    <div  id="menu_lv1" class="banner_div">
+			    	<div class="main_top_link2">
+				<img src="../../images/zscrd/kuangjia/main_08.png" width="15" height="25"></div>
+			        <div class="main_top_link"> 
+			         <ul>
+				  <li style="cursor: pointer;" onclick="backHome()"><img src="../../images/zscrd/kuangjia/home.png" width="15">&nbsp;首页</li>				 
+				  <li>当前用户：<span>${CURR_USERNAME}</span></li>
+			          <li>所属部门：<span>${CURR_DEPTNAME}</span></li>
+			          <li><a href="#" onclick="lockWindow()">[锁屏]</a></li>
+			          <li><a href="#" onclick="quit()">[退出系统]</a></li>
+			         </ul>
+			        </div> 
+				
+			        <div class="main_top_link1"><img src="../../images/zscrd/kuangjia/main_06.png" width="15" height="25"></div>
+			    </div> 
 			    
 					<!-- 一级菜单 -->
 			  </div>  
@@ -1064,14 +1083,14 @@ title="点击查看版本更新信息"
 	</div>
 	<div id="wrapdiv" class="wrapdiv">
 	<div id="Page_left" class="tree" >
-		<table id="Page_left_tree" >
+		<table id="Page_left_tree" cellpadding="0" cellspacing="0">
 			<tr id="Page_left_tree_tr">
 				<td style="border:0px solid #4499ee;">
 					<div id="TreeTopDiv"></div>
 				</td>
 			</tr>
-			<tr id="Page_right_tree_tr" style="width:193px;margin-top:-3px;">
-				<td style="width:193px;">
+			<tr id="Page_right_tree_tr" style="width:100%;margin-top:0px;">
+				<td style="width:100%;">
 					<div id="menu_lv2"></div>
 <!-- 					<div id="TreeContainDiv" style="width:0px; height:0px;display:none;"></div> -->
 				</td>
@@ -1101,8 +1120,7 @@ title="点击查看版本更新信息"
   
     <div id="Page_right">
  		<!-- iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/fmp/system/notice/NoticeBiz/ShowNotice?moduleId=s_md_fhzy&tableModelId=SAffiche" frameborder="0" scrolling="auto" > -->
-		   
-		<iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/SMMS/SmmsPendingEventBiz/forceEntering" frameborder="0" scrolling="auto" ></iframe>
+		<iframe id="infoFrame"   name="infoframe" src="<%=rootPath%>/SMMS/SmmsPendingEventBiz/homepageEntering" frameborder="0" scrolling="auto" ></iframe>
 	</div>
 	</div>
 	

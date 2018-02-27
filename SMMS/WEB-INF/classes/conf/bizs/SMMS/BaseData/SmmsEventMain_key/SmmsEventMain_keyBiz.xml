@@ -25,6 +25,9 @@
         </action>
 		<!--删除操作-->
         <action  name="Delete" class="com.zstar.SMMS.BaseData.SmmsEventMain_key.action.DeleteSmmsEventMain_keyAction">
-        </action>                    
+        </action>    
+        <!-- 日志举证-->     
+         <action  name="mainEventKey" class="com.zstar.SMMS.BaseData.SmmsEventMain_key.action.RzjzMainEvent_keyAction">
+        </action>                 
     </package>
 </struts>

@@ -75,7 +75,6 @@
 					  <td align="center">
 					    <div >
 					    	<input class="h5button blue medium" type="button"   onclick="apply();" value="确定"></input>
-					    	<input class="h5button blue medium" type="button"   onclick="closeWindow();" value="取消"></input>
 					    </div> 					  
 					  </td>
 					  <td></td>

@@ -48,9 +48,10 @@ height:55px;
 
 /** use as pic **/
 .logo_icon {
-background:url(../../images/zscrd/kuangjia/main_top_logo2.png) left top no-repeat;
+/* background:url(../../images/zscrd/kuangjia/main_top_logo2.png) left top no-repeat; */
 width:100%;
 height:55px;
+min-width:1100px;
 }
 
 .logo_area {
@@ -58,13 +59,16 @@ height:55px;
 	position: relative;
 	color:#373737; 
 	height:55px;
-	background:url(../../images/zscrd/kuangjia/main_top_right.png) left top no-repeat;
+	background:url(../../images/zscrd/kuangjia/main_top_right.png) no-repeat;
 }
 #logo_version{
 	float: left;
-	height:15px;
-	margin-left:310px;
-	margin-top:20px;
+	height:51px;
+	width:472px;
+	background:url(../../images/zscrd/kuangjia/main_top_logo2.png) left top no-repeat;
+	text-align: center;
+	cursor: pointer;
+/* 	border:1px solid red; */
 }
 
 .logo_icon_bottom {
@@ -137,6 +141,7 @@ div.menubar_lv2{
 
 div.userInfoBar{
 	height: 30px;
+	width:auto;
 	font-size: 12px;
 	color:#ffffff;
 	vertical-align:bottom;
@@ -152,11 +157,19 @@ div.userButtonBar{
 	line-height:-10px;*/
 	background: url(../../images/zscrd/kuangjia/main_07.png) right bottom repeat-x;
 }
-
+.banner_div{width:600px; height:52px; background:url(../../images/zscrd/kuangjia/main_top_right.png) no-repeat;float:right; }
+.main_top_link2{ height:25px; width:15px; float:right; margin-top:13px; margin-right:20px;}
+.main_top_link1{height:25px; width:15px; float:right; margin-top:13px;}
+.main_top_link{height:25px; width:auto;color:#FFF; float:right; margin-top:13px; line-height:25px; background:url(../../images/zscrd/kuangjia/main_07.png) repeat-x;}
+.main_top_link ul{ list-style:none;min-width:110px;}
+.main_top_link ul li{ display:inline; margin-left:15px;} 
+.main_top_link ul li a{ color:#FFF; text-decoration:none;} 
+.main_top_link ul li a:hover{ color:#F00; text-decoration: underline;} 
+.main_top_link ul li span{color:#ffd800;}
 #userButtonBar_div{
 	float: right;
 	height: 21px;
-	width: 65px;
+	width: 62px;
 	line-height: 21px;
 }
 #userButtonBar_a{
@@ -195,7 +208,7 @@ div.userInfoBar font{
 /*  	border:1px solid red; */
  	
  	background:url(../../images/zscrd/kuangjia/main_46.png); 
- 	width:192px; 
+ 	width:198px; 
  	height:24px; 
  	line-height:24px; 
  	text-indent:20px; 
@@ -220,9 +233,8 @@ div.userInfoBar font{
 .menu2_on {
 /* 	background: url(../../images/zscrd/daohang_2.gif) left bottom no-repeat; */
 /* 	float: left; */
-	
 	background:url(../../images/zscrd/kuangjia/main_24.png); 
-	width:192px; 
+	width:198px; 
 	height:24px; 
 	line-height:24px; 
 	text-indent:20px; 

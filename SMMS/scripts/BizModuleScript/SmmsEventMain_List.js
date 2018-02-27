@@ -1,13 +1,13 @@
 /***********************************
-* @文件描述：
-*************************************/
+ * @文件描述：
+ *************************************/
 function doOnload(){
-  if (typeof(doOnload_Super) != "undefined") { doOnload_Super();}  //如果存在页面加载超级方法，则先执行
+	if (typeof(doOnload_Super) != "undefined") { doOnload_Super();}  //如果存在页面加载超级方法，则先执行
 ////////对于列表操作，页面加载时要执行的代码在此完成//////////
 }
 
 function doChange(obj){
-  if (typeof(doChange_Super) != "undefined") { doChange_Super(obj);}  //如果存在onChange的超级方法，则先执行
+	if (typeof(doChange_Super) != "undefined") { doChange_Super(obj);}  //如果存在onChange的超级方法，则先执行
 ////////对于列表操作，页面元素发生改变是要执行的代码在此完成//////////
 }
 //强制关停按钮所触发的时间
@@ -79,14 +79,142 @@ function forceCloseAll(){
 			function backCallSendMsg(msg){
 				showMessage(msg);
 				doRefreshList();
-				}
 			}
 		}
 	}
-//	下发
-	function sandAll(){
+}
+//下发
+function sandAll(){
 
-		var url = rootPath+"/SMMS/SmmsEventMainBiz/SandAll?RID=";
+	var url = rootPath+"/SMMS/SmmsEventMainBiz/SandAll?RID=";
+	//发送一个ajax请求
+	XMLHttp.urlSubmit(url,backCallSendMsg);
+	function backCallSendMsg(msg){
+		showMessage(msg);
+		//刷新列表
+		doRefreshList();
+	}
+}
+
+//关停录入
+function inputForceClose(){
+
+	var url = rootPath+"/SMMS/SmmsEventMainBiz/forceEntering";
+
+	openWindow(comUrl(url));
+}
+//移至白名单
+function whiteList(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if(selectedDataList != null){
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids +=rid+";";
+
+		}
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/whiteList?RID="+rids;
+		//发送一个ajax请求
+		XMLHttp.urlSubmit(url,backCallSendMsg);
+		function backCallSendMsg(msg){	
+			showMessage(msg);
+			//刷新列表
+			doRefreshList();
+		}
+	}
+}
+//移出白名单
+function updateBlackList(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if(selectedDataList != null){
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids +=rid+",";
+
+		}
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/updateBlackList?RID="+rids;
+		//发送一个ajax请求
+		XMLHttp.urlSubmit(url,backCallSendMsg);
+		function backCallSendMsg(msg){
+			showMessage(msg);
+			//刷新列表
+			doRefreshList();
+		}	
+	}
+}
+
+//IDC安全事件管理的解封申请
+function unblockApply(){
+	var result=getDataListTrueValue(selectedRid,"RECTIFY_STATE");
+	if(result =='030'){
+		showMessage("该数据已在申请解封中，请勿执行操作");
+		//刷新列表
+		doRefreshList();
+	}else{
+		var url=rootPath+"/SMMS/SmmsWebOpenAppBiz/IDCAdd?tableModelId=SmmsWebOpenApp&RID="+selectedRid;
+		openWindow(comUrl(url));
+	}
+
+}
+//网络安全事件 待关停 提交关停申请
+function forcloseApply(){
+
+	var selectDataList = new Array();
+	selectDataList = setSelectedDataList();
+	if(setSelectedDataList != null) {
+		if(selectDataList.length<2){
+			var result=getDataListTrueValue(selectDataList[0].get("RID"),"RECTIFY_STATE");
+			if(result =='005'){
+				showMessage("数据已处理");
+				//刷新列表
+				doRefreshList();
+			}else{
+				var url = rootPath+"/SMMS/SmmsWebCloseAppBiz/DoAdd?tableModelId=SmmsWebCloseApp&RID="+selectDataList[0].get("RID");
+				openWindow(comUrl(url));
+			}
+		}else{
+			showMessage("一次只能审批一个");
+			//刷新列表
+			doRefreshList();
+		}
+	}
+}
+//IDC安全事件管理的标记已关停
+function signClose(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if(selectedDataList != null){
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids =rids+rid+",";
+		}
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/signClose?RID="+rids;
+		//发送一个ajax请求
+		XMLHttp.urlSubmit(url,backCallSendMsg);
+		function backCallSendMsg(msg){
+			showMessage(msg);
+			//刷新列表
+			doRefreshList();
+		}	
+	}
+}
+//移至确定关停
+function finalToTwo(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if (selectedDataList != null) {
+
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids +=rid+",";
+
+		}
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/finalToTwo?RID="+rids;
 		//发送一个ajax请求
 		XMLHttp.urlSubmit(url,backCallSendMsg);
 		function backCallSendMsg(msg){
@@ -94,54 +222,31 @@ function forceCloseAll(){
 			//刷新列表
 			doRefreshList();
 		}
-	}
 
-//	关停录入
-	function inputForceClose(){
+	} 
+}
 
-		var url = rootPath+"/SMMS/SmmsEventMainBiz/forceEntering";
+//网站一键恢复
 
-		openWindow(comUrl(url));
-	}
-//	移至白名单
-	function whiteList(){
-		var selectedDataList = new Array();
-		selectedDataList = setSelectedDataList();
-		var rids = "";
-		if(selectedDataList != null){
-			for (var i = 0; i<selectedDataList.length ;i++){
-				var rid=selectedDataList[i].get("RID");  
-				rids +=rid+";";
+function recoverWeb(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if (selectedDataList != null) {
 
-			}
-			var url = rootPath+"/SMMS/SmmsEventMainBiz/whiteList?RID="+rids;
-			//发送一个ajax请求
-			XMLHttp.urlSubmit(url,backCallSendMsg);
-			function backCallSendMsg(msg){	
-				showMessage(msg);
-				//刷新列表
-				doRefreshList();
-			}
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids +=rid+",";
+
 		}
-	}
-//	移出白名单
-	function updateBlackList(){
-		var selectedDataList = new Array();
-		selectedDataList = setSelectedDataList();
-		var rids = "";
-		if(selectedDataList != null){
-			for (var i = 0; i<selectedDataList.length ;i++){
-				var rid=selectedDataList[i].get("RID");  
-				rids +=rid+",";
-
-			}
-			var url = rootPath+"/SMMS/SmmsEventMainBiz/updateBlackList?RID="+rids;
-			//发送一个ajax请求
-			XMLHttp.urlSubmit(url,backCallSendMsg);
-			function backCallSendMsg(msg){
-				showMessage(msg);
-				//刷新列表
-				doRefreshList();
-			}	
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/recoverWeb?RID="+rids;
+		//发送一个ajax请求
+		XMLHttp.urlSubmit(url,backCallSendMsg);
+		function backCallSendMsg(msg){
+			showMessage(msg);
+			//刷新列表
+			doRefreshList();
 		}
-	}
+
+	} 
+}

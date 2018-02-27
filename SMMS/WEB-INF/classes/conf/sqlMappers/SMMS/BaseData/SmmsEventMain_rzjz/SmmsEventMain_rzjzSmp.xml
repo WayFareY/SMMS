@@ -23,7 +23,7 @@
             IP,
             ATTACK_IP,
             SYS_RECTIFY_SUGGEST,
-            FINAL_RECTIFY_SUGGES,
+            FINAL_RECTIFY_SUGGEST,
             IS_FORCE_CLOSE,
             IS_WHITE_LIST,
             FORCE_CLOSE_DESC,
@@ -64,7 +64,7 @@
             IP,
             ATTACK_IP,
             SYS_RECTIFY_SUGGEST,
-            FINAL_RECTIFY_SUGGES,
+            FINAL_RECTIFY_SUGGEST,
             IS_FORCE_CLOSE,
             IS_WHITE_LIST,
             FORCE_CLOSE_DESC,
@@ -146,7 +146,7 @@
             <if test="IP != null ">IP,</if>
             <if test="ATTACK_IP != null ">ATTACK_IP,</if>
             <if test="SYS_RECTIFY_SUGGEST != null ">SYS_RECTIFY_SUGGEST,</if>
-            <if test="FINAL_RECTIFY_SUGGES != null ">FINAL_RECTIFY_SUGGES,</if>
+            <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
             <if test="IS_WHITE_LIST != null ">IS_WHITE_LIST,</if>
             <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
@@ -184,7 +184,7 @@
            <if test="IP != null ">#{IP},</if>
            <if test="ATTACK_IP != null ">#{ATTACK_IP},</if>
            <if test="SYS_RECTIFY_SUGGEST != null ">#{SYS_RECTIFY_SUGGEST},</if>
-           <if test="FINAL_RECTIFY_SUGGES != null ">#{FINAL_RECTIFY_SUGGES},</if>
+           <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if>
            <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
@@ -225,7 +225,7 @@
 		    <if test="IP!=null"> IP=#{IP},</if> 
 		    <if test="ATTACK_IP!=null"> ATTACK_IP=#{ATTACK_IP},</if> 
 		    <if test="SYS_RECTIFY_SUGGEST!=null"> SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},</if> 
-		    <if test="FINAL_RECTIFY_SUGGES!=null"> FINAL_RECTIFY_SUGGES=#{FINAL_RECTIFY_SUGGES},</if> 
+		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGES=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
 		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 

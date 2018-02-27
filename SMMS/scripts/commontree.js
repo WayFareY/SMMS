@@ -251,6 +251,8 @@ function showSubTree(menuId){
 			}
 			$("#"+menuId+"_treeShow").css("margin-bottom","10px");
 			$("#"+menuId+"_treeShow").css("margin-top","3px");
+			//$("#"+menuId+"_treeShow").css("height","585px");
+			$("#"+menuId+"_treeShow").css("overflow","auto");
 		}
 	}else{
 		PreId="";
@@ -318,6 +320,7 @@ function refreshRecordCount(treeObj,menuId){
 function backSubTree(){	
 	$("#"+PreId+"_treeShow").css("margin-bottom","0px");
 	$("#"+PreId+"_treeShow").css("margin-top","0px");
+	//$("#"+PreId+"_treeShow").css("height","0px");
 	if (currentTree!=undefined && PreId!=""){
 		
 		var childCount=currentTree.htmlNode.childNodes.length;

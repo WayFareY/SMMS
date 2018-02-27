@@ -24,7 +24,7 @@
             ssp.ATTACK_IP,
             ssp.URL,
             ssp.SYS_RECTIFY_SUGGEST,
-            ssp.FINAL_RECTIFY_SUGGES,
+            ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
             ssp.FORCE_CLOSE_DESC,
@@ -45,6 +45,9 @@
             ssp.KEYWORDS,
             ssp.SNAPSHOP,
             ssp.URL,
+            ssp.PRIORITY,
+            ssp.DETIAL_COUNT,
+            ssp.ENFORCE_COUNT,
        		sii.IDC_ID,
             sii.IDC_NAME
 </sql>
@@ -70,7 +73,7 @@
             ssp.ATTACK_IP,
             ssp.URL,
             ssp.SYS_RECTIFY_SUGGEST,
-            ssp.FINAL_RECTIFY_SUGGES,
+            ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
             ssp.FORCE_CLOSE_DESC,
@@ -91,6 +94,9 @@
             ssp.KEYWORDS,
             ssp.SNAPSHOP,
             ssp.URL,
+            ssp.PRIORITY,
+            ssp.DETIAL_COUNT,
+            ssp.ENFORCE_COUNT,
        		sii.IDC_ID,
             sii.IDC_NAME
 </sql>
@@ -103,13 +109,7 @@
 		'详情' 
 	else 
 		'无' 
-	end  as TRANS_SNAPSHOP,case WHEN 
-		ssp.RID is not null and ssp.RID!='' 
-	then 
-		'查看明细' 
-	else 
-		'无' 
-	end  as TRANS_RID,<include refid="listColumns"/>
+	end  as TRANS_SNAPSHOP,DETIAL_COUNT  as TRANS_RID,<include refid="listColumns"/>
 	 from SMMS_EVENT_MAIN  as ssp
 	 left join smms_idc_info as sii
     on ssp.ACCESS_ID=sii.IDC_ID
@@ -182,7 +182,7 @@
             <if test="ATTACK_IP != null ">ATTACK_IP,</if>
             <if test="URL != null ">URL,</if>
             <if test="SYS_RECTIFY_SUGGEST != null ">SYS_RECTIFY_SUGGEST,</if>
-            <if test="FINAL_RECTIFY_SUGGES != null ">FINAL_RECTIFY_SUGGES,</if>
+            <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
             <if test="IS_WHITE_LIST != null ">IS_WHITE_LIST,</if>
             <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
@@ -198,6 +198,8 @@
             <if test="MAPPING_MODE != null ">MAPPING_MODE,</if>
             <if test="MEMO != null ">MEMO,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="PRIORITY != null ">PRIORITY,</if>
+            <if test="ENFORCE_COUNT != null ">ENFORCE_COUNT,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
 	   values (
@@ -221,7 +223,7 @@
            <if test="ATTACK_IP != null ">#{ATTACK_IP},</if>
            <if test="URL != null ">#{URL},</if>
            <if test="SYS_RECTIFY_SUGGEST != null ">#{SYS_RECTIFY_SUGGEST},</if>
-           <if test="FINAL_RECTIFY_SUGGES != null ">#{FINAL_RECTIFY_SUGGES},</if>
+           <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if>
            <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
@@ -237,7 +239,9 @@
            <if test="MAPPING_MODE != null ">#{MAPPING_MODE},</if>
            <if test="MEMO != null ">#{MEMO},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="PRIORITY != null ">#{PRIORITY},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
+           <if test="ENFORCE_COUNT != null ">#{ENFORCE_COUNT},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
 </insert> 
 
@@ -263,7 +267,7 @@
 		    <if test="ATTACK_IP!=null"> ATTACK_IP=#{ATTACK_IP},</if> 
 		    <if test="URL!=null"> URL=#{URL},</if> 
 		    <if test="SYS_RECTIFY_SUGGEST!=null"> SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},</if> 
-		    <if test="FINAL_RECTIFY_SUGGES!=null"> FINAL_RECTIFY_SUGGES=#{FINAL_RECTIFY_SUGGES},</if> 
+		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
 		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
@@ -279,6 +283,8 @@
 		    <if test="MAPPING_MODE!=null"> MAPPING_MODE=#{MAPPING_MODE},</if> 
 		    <if test="MEMO!=null"> MEMO=#{MEMO},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="PRIORITY!=null"> PRIORITY=#{PRIORITY},</if> 
+		    <if test="ENFORCE_COUNT!=null"> ENFORCE_COUNT=#{ENFORCE_COUNT},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

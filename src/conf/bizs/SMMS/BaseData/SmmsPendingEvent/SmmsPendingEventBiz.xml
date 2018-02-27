@@ -62,6 +62,10 @@
         </action>  
         <!-- 关停录入-->     
          <action  name="qzgt" class="com.zstar.SMMS.BaseData.SmmsPendingEvent.action.QzgtAction">
-        </action> 
+        </action>
+	<!--首页-->     
+         <action  name="homepageEntering" class="com.ui.HomepageAction">
+       		<result name="homesuccess">/WEB-INF/jsp/SMMS/smmshomepage2.jsp</result>
+         </action>
     </package>
 </struts>

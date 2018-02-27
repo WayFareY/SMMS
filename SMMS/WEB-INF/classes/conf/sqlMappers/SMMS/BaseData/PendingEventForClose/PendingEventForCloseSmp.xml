@@ -45,7 +45,7 @@
             RECTIFY_STATE,
             EVENT_SOURCE,
             IS_FORCE_CLOSE,
-            FORCE_CLOSE_DESCE
+            FORCE_CLOSE_DESC
 </sql>
 <sql id="detailColumns">
 	
@@ -90,7 +90,7 @@
             RECTIFY_STATE,
             EVENT_SOURCE,
             IS_FORCE_CLOSE,
-            FORCE_CLOSE_DESCE
+            FORCE_CLOSE_DESC
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
 	select <include refid="listColumns"/> from SMMS_PENDING_EVENT 
@@ -189,7 +189,7 @@
             <if test="RECTIFY_STATE != null ">RECTIFY_STATE,</if>
             <if test="EVENT_SOURCE != null ">EVENT_SOURCE,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
-            <if test="FORCE_CLOSE_DESCE != null ">FORCE_CLOSE_DESCE</if>)
+            <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
            <if test="CLIENTNAME != null ">#{CLIENTNAME},</if>
@@ -232,7 +232,7 @@
            <if test="RECTIFY_STATE != null ">#{RECTIFY_STATE},</if>
            <if test="EVENT_SOURCE != null ">#{EVENT_SOURCE},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
-           <if test="FORCE_CLOSE_DESCE != null ">#{FORCE_CLOSE_DESCE}</if>)
+           <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC}</if>)
 </insert> 
 
 <update id="updateSave" parameterType="hashmap" > 
@@ -277,7 +277,7 @@
 		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
 		    <if test="EVENT_SOURCE!=null"> EVENT_SOURCE=#{EVENT_SOURCE},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
-		    <if test="FORCE_CLOSE_DESCE!=null"> FORCE_CLOSE_DESCE=#{FORCE_CLOSE_DESCE},</if> 
+		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
 		</set>
 	where RID=#{RID}
 </update> 

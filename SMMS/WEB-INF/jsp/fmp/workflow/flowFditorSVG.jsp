@@ -97,11 +97,7 @@ function getOpMode()
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
 	style="width: 800px; margin-left: -350px">
 <div class="modal-body" style="max-height: 500px;"><!-- body --></div>
-<div class="modal-footer" style="padding: 5px;"><a
-	href="http://www.leipi.org" target="_blank"><img
-	src="http://www.leipi.org/wp-content/themes/leipi/images/leipi.png"
-	alt="雷劈认证 icon" style="width: 40px"></a> <!--a href="#" class="btn btn-danger" data-dismiss="modal" aria-hidden="true"><i class="icon-remove icon-white"></i></a-->
-</div>
+
 </div>
 
 
@@ -344,13 +340,7 @@ function getOpMode()
 
 
 <div style="display: none;"></div>
-<div style="display: none"><script type="text/javascript">
-	var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://"
-			: " http://");
-	document
-			.write(unescape("%3Cscript src='"
-					+ _bdhmProtocol
-					+ "hm.baidu.com/h.js%3F1e6fd3a46a5046661159c6bf55aad1cf' type='text/javascript'%3E%3C/script%3E"));
-</script></div>
+<div style="display: none">
+</div>
 </body>
 </html>

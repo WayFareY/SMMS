@@ -7,6 +7,8 @@
             RID,
             IDC_ID,
             IDC_NAME,
+            IDC_SHORT_NAME,
+            IS_CONNECT_SYS,
             OFFICE_TEL,
             EMAIL,
             OFFICE_ADDRESS,
@@ -45,6 +47,8 @@
             RID,
             IDC_ID,
             IDC_NAME,
+            IDC_SHORT_NAME,
+            IS_CONNECT_SYS,
             OFFICE_TEL,
             EMAIL,
             OFFICE_ADDRESS,
@@ -98,7 +102,10 @@
     ORDER BY idc.IDC_ID,ROOM_IDX
 </select>
 <select id="selectUrlAndRid" parameterType="hashmap" resultType="hashmap">
-	select WEBSERVICE_URL as url,RID as rid FROM SMMS_IDC_INFO where RECORDSTATE ='0'
+	select WEBSERVICE_URL as URL,RID FROM SMMS_IDC_INFO where RECORDSTATE ='0'
+</select>
+<select id="getIdcCount" parameterType="hashmap" resultType="hashmap">
+	select count(idc_id) as IDC_COUNT from smms_idc_info where RECORDSTATE='0'
 </select>
 <select id="selectUrlOneRid" parameterType="String" resultType="String">
 	select WEBSERVICE_URL as url FROM SMMS_IDC_INFO where RECORDSTATE ='0' and RID = #{rid}
@@ -112,6 +119,9 @@
         </if>	
 	</where>
 </select> 
+<select id="selectIdcId" parameterType="hashmap" resultType="hashmap">
+	SELECT  IDC_ID,IDC_SHORT_NAME FROM smms_idc_info WHERE RID = #{RID} and RECORDSTATE ='0'
+</select>
 <!--校验IDC_ID-->
 <select id="checkIdcId" parameterType="hashmap" resultType="hashmap">
 	SELECT  IDC_ID FROM smms_idc_info WHERE IDC_ID = #{IDC_ID}
@@ -127,7 +137,7 @@
 	select <include refid="detailColumns"/> from SMMS_IDC_INFO idc where idc.RID = #{RID}
 	 
 </select> 
-<select id="getIdcInfoByIdcId" parameterType="hashmap" resultType="hashmap"> 
+<select id="getIdcInfoByIdcId" parameterType="String" resultType="hashmap"> 
 	select <include refid="detailColumns"/>  from SMMS_IDC_INFO  where IDC_ID = #{IDC_ID} 
 </select>
 
@@ -148,6 +158,8 @@
             <if test="RID != null ">RID,</if>
             <if test="IDC_ID != null ">IDC_ID,</if>
             <if test="IDC_NAME != null ">IDC_NAME,</if>
+            <if test="IDC_SHORT_NAME != null ">IDC_SHORT_NAME,</if>
+            <if test="IS_CONNECT_SYS != null ">IS_CONNECT_SYS,</if>
             <if test="OFFICE_TEL != null ">OFFICE_TEL,</if>
             <if test="EMAIL != null ">EMAIL,</if>
             <if test="OFFICE_ADDRESS != null ">OFFICE_ADDRESS,</if>
@@ -184,6 +196,8 @@
            <if test="RID != null ">#{RID},</if>
            <if test="IDC_ID != null ">#{IDC_ID},</if>
            <if test="IDC_NAME != null ">#{IDC_NAME},</if>
+           <if test="IDC_SHORT_NAME != null ">#{IDC_SHORT_NAME},</if>
+           <if test="IS_CONNECT_SYS != null ">#{IS_CONNECT_SYS},</if>
            <if test="OFFICE_TEL != null ">#{OFFICE_TEL},</if>
            <if test="EMAIL != null ">#{EMAIL},</if>
            <if test="OFFICE_ADDRESS != null ">#{OFFICE_ADDRESS},</if>
@@ -223,6 +237,8 @@
 		<set>
 				    <if test="IDC_ID!=null"> IDC_ID=#{IDC_ID},</if> 
 		    <if test="IDC_NAME!=null"> IDC_NAME=#{IDC_NAME},</if> 
+		    <if test="IDC_SHORT_NAME!=null"> IDC_SHORT_NAME=#{IDC_SHORT_NAME},</if> 
+		    <if test="IS_CONNECT_SYS!=null"> IS_CONNECT_SYS=#{IS_CONNECT_SYS},</if> 
 		    <if test="OFFICE_TEL!=null"> OFFICE_TEL=#{OFFICE_TEL},</if> 
 		    <if test="EMAIL!=null"> EMAIL=#{EMAIL},</if> 
 		    <if test="OFFICE_ADDRESS!=null"> OFFICE_ADDRESS=#{OFFICE_ADDRESS},</if> 

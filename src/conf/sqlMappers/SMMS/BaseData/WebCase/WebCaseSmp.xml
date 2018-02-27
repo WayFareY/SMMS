@@ -129,6 +129,9 @@
 	select DOMAIN_NAME from smms_web_case where RECORDSTATE='0'
 </select>
 
+<select id="getIdcWebCount" parameterType="hashmap" resultType="hashmap">
+   select count(RID) as BUSSY_COUNT from smms_web_case where RECORDSTATE='0'
+</select>
 <select id="getDomainNameByRid" parameterType="hashmap" resultType="hashmap">
 	select DOMAIN_NAME from smms_web_case where RECORDSTATE='0' and RID=#{RID}
 </select>

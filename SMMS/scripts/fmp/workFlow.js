@@ -186,8 +186,14 @@ function workFlowStartOpSubmit(rid,flowTempId,tableModelId,bizTypeId,parmsUrl){
 	if(parmsUrl && parmsUrl != ''){
 		url +=parmsUrl;
 	}
-	openModalDialog(url,"","scroll:no; center:yes; resizable:yes; dialogWidth:600px;dialogHeight:350px");
-	doRefreshList();
+	var dataObject = new Object();    
+	openModalDialog(url,dataObject,"scroll:no; center:yes; resizable:yes; dialogWidth:600px;dialogHeight:350px");
+	dataObject.backCall=bc;		
+	
+	function bc(){
+		doRefreshList();
+		closeWindow();
+	};
 }
 
 /**
@@ -341,6 +347,24 @@ function getBizUrl(opMode){
 			}
 			break;
 		}
+		case '300':{
+			 
+			//网站恢复申请
+			url = rootPath+"/SMMS/SmmsWebOpenAppBiz/${bizAction}BIZTYPEID=300";
+			if(url.indexOf("&tableModelId=")<0){
+				url += "&tableModelId=SmmsWebOpenApp";
+			}
+			break;
+		}	
+		case '400':{
+			 
+			//网站关停申请
+			url = rootPath+"/SMMS/SmmsWebCloseAppBiz/${bizAction}BIZTYPEID=400";
+			if(url.indexOf("&tableModelId=")<0){
+				url += "&tableModelId=SmmsWebCloseApp";
+			}
+			break;
+		}			
 		default:url = "";
 		break;
 	}
@@ -453,7 +477,7 @@ function apvSpecificHisView(){
 function flowSpecificReDiscuss(){
 	if(selectedRid !=null){
 		var currApproveState = getDataListTrueValue(selectedRid,"APPROVESTATE");
-		if(currApproveState == '800'){
+		if(currApproveState == '800'|| currApproveState=='900'){
 			var bizRid = getDataListTrueValue(selectedRid,"BIZRID"); 
 			var url = getBizUrl();
 			if(url == ""){

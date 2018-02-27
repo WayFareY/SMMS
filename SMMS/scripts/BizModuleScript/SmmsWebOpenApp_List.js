@@ -38,3 +38,17 @@ function sandAll(){
 		}
 		
 }
+
+function checkOpperation(opid){
+	if ('op_viewData' == opid){
+		var appResult=getDataListTrueValue(selectedRid,"APP_RESULT");
+		if( appResult !='0'){
+			showMessage("该数据已在处理,请勿执行操作");
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+}
+

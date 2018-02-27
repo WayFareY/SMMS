@@ -23,7 +23,7 @@
             ssp.IP,
             ssp.ATTACK_IP,
             ssp.SYS_RECTIFY_SUGGEST,
-            ssp.FINAL_RECTIFY_SUGGES,
+            ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
             ssp.FORCE_CLOSE_DESC,
@@ -43,7 +43,11 @@
             ssp.RECORDSTATE,
             ssp.KEYWORDS,
             ssp.SNAPSHOP,
+            ssp.DETIAL_COUNT,
+            ssp.ENFORCE_COUNT,
+            ssp.DETAIL_RID,
             ssp.URL,
+            ssp.PRIORITY,
        		sii.IDC_ID,
             sii.IDC_NAME
 </sql>
@@ -68,7 +72,7 @@
             ssp.IP,
             ssp.ATTACK_IP,
             ssp.SYS_RECTIFY_SUGGEST,
-            ssp.FINAL_RECTIFY_SUGGES,
+            ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
             ssp.FORCE_CLOSE_DESC,
@@ -88,19 +92,64 @@
             ssp.RECORDSTATE,
             ssp.KEYWORDS,
             ssp.SNAPSHOP,
+            ssp.DETIAL_COUNT,
+            ssp.ENFORCE_COUNT,
+            ssp.DETAIL_RID,
             ssp.URL,
+            ssp.PRIORITY,
        		sii.IDC_ID,
             sii.IDC_NAME
 </sql>
+<sql id="listColumnsByRid">
+	
+            RID as EVENT_MAINRID,
+            EVENT_SOURCE,
+            CLIENTNAME,
+            REPORT_CITY,
+            EVENT_TYPE1,
+            THREAT_LEVEL,
+            THREAT_NAME,
+            THREAT_TYPE1,
+            THREAT_TYPE2,
+            THREAT_TYPE3,
+            THREAT_TYPE4,
+            ACCESS_ID,
+            ROOM_NAME,
+            ROOM_IDX,
+            DOMAIN_NAME,
+            CC_DOMAIN,
+            IP,
+            ATTACK_IP,
+            SYS_RECTIFY_SUGGEST,
+            FINAL_RECTIFY_SUGGEST,
+            IS_FORCE_CLOSE,
+            IS_WHITE_LIST,
+            FORCE_CLOSE_DESC,
+            RECTIFY_TERM,
+            CLOSE_TERM,
+            SEND_TIME,
+            SEND_TIMESTAMP,
+            RECTIFY_STATE,
+            RECTIFY_MEASURE,
+            FEEDBACK_TIME,
+            FEEDBACK_TIMESTAMP,
+            WEB_CASE_RID,
+            MAPPING_MODE,
+            MEMO,
+            CREATTIME,
+            MODIFIEDTIME,
+            RECORDSTATE,
+            KEYWORDS,
+            SNAPSHOP,
+            DETIAL_COUNT,
+            ENFORCE_COUNT,
+            PRIORITY,
+            URL
+</sql>
+
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
 	select sii.IDC_NAME as TRANS_IDC_ID,ssw.WEBSITE_NAME as TRANS_WEB_CASE_RID,
-  case WHEN 
-		ssp.RID is not null and ssp.RID!='' 
-	then 
-		'查看明细' 
-	else 
-		'无' 
-	end  as TRANS_RID,<include refid="listColumns"/>
+ 	ssp.DETIAL_COUNT  as TRANS_RID,<include refid="listColumns"/>
 	from SMMS_EVENT_MAIN as ssp
 	left join smms_idc_info as sii
     on ssp.ACCESS_ID=sii.IDC_ID
@@ -117,26 +166,266 @@
              order by ${order}
         </if>				
 </select> 
+<select id="findEventMainInfo" parameterType="hashmap" resultType="hashmap"> 
+	select RECTIFY_STATE,CREATTIME,ENFORCE_COUNT,THREAT_TYPE4,KEYWORDS,IS_FORCE_CLOSE,PRIORITY,THREAT_LEVEL,THREAT_TYPE1,THREAT_TYPE2 ,FINAL_RECTIFY_SUGGEST from SMMS_EVENT_MAIN where RECORDSTATE='0' and  RID=#{RID}			
+</select> 
 <select id="countWebCaseRidTotal" parameterType="hashmap" resultType="hashmap"> 
-	select count(WEB_CASE_RID) as WEBCASETOTAL,max(rid) as MAIN_RID from SMMS_EVENT_MAIN where RECORDSTATE='0'and RECTIFY_STATE='000' and  WEB_CASE_RID=#{WEB_CASE_RID}			
+select count(main.WEB_CASE_RID) as WEBCASETOTAL,max(main.rid) as MAIN_RID ,max(main.DETIAL_COUNT) as DETIAL_COUNT, max(main.RECTIFY_STATE) as RECTIFY_STATE,max(main.CREATTIME) as CREATTIME,max(main.ENFORCE_COUNT) as ENFORCE_COUNT,max(main.THREAT_TYPE4) as THREAT_TYPE4,max(main.KEYWORDS) as KEYWORDS,max(main.IS_FORCE_CLOSE) as IS_FORCE_CLOSE,max(main.PRIORITY) as PRIORITY,max(main.THREAT_LEVEL) as THREAT_LEVEL, 
+ max(THREAT_TYPE1) as THREAT_TYPE1,max(THREAT_TYPE2) as THREAT_TYPE2,max(FINAL_RECTIFY_SUGGEST) as FINAL_RECTIFY_SUGGEST from SMMS_EVENT_MAIN as main 
+where main.RECORDSTATE='0' and  main.WEB_CASE_RID=#{WEB_CASE_RID}			
 </select> 
 <select id="countDomainTotal" parameterType="hashmap" resultType="hashmap"> 
-	select count(DOMAIN_NAME) as DOMAINTOTAL,max(rid) as MAIN_RID from SMMS_EVENT_MAIN where RECORDSTATE='0' and RECTIFY_STATE='000' and DOMAIN_NAME=#{DOMAIN_NAME} 
+select count(main.DOMAIN_NAME) as DOMAINTOTAL,max(main.rid) as MAIN_RID,max(main.DETIAL_COUNT) as DETIAL_COUNT, max(main.RECTIFY_STATE) as RECTIFY_STATE,max(main.CREATTIME) as CREATTIME,max(main.ENFORCE_COUNT) as ENFORCE_COUNT,max(main.THREAT_TYPE4) as THREAT_TYPE4,max(main.KEYWORDS) as KEYWORDS,max(main.IS_FORCE_CLOSE) as IS_FORCE_CLOSE,max(main.PRIORITY) as PRIORITY,max(main.THREAT_LEVEL) as THREAT_LEVEL ,
+   max(THREAT_TYPE1) as THREAT_TYPE1,max(THREAT_TYPE2) as THREAT_TYPE2,max(FINAL_RECTIFY_SUGGEST) as FINAL_RECTIFY_SUGGEST   from SMMS_EVENT_MAIN as main 
+where main.RECORDSTATE='0' and main.DOMAIN_NAME=#{DOMAIN_NAME} 
 </select> 
 <select id="countIpTotal" parameterType="hashmap" resultType="hashmap"> 
-	select count(IP) as IPTOTAL,max(rid) as MAIN_RID from SMMS_EVENT_MAIN where RECORDSTATE='0' and RECTIFY_STATE='000' and IP=#{IP} 
+select count(main.IP) as IPTOTAL,max(main.rid) as MAIN_RID,max(main.DETIAL_COUNT) as DETIAL_COUNT, max(main.RECTIFY_STATE) as RECTIFY_STATE,max(main.CREATTIME) as CREATTIME,max(main.ENFORCE_COUNT) as ENFORCE_COUNT,max(main.THREAT_TYPE4) as THREAT_TYPE4,max(main.KEYWORDS) as KEYWORDS ,max(main.IS_FORCE_CLOSE) as IS_FORCE_CLOSE,max(main.PRIORITY) as PRIORITY,max(main.THREAT_LEVEL) as THREAT_LEVEL ,
+ max(THREAT_TYPE1) as THREAT_TYPE1,max(THREAT_TYPE2) as THREAT_TYPE2,max(FINAL_RECTIFY_SUGGEST) as FINAL_RECTIFY_SUGGEST	from SMMS_EVENT_MAIN as main 
+where main.RECORDSTATE='0' and main.IP=#{IP} 
 </select> 
+<select id="selectModifiedTime" resultType="hashmap"> 
+      select RID as EVENT_RID,MODIFIEDTIME,ACCESS_ID from SMMS_EVENT_MAIN 
+      where RECORDSTATE = '0' 
+      and RECTIFY_STATE = '020' and IS_FORCE_CLOSE = '2'
+</select> 
+
+<select id="dealRectify" parameterType="hashmap" resultType="hashmap"> 
+   select RID, MAIN_RID, OCCUR_TIME
+   from smms_pending_event
+   where MAIN_RID = #{EVENT_RID} 
+    <![CDATA[AND #{MODIFIEDTIME} < OCCUR_TIME ]]> 
+</select> 
+<select id="findEventMainMessage" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumnsByRid"/> from SMMS_EVENT_MAIN where   RID=#{EVENT_RID}			
+</select> 
+<select id="findEventMainUrl" parameterType="hashmap" resultType="hashmap"> 
+	select  EVENT_TYPE1,THREAT_TYPE1,THREAT_TYPE4 from SMMS_EVENT_MAIN where   RID=#{RID}			
+</select> 
+
+<select id="getCountWebCaseRid" parameterType="hashmap" resultType="hashmap"> 
+	select count(WEB_CASE_RID) as NO_CASE from smms_event_main where RECORDSTATE='0' and (WEB_CASE_RID is null or WEB_CASE_RID='')		
+</select> 
+
+<select id="getCountModifiedtime" parameterType="hashmap" resultType="hashmap"> 
+	select count(MODIFIEDTIME) as MONTH_EVENT from smms_event_main where substring(MODIFIEDTIME,1,7)=substring(to_char(CURRENT_DATE,'yyyy-mm-dd'),1,7) and RECORDSTATE='0'
+</select> 
+
+<select id="getCountRectifyStateEight" parameterType="hashmap" resultType="hashmap"> 
+	select count(RECTIFY_STATE) as MONTH_DEALT from smms_event_main where substring(MODIFIEDTIME,1,7)=substring(to_char(CURRENT_DATE,'yyyy-mm-dd'),1,7) and RECTIFY_STATE='888' and RECORDSTATE='0'
+</select> 
+
+<select id="getCountRectifyStateNoEight" parameterType="hashmap" resultType="hashmap"> 
+	select count(RECTIFY_STATE) as MONTH_NOT_DEAL from smms_event_main where substring(MODIFIEDTIME,1,7)=substring(to_char(CURRENT_DATE,'yyyy-mm-dd'),1,7) and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null and RECORDSTATE='0'
+</select> 
+<select id="getCountIsForceCloseOne" parameterType="hashmap" resultType="hashmap"> 
+	select count(IS_FORCE_CLOSE) as CLOSED_COUNT from smms_event_main where IS_FORCE_CLOSE='1' and RECTIFY_STATE ='888' and RECORDSTATE='0'
+</select> 
+<select id="getCountIsForceCloseNoOne" parameterType="hashmap" resultType="hashmap"> 
+	select count(IS_FORCE_CLOSE) as NEED_CLOSE_COUNT from smms_event_main where IS_FORCE_CLOSE='1' and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null and RECORDSTATE='0'
+</select>
+<select id="getCountIsForceCloseTwo" parameterType="hashmap" resultType="hashmap"> 
+	select count(IS_FORCE_CLOSE) as RECTIFY_COUNT from smms_event_main where IS_FORCE_CLOSE='2' and RECTIFY_STATE ='888' and RECORDSTATE='0'
+</select>
+<select id="getCountIsForceCloseNoTwo" parameterType="hashmap" resultType="hashmap"> 
+	select count(IS_FORCE_CLOSE) as NEED_RECTIFY_COUNT from smms_event_main where IS_FORCE_CLOSE='2' and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null and RECORDSTATE='0'
+</select>
+
+<select id="getCountThreatTypeOneAll" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as COUNT_THREAT_TYPE4_ALL from smms_event_main 
+ where 
+    (threat_type4 like '%010%' 
+  or
+    threat_type4 like '%020%' 
+  or
+  threat_type4 like '%030%' 
+    )
+  and 
+     RECORDSTATE='0' 
+  and 
+    (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeOne" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_010 from smms_event_main 
+ where 
+   threat_type4 like '%010%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeTwo" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_020 from smms_event_main 
+ where 
+   threat_type4 like '%020%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+    (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeThree" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_030 from smms_event_main 
+ where 
+   threat_type4 like '%030%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+
+<select id="getCountThreatTypeTwoAll" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as COUNT_THREAT_TYPE4_ALL from smms_event_main 
+ where 
+    (threat_type4 like '%040%' 
+  or
+    threat_type4 like '%050%' 
+  or
+  threat_type4 like '%060%' 
+    )
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeFour" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_040 from smms_event_main 
+ where 
+   threat_type4 like '%040%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeFive" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_050 from smms_event_main 
+ where 
+   threat_type4 like '%050%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+<select id="getCountThreatTypeSix" parameterType="hashmap" resultType="hashmap"> 
+	select count(threat_type4) as KEY_060 from smms_event_main 
+ where 
+   threat_type4 like '%060%' 
+  and 
+     RECORDSTATE='0' 
+  and 
+     (threat_type4!='' or threat_type4 is not null)
+</select>
+
+
+<select id="getCountThreatTypeAll" parameterType="hashmap" resultType="hashmap"> 
+select MAX(idc.idc_short_name) AS IDC_NAME,main.access_id as IDC_ID,main.threat_type1,count(main.threat_type1) as COUNT_THREAT_TYPE1 
+from smms_event_main main
+LEFT JOIN smms_idc_info idc
+ON idc.idc_id = main.access_id
+where main.access_id !='' and main.access_id is not null and main.threat_type1!='99' and main.threat_type1!='' and main.RECORDSTATE='0'
+GROUP BY main.threat_type1,main.access_id
+ORDER BY main.access_id DESC
+</select>
+
+<select id="getCountEventTypeAll" parameterType="hashmap" resultType="hashmap"> 
+select MAX(idc.idc_short_name) AS IDC_NAME,main.access_id as IDC_ID,main.event_type1,count(main.event_type1) as COUNT_EVENT_TYPE1 
+from smms_event_main main
+LEFT JOIN smms_idc_info idc
+ON idc.idc_id = main.access_id
+where main.access_id !='' and main.access_id is not null and main.event_type1 !='' and main.event_type1 is not null and main.RECORDSTATE='0' and (main.event_type1 = 'vpn' or main.event_type1='vpno' or main.event_type1='proxy')
+GROUP BY main.event_type1,main.access_id
+ORDER BY main.access_id DESC
+</select>
+
+<select id="getCountThreatByState" parameterType="hashmap" resultType="hashmap"> 
+select MAX(idc.idc_short_name) AS IDC_NAME,main.access_id as IDC_ID,main.threat_type1,count(main.threat_type1) as COUNT_THREAT_TYPE1 
+from smms_event_main main
+LEFT JOIN smms_idc_info idc
+ON idc.idc_id = main.access_id
+where main.access_id !='' and main.access_id is not null and main.threat_type1!='99' and main.threat_type1!='' and main.RECORDSTATE='0'
+and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null
+GROUP BY main.threat_type1,main.access_id
+ORDER BY main.access_id DESC
+</select>
+
+<select id="getCountEventByState" parameterType="hashmap" resultType="hashmap"> 
+select MAX(idc.idc_short_name) AS IDC_NAME,main.access_id as IDC_ID,main.event_type1,count(main.event_type1) as COUNT_EVENT_TYPE1 
+from smms_event_main main
+LEFT JOIN smms_idc_info idc
+ON idc.idc_id = main.access_id
+where main.access_id !='' and main.access_id is not null and main.event_type1 !='' and main.event_type1 is not null and main.RECORDSTATE='0' and (main.event_type1 = 'vpn' or main.event_type1='vpno' or main.event_type1='proxy')
+and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null
+GROUP BY main.event_type1,main.access_id
+ORDER BY main.access_id DESC
+</select>
+
+<select id="getCountThreatTypeToTen" parameterType="hashmap" resultType="hashmap"> 
+select threat_type2 as EVENT_NAME,count(threat_type2) as EVENT_COUNT from smms_event_main  
+where threat_type2!='' and threat_type2 is not null and RECORDSTATE='0'
+GROUP BY threat_type2
+ORDER BY count(threat_type2) DESC
+LIMIT 10
+</select>
+<select id="getCountThreatTypeToTenNoDel" parameterType="hashmap" resultType="hashmap"> 
+select threat_type2 as EVENT_NAME,count(threat_type2) as EVENT_COUNT from smms_event_main  
+where threat_type2!='' and threat_type2 is not null and RECTIFY_STATE !='888' and RECTIFY_STATE !='' and RECTIFY_STATE is not null and RECORDSTATE='0'
+GROUP BY threat_type2
+ORDER BY count(threat_type2) DESC
+LIMIT 10
+</select>
+<update id="updateDetialCount" parameterType="hashmap">
+	update SMMS_EVENT_MAIN set 
+	DETIAL_COUNT=#{DETIAL_COUNT},
+	MODIFIEDTIME=#{MODIFIEDTIME}
+	where RID=#{RID}
+</update>
+<update id="updateIsForclose" parameterType="hashmap">
+	update SMMS_EVENT_MAIN 
+	<set>
+		<if test="IS_FORCE_CLOSE !=null">IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if>
+		<if test="PRIORITY !=null">PRIORITY=#{PRIORITY},</if>
+		<if test="THREAT_LEVEL !=null">THREAT_LEVEL=#{THREAT_LEVEL},</if>
+		<if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		<if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+		<if test="FORCE_CLOSE_DESC !=null">FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC}</if>
+	</set>
+	where RID=#{RID}
+</update>
+<update id="updateDetialCountAddOne" parameterType="hashmap">
+	update SMMS_EVENT_MAIN set 
+	DETIAL_COUNT=DETIAL_COUNT+1
+	where RID=#{RID}
+</update>
+
+<update id="updateKeyWords" parameterType="hashmap">
+	update SMMS_EVENT_MAIN
+	 <set> 
+		<if test="THREAT_TYPE4!=null">THREAT_TYPE4=#{THREAT_TYPE4},</if>
+		<if test="KEYWORDS!=null">KEYWORDS=#{KEYWORDS},</if>
+		<if test="THREAT_LEVEL !=null">THREAT_LEVEL=#{THREAT_LEVEL},</if>
+		<if test="IS_FORCE_CLOSE !=null">IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if>
+		<if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		<if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+		<if test="FORCE_CLOSE_DESC !=null">FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC}</if>
+	 </set>
+	where RID=#{RID}
+</update>
+<select id="selectDetailRid" parameterType="hashmap" resultType="hashmap">
+	select DETAIL_RID from SMMS_EVENT_MAIN where RID=#{RID}
+</select>
 
 <select id="viewToJson" parameterType="hashmap" resultType="hashmap">
 select 
-	ssp.url as URL,
-	ssp.SNAPSHOP as SNAPSHOP,
+		ssp.url as URL,
+		ssp.SNAPSHOP as SNAPSHOP,
 		ssp.ACCESS_ID as ACCESS_ID,
 		ssp.THREAT_LEVEL as DAMAGE_CLASS,
 		swc.SPONSER_CASE_NUM as CASE_ID,
 		ssp.RECTIFY_TERM as RECTIFY_TERM,
 		ssp.CLOSE_TERM as CLOSE_TERM,
 		ssp.rid as EVENT_ID,
+		ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+		ssp.DETAIL_RID as DETAIL_RID,
+		case when ssp.DOMAIN_NAME is null or ssp.DOMAIN_NAME=''  then ip  ELSE ssp.DOMAIN_NAME end as DOMAIN,
 	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as SECURITY_TYPE 
 	</if>	
@@ -150,8 +439,8 @@ left JOIN
 on 
 ssp.WEB_CASE_RID=swc.rid 
 <where>
-		 ssp.RECTIFY_STATE='000' and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
-
+		ssp.RECORDSTATE='0'
+		and ssp.ACCESS_ID !='' and ssp.ACCESS_ID is not null 
         <if test="RIDCONDITION !=null and RIDCONDITION!='' ">   
              ${RIDCONDITION}
         </if>	
@@ -162,6 +451,9 @@ ssp.WEB_CASE_RID=swc.rid
 	select 
 	ssp.rid as EVENT_ID,
 	ssp.url as URL,
+	ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+	ssp.DETAIL_RID as DETAIL_RID,
+	case when ssp.DOMAIN_NAME is null or ssp.DOMAIN_NAME=''  then ip  ELSE ssp.DOMAIN_NAME end as DOMAIN,
 	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as SECURITY_TYPE,
 	</if>	
@@ -181,8 +473,8 @@ left JOIN
 on 
 ssp.WEB_CASE_RID=swc.rid 
 <where>
-		 ssp.RECTIFY_STATE='000' and ssp.IS_FORCE_CLOSE='2' and ssp.RECORDSTATE='0'
-
+		 ssp.RECORDSTATE='0'
+		 and ssp.ACCESS_ID !='' and ssp.ACCESS_ID is not null 
         <if test="RIDCONDITION!=null and RIDCONDITION!='' ">   
              ${RIDCONDITION}
         </if>	
@@ -193,6 +485,9 @@ ssp.WEB_CASE_RID=swc.rid
 	select 
 	ssp.rid as EVENT_ID,
 	ssp.url as URL,
+	ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+	ssp.DETAIL_RID as DETAIL_RID,
+	case when ssp.DOMAIN_NAME is null or ssp.DOMAIN_NAME=''  then ip  ELSE ssp.DOMAIN_NAME end as DOMAIN,
 	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as SECURITY_TYPE,
 	</if>	
@@ -213,19 +508,22 @@ on
 ssp.WEB_CASE_RID=swc.rid 
 where 
 		ssp.RECTIFY_STATE='000' 
-and ssp.IS_FORCE_CLOSE='2' and ssp.RECORDSTATE='0'
+and ssp.IS_FORCE_CLOSE='2' and ssp.RECORDSTATE='0' and ssp.ACCESS_ID !='' and ssp.ACCESS_ID is not null 
 order by ssp.access_id asc
 </select>
 <select id="viewToAllJson" parameterType="hashmap" resultType="hashmap">
 select 
-	ssp.url as URL,
-	ssp.SNAPSHOP as SNAPSHOP,
+	    ssp.url as URL,
+	    ssp.SNAPSHOP as SNAPSHOP,
 		ssp.ACCESS_ID as ACCESS_ID,
 		ssp.THREAT_LEVEL as DAMAGE_CLASS,
 		swc.SPONSER_CASE_NUM as CASE_ID,
 		ssp.RECTIFY_TERM as RECTIFY_TERM,
 		ssp.CLOSE_TERM as CLOSE_TERM,
 		ssp.rid as EVENT_ID,
+		ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+		ssp.DETAIL_RID as DETAIL_RID,
+		case when ssp.DOMAIN_NAME is null or ssp.DOMAIN_NAME=''  then ip  ELSE ssp.DOMAIN_NAME end as DOMAIN,
 	<if test='DBTYPE=="MYSQL" || DBTYPE=="ORACLE"'>
 		CONCAT(CONCAT(CONCAT(CONCAT(ssp.THREAT_TYPE1,'_'),ssp.THREAT_TYPE2),'_',ssp.THREAT_TYPE3),'_',ssp.THREAT_TYPE4) as SECURITY_TYPE 
 	</if>	
@@ -240,13 +538,15 @@ on
 		ssp.WEB_CASE_RID=swc.rid 
 where 
 		ssp.RECTIFY_STATE='000' 
-and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
+and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0' and ssp.ACCESS_ID !='' and ssp.ACCESS_ID is not null
 order by ssp.access_id asc
 </select>
 
 <select id="viewToAllJsonIp" parameterType="hashmap" resultType="hashmap">
 select 
 	ssi.ACCESS_IP as IP,
+	ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+	ssp.DETAIL_RID as DETAIL_RID,
 	ssp.DOMAIN_NAME as DOMAIN
 from SMMS_EVENT_MAIN as ssp 
 left JOIN
@@ -258,28 +558,20 @@ left join
 on 
 	swc.rid=ssi.case_rid
 where 
-		ssp.RECTIFY_STATE='000' 
-and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
+		 ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
 order by ssp.access_id asc
 </select>
 <select id="viewToJsonIp" parameterType="hashmap" resultType="hashmap">
 select 
-	ssi.ACCESS_IP as IP,
-	ssp.DOMAIN_NAME as DOMAIN
+	ssp.RID as EVENT_RID,
+	ssp.ENFORCE_COUNT as ENFORCE_COUNT,
+	ssp.DETAIL_RID as DETAIL_RID,
+	case when ssp.DOMAIN_NAME is null or ssp.DOMAIN_NAME=''  then ip  ELSE ssp.DOMAIN_NAME end as DOMAIN
 from SMMS_EVENT_MAIN as ssp 
-left JOIN
-		smms_web_case as swc 
-on 
-ssp.WEB_CASE_RID=swc.rid 
-left join 
-	smms_web_case_ip as ssi
-on 
-	swc.rid=ssi.case_rid
 <where>
-		 ssp.RECTIFY_STATE='000' and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
-
-        <if test="ridCondition!=null and ridCondition!='' ">   
-             ${ridCondition}
+		 ssp.RECORDSTATE='0'
+        <if test="RIDCONDITION!=null and RIDCONDITION!='' ">   
+             ${RIDCONDITION}
         </if>	
 </where>
 </select>
@@ -326,7 +618,8 @@ and ssp.IS_FORCE_CLOSE='1' and ssp.RECORDSTATE='0'
 	RECTIFY_MEASURE=#{RECTIFY_MEASURE},
 	RECTIFY_STATE=#{RECTIFY_STATE},
 	FEEDBACK_TIME=#{FEEDBACK_TIME},
-	FEEDBACK_TIMESTAMP=#{FEEDBACK_TIMESTAMP}
+	FEEDBACK_TIMESTAMP=#{FEEDBACK_TIMESTAMP},
+	MODIFIEDTIME=#{MODIFIEDTIME}
 	where RID=#{RID}
 </update>
 <update id="issueStateUpdate" parameterType="hashmap">
@@ -334,28 +627,52 @@ UPDATE SMMS_EVENT_MAIN
 		<set>
 		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
-		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP}</if> 
+		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}</if> 
 		</set>
-WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
+WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' 'and RECORDSTATE='0';
 </update>
 
+<update id="updateReStateAfter" parameterType="hashmap" > 
+	update SMMS_EVENT_MAIN   
+		<set>
+		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}</if> 
+		</set>
+	where RID=#{RID} 
+</update>
+<update id="updateCloseReStateAfter" parameterType="hashmap" > 
+	update SMMS_EVENT_MAIN   
+		<set>
+		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+		    <if test="SYS_RECTIFY_SUGGEST != null ">SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},</if>
+            <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if>
+            <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if>
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}</if> 
+		</set>
+	where RID=#{RID}   and RECORDSTATE='0'
+</update>
 <update id="updateRectifyState" parameterType="hashmap" > 
 	update SMMS_EVENT_MAIN   
 		<set>
 		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
-		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP}</if> 
+		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP},</if> 
+		    <if test="ENFORCE_COUNT!=null"> ENFORCE_COUNT=#{ENFORCE_COUNT},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}</if> 
 		</set>
-	where RID=#{EVENT_RID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='1'and RECORDSTATE='0';
+	where RID=#{EVENT_RID}   and RECORDSTATE='0';
 </update>
 <update id="updateQzgtState" parameterType="hashmap" > 
 	update SMMS_EVENT_MAIN   
 		<set>
 		    <if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
-		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP}</if> 
+		    <if test="SEND_TIMESTAMP!=null"> SEND_TIMESTAMP=#{SEND_TIMESTAMP},</if> 
+		    <if test="ENFORCE_COUNT!=null"> ENFORCE_COUNT=#{ENFORCE_COUNT},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}</if> 
 		</set>
-	where RID=#{EVENT_RID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='1'and RECORDSTATE='0';
+	where RID=#{EVENT_RID}   and RECORDSTATE='0' 
 </update>
 
 <update id="updateWhiteList" parameterType="hashmap">
@@ -371,6 +688,15 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
  </update>
  <update id="deleteUpdateRecordstate" parameterType="hashmap" > 
 	update SMMS_EVENT_MAIN  set RECORDSTATE=#{RECORDSTATE} 
+      <where>
+        <if test="ridCondition!=null and ridCondition!='' ">   
+             ${ridCondition}
+        </if>	
+	</where>
+  
+</update>
+ <update id="updateFinalRectifySuggest" parameterType="hashmap" > 
+	update SMMS_EVENT_MAIN  set FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},MODIFIEDTIME=#{MODIFIEDTIME} 
       <where>
         <if test="ridCondition!=null and ridCondition!='' ">   
              ${ridCondition}
@@ -403,6 +729,55 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
     where ssp.RID = #{RID} 
 </select> 
 
+<select id="selectByRid" resultType="hashmap"> 
+      select ssp.RID,
+            ssp.EVENT_SOURCE,
+            ssp.CLIENTNAME,
+            ssp.REPORT_CITY,
+            ssp.EVENT_TYPE1,
+            ssp.THREAT_LEVEL,
+            ssp.THREAT_NAME,
+            ssp.THREAT_TYPE1,
+            ssp.THREAT_TYPE2,
+            ssp.THREAT_TYPE3,
+            ssp.THREAT_TYPE4,
+            ssp.ACCESS_ID,
+            ssp.ROOM_NAME,
+            ssp.ROOM_IDX,
+            ssp.DOMAIN_NAME,
+            ssp.CC_DOMAIN,
+            ssp.IP,
+            ssp.ATTACK_IP,
+            ssp.SYS_RECTIFY_SUGGEST,
+            ssp.FINAL_RECTIFY_SUGGEST,
+            ssp.IS_FORCE_CLOSE,
+            ssp.IS_WHITE_LIST,
+            ssp.FORCE_CLOSE_DESC,
+            ssp.RECTIFY_TERM,
+            ssp.CLOSE_TERM,
+            ssp.SEND_TIME,
+            ssp.SEND_TIMESTAMP,
+            ssp.RECTIFY_STATE,
+            ssp.RECTIFY_MEASURE,
+            ssp.FEEDBACK_TIME,
+            ssp.FEEDBACK_TIMESTAMP,
+            ssp.WEB_CASE_RID,
+            ssp.MAPPING_MODE,
+            ssp.MEMO,
+            ssp.CREATTIME,
+            ssp.MODIFIEDTIME,
+            ssp.RECORDSTATE,
+            ssp.KEYWORDS,
+            ssp.SNAPSHOP,
+            ssp.DETIAL_COUNT,
+            ssp.ENFORCE_COUNT,
+            ssp.URL,
+            ssp.PRIORITY
+            from SMMS_EVENT_MAIN ssp
+      where ssp.RID = #{EVENT_MAINRID}  
+
+</select> 
+
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_EVENT_MAIN  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
 </update> 
@@ -413,6 +788,197 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
       on ssp.ACCESS_ID=sii.IDC_ID
       where ssp.RID = #{RID}  
 </select> 
+
+<select id="unblockApply" parameterType="hashmap" resultType="hashmap"> 
+      select ACCESS_ID ,case when DOMAIN_NAME is null or DOMAIN_NAME=''  then ip  ELSE DOMAIN_NAME end as DOMAIN_NAME,ENFORCE_COUNT from SMMS_EVENT_MAIN  
+      where RID = #{RID}  
+</select>
+<select id="forCloseApply" parameterType="hashmap" resultType="hashmap"> 
+      select ACCESS_ID,ENFORCE_COUNT from SMMS_EVENT_MAIN  
+      where RID = #{RID}  
+</select>
+<update id="updateReState" parameterType="hashmap" > 
+	update SMMS_EVENT_MAIN  
+		<set>
+			<if test="RECTIFY_STATE!=null"> RECTIFY_STATE=#{RECTIFY_STATE},</if> 
+			 <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME}, </if>
+			<if test="ENFORCE_COUNT!=null"> ENFORCE_COUNT=#{ENFORCE_COUNT}</if> 
+		   
+		</set>
+			where RID =#{RID}
+</update> 
+
+<update id="update" parameterType="hashmap" > 
+	update SMMS_EVENT_MAIN  set ENFORCE_COUNT=ENFORCE_COUNT+1,MODIFIEDTIME=#{MODIFIEDTIME},RECTIFY_STATE=#{RECTIFY_STATE},FEEDBACK_TIME=#{FEEDBACK_TIME},FEEDBACK_TIMESTAMP=#{FEEDBACK_TIMESTAMP},RECTIFY_MEASURE=#{RECTIFY_MEASURE} 
+    <where>
+        <if test="CONDITION!=null and CONDITION!='' ">   
+             ${CONDITION}
+        </if>	
+</where>
+</update>
+<select id="selectUrlAndRid" parameterType="hashmap" resultType="hashmap"> 
+      select IP,URL,RID as EVENT_RID from SMMS_EVENT_MAIN  
+      <where>
+        <if test="CONDITION!=null and CONDITION!='' ">   
+             ${CONDITION}
+        </if>	
+	  </where>  
+</select>
+<select id="selectEventMailAfInWeb" parameterType="hashmap" resultType="hashmap"> 
+      	select 								 
+			sse.CLIENTNAME as clientname,
+            sse.REPORT_CITY as report_city,
+            ssp.REPORT_TIME as report_time,
+            ssp.OCCUR_TIME as occur_time,
+            sse.THREAT_LEVEL as threat_level,
+            sse.THREAT_NAME as threat_name,
+            sse.THREAT_TYPE2 as threat_type2,
+            sse.IP as ip,
+            sse.DOMAIN_NAME as domain_name,
+            sse.URL as access_id,
+            sse.ACCESS_ID as url,
+            sse.ROOM_NAME as room_name,
+            sse.ROOM_IDX as room_idx,
+            sse.SNAPSHOP as snapshop,
+            ssp.LOG_RID as log_rid,
+            ssp.LOG_TABLENAME as log_tablename,
+            sse.MODIFIEDTIME as modifiedtime,
+			sse.CREATTIME as creattime,
+			ssw.WEBSITE_NAME as web_case_rid,
+            sse.PRIORITY as priority	          			
+     from smms_event_main as sse  
+            left join  SMMS_PENDING_EVENT  as ssp
+            on sse.DETAIL_RID=ssp.rid   
+     left join 
+    	    SMMS_WEB_CASE as ssw
+    	    on ssp.WEB_CASE_RID=ssw.RID
+     where 
+         	sse.recordstate ='0' 
+         	and	ssp.log_tablename ='SMMS_AF_LOG'    
+            and  sse.WEB_CASE_RID is not null and sse.WEB_CASE_RID != ''
+            and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &gt;= #{STARTTIME} and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &lt;= #{ENDTIME}
+	
+</select>
+
+
+<select id="selectEventMailAfNotInWeb" parameterType="hashmap" resultType="hashmap"> 
+      select 								 
+			sse.CLIENTNAME as clientname,
+            sse.REPORT_CITY as report_city,
+            ssp.REPORT_TIME as report_time,
+            ssp.OCCUR_TIME as occur_time,
+            sse.THREAT_LEVEL as threat_level,
+            sse.THREAT_NAME as threat_name,
+            sse.THREAT_TYPE2 as threat_type2,
+            sse.IP as ip,
+            sse.DOMAIN_NAME as domain_name,
+            sse.URL as access_id,
+            sse.ACCESS_ID as url,
+            sse.ROOM_NAME as room_name,
+            sse.ROOM_IDX as room_idx,
+            sse.SNAPSHOP as snapshop,
+            ssp.LOG_RID as log_rid,
+            ssp.LOG_TABLENAME as log_tablename,
+            sse.MODIFIEDTIME as modifiedtime,
+			sse.CREATTIME as creattime,
+			ssw.WEBSITE_NAME as web_case_rid,
+            sse.PRIORITY as priority	          			
+     from smms_event_main as sse  
+            left join  SMMS_PENDING_EVENT  as ssp
+            on sse.DETAIL_RID=ssp.rid   
+      left join 
+    	    SMMS_WEB_CASE as ssw
+    	    on ssp.WEB_CASE_RID=ssw.RID
+      where	
+            sse.recordstate ='0'  
+            and ssp.log_tablename ='SMMS_AF_LOG' 
+            and  (sse.WEB_CASE_RID is  null or sse.WEB_CASE_RID = '')
+            and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &gt;= #{STARTTIME} and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &lt;= #{ENDTIME}
+	 
+</select>
+
+<select id="selectEventMailAcInWeb" parameterType="hashmap" resultType="hashmap"> 
+  select 
+            sse.CLIENTNAME as clientname,
+            sse.REPORT_CITY as report_city,
+            ssp.REPORT_TIME as report_time,
+            ssp.OCCUR_TIME as occur_time,
+            sse.THREAT_LEVEL as threat_level,
+            sse.THREAT_NAME as threat_name,
+            sse.THREAT_TYPE2 as threat_type2,
+            sse.IP as ip,
+            sse.DOMAIN_NAME as domain_name,
+            sse.URL as access_id,
+            sse.ACCESS_ID as url,
+            sse.ROOM_NAME as room_name,
+            sse.ROOM_IDX as room_idx,
+	        ssp.LOG_RID as log_rid,
+            ssp.LOG_TABLENAME as log_tablename,
+            ssp.LOG_FILENAME as log_filename,
+            sse.MODIFIEDTIME as modifiedtime,
+            ssp.EVENT_TYPE2 as event_type2,
+            ssp.EVENT_TYPE3 as event_type3,
+	        ssw.WEBSITE_NAME as web_case_rid,
+	        crc1.CRC_VALUE as crc_value,
+	        crc2.CRC_VALUE as crc_value  
+ from smms_event_main as sse  
+      left join  SMMS_PENDING_EVENT  as ssp
+	          on sse.DETAIL_RID=ssp.rid   
+	  left join SMMS_WEB_CASE as ssw
+              on sse.WEB_CASE_RID=ssw.RID
+      left join smms_crc_mapting as crc1
+		      on ssp.EVENT_TYPE2 = crc1.CRC_KEY 
+	  left join smms_crc_mapting as crc2
+		      on ssp.EVENT_TYPE3 = crc2.CRC_KEY 
+	where 	   sse.recordstate ='0' 
+			   and sse.WEB_CASE_RID is not null and sse.WEB_CASE_RID != ''
+               and ssp.log_tablename != 'SMMS_AF_LOG' 
+               and (crc1.CRC_TYPE='a' or crc1.CRC_TYPE ='r' or crc1.CRC_TYPE ='t')
+		       and (crc2.CRC_TYPE='a' or crc2.CRC_TYPE ='r' or crc2.CRC_TYPE ='t')
+               and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &gt;= #{STARTTIME} and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &lt;= #{ENDTIME}
+</select>
+
+
+<select id="selectEventMailAcNotInWeb" parameterType="hashmap" resultType="hashmap"> 
+      select 
+            sse.CLIENTNAME as clientname,
+            sse.REPORT_CITY as report_city,
+            ssp.REPORT_TIME as report_time,
+            ssp.OCCUR_TIME as occur_time,
+            sse.THREAT_LEVEL as threat_level,
+            sse.THREAT_NAME as threat_name,
+            sse.THREAT_TYPE2 as threat_type2,
+            sse.IP as ip,
+            sse.DOMAIN_NAME as domain_name,
+            sse.URL as access_id,
+            sse.ACCESS_ID as url,
+            sse.ROOM_NAME as room_name,
+            sse.ROOM_IDX as room_idx,
+	        ssp.LOG_RID as log_rid,
+            ssp.LOG_TABLENAME as log_tablename,
+            ssp.LOG_FILENAME as log_filename,
+            sse.MODIFIEDTIME as modifiedtime,
+            ssp.EVENT_TYPE2 as event_type2,
+            ssp.EVENT_TYPE3 as event_type3,
+	        ssw.WEBSITE_NAME as web_case_rid,
+	        crc1.CRC_VALUE as crc_value,
+	        crc2.CRC_VALUE as crc_value  
+ from smms_event_main as sse  
+      left join  SMMS_PENDING_EVENT  as ssp
+	          on sse.DETAIL_RID=ssp.rid   
+	  left join SMMS_WEB_CASE as ssw
+              on sse.WEB_CASE_RID=ssw.RID
+      left join smms_crc_mapting as crc1
+		      on ssp.EVENT_TYPE2 = crc1.CRC_KEY 
+	  left join smms_crc_mapting as crc2
+		      on ssp.EVENT_TYPE3 = crc2.CRC_KEY 
+		 where sse.recordstate ='0' 
+		 	   and (sse.WEB_CASE_RID is  null or sse.WEB_CASE_RID = '')
+		  	   and ssp.log_tablename != 'SMMS_AF_LOG'
+               and (crc1.CRC_TYPE='a' or crc1.CRC_TYPE ='r' or crc1.CRC_TYPE ='t')
+		       and (crc2.CRC_TYPE='a' or crc2.CRC_TYPE ='r' or crc2.CRC_TYPE ='t') 
+               and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &gt;= #{STARTTIME} and replace(substring(sse.MODIFIEDTIME,1,10),'-','')  &lt;= #{ENDTIME}
+</select>
 
 <insert id="insertSave" parameterType="hashmap" >
 	insert into SMMS_EVENT_MAIN (
@@ -435,7 +1001,7 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
             <if test="IP != null ">IP,</if>
             <if test="ATTACK_IP != null ">ATTACK_IP,</if>
             <if test="SYS_RECTIFY_SUGGEST != null ">SYS_RECTIFY_SUGGEST,</if>
-            <if test="FINAL_RECTIFY_SUGGES != null ">FINAL_RECTIFY_SUGGES,</if>
+            <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             IS_FORCE_CLOSE,
             IS_WHITE_LIST,
             <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
@@ -456,6 +1022,10 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
             <if test="SNAPSHOP !=null">SNAPSHOP,</if>
             <if test="KEYWORDS != null ">KEYWORDS,</if>
             <if test="URL != null ">URL,</if>
+            <if test="DETIAL_COUNT != null ">DETIAL_COUNT,</if>
+            <if test="ENFORCE_COUNT != null ">ENFORCE_COUNT,</if>
+            <if test="PRIORITY != null ">PRIORITY,</if>
+            <if test="DETAIL_RID != null ">DETAIL_RID,</if>
             <if test="RID != null ">RID</if>
             )
 	   values (
@@ -466,7 +1036,7 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
            <if test="EVENT_TYPE1 != null ">#{EVENT_TYPE1},</if>
            <if test="THREAT_LEVEL != null ">#{THREAT_LEVEL},</if><if test="THREAT_LEVEL == null ">1,</if>
            <if test="THREAT_NAME != null ">#{THREAT_NAME},</if><if test="THREAT_NAME == null ">999,</if>
-           <if test="THREAT_TYPE1 != null ">#{THREAT_TYPE1},</if><if test="THREAT_TYPE1 == null ">999,</if>
+           <if test="THREAT_TYPE1 != null ">#{THREAT_TYPE1},</if><if test="THREAT_TYPE1 == null ">99,</if>
            <if test="THREAT_TYPE2 != null ">#{THREAT_TYPE2},</if>
            <if test="THREAT_TYPE3 != null ">#{THREAT_TYPE3},</if>
            <if test="THREAT_TYPE4 != null ">#{THREAT_TYPE4},</if>
@@ -478,7 +1048,7 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
            <if test="IP != null ">#{IP},</if>
            <if test="ATTACK_IP != null ">#{ATTACK_IP},</if>
            <if test="SYS_RECTIFY_SUGGEST != null ">#{SYS_RECTIFY_SUGGEST},</if>
-           <if test="FINAL_RECTIFY_SUGGES != null ">#{FINAL_RECTIFY_SUGGES},</if>
+           <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if><if test="IS_FORCE_CLOSE ==null">2,</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if><if test="IS_WHITE_LIST ==null">2,</if>
            <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
@@ -499,6 +1069,10 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
            <if test="SNAPSHOP !=null">#{SNAPSHOP},</if>
            <if test="KEYWORDS != null ">#{KEYWORDS},</if>
            <if test="URL != null ">#{URL},</if>
+           <if test="DETIAL_COUNT != null ">#{DETIAL_COUNT},</if>
+          <if test="ENFORCE_COUNT  != null ">#{ENFORCE_COUNT},</if>
+          <if test="PRIORITY  != null ">#{PRIORITY},</if>
+          <if test="DETAIL_RID  != null ">#{DETAIL_RID},</if>
            <if test="RID != null ">#{RID}</if>)
 </insert> 
 
@@ -523,7 +1097,7 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
 		    <if test="IP!=null"> IP=#{IP},</if> 
 		    <if test="ATTACK_IP!=null"> ATTACK_IP=#{ATTACK_IP},</if> 
 		    <if test="SYS_RECTIFY_SUGGEST!=null"> SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},</if> 
-		    <if test="FINAL_RECTIFY_SUGGES!=null"> FINAL_RECTIFY_SUGGES=#{FINAL_RECTIFY_SUGGES},</if> 
+		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
 		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
@@ -542,9 +1116,13 @@ WHERE RID =#{EVENT_ID} and RECTIFY_STATE='000' and IS_FORCE_CLOSE='2' ;
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		    <if test="SNAPSHOP !=null">SNAPSHOP=#{SNAPSHOP},</if>
             <if test="KEYWORDS != null ">KEYWORDS=#{KEYWORDS},</if>
+             <if test="DETIAL_COUNT != null ">DETIAL_COUNT=#{DETIAL_COUNT},</if>
+             <if test="ENFORCE_COUNT  != null ">ENFORCE_COUNT=#{ENFORCE_COUNT},</if>
+             <if test="PRIORITY  != null ">PRIORITY=#{PRIORITY},</if>
+             <if test="DETAIL_RID  != null ">DETAIL_RID=#{DETAIL_RID},</if>
              <if test="URL != null ">URL=#{URL},</if>
 		</set>
 	where RID=#{RID}
-</update> 
+</update>
 
 </mapper>

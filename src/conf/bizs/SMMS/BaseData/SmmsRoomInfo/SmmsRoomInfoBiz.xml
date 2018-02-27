@@ -28,6 +28,9 @@
         </action>  
         <!--导入机房信息操作-->
         <action  name="inputRoomInfo" class="com.zstar.SMMS.BaseData.SmmsRoomInfo.action.InputRoomInfoAction">  
-        </action>                      
+        </action>
+         <!--下载IDC机房信息模板文件-->
+        <action  name="downloadRoomInfo" class="com.zstar.SMMS.BaseData.SmmsRoomInfo.action.DownloadRoomInfoAction">  
+        </action>                   
     </package>
 </struts>

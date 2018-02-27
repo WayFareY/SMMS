@@ -87,7 +87,7 @@
 <update id="deleteUpdate" parameterType="hashmap" > 
 	update SMMS_DOMAIN_FULX flx set RECORDSTATE=#{RECORDSTATE} where flx.RID=#{RID}
 </update> 
- 
+
 <select id="updateDetail" parameterType="String" resultType="hashmap"> 
       select <include refid="detailColumns"/> 
       from SMMS_DOMAIN_FULX flx

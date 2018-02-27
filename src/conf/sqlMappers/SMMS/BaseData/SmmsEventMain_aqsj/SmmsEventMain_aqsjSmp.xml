@@ -23,7 +23,7 @@
             spea.IP,
             spea.ATTACK_IP,
             spea.SYS_RECTIFY_SUGGEST,
-            spea.FINAL_RECTIFY_SUGGES,
+            spea.FINAL_RECTIFY_SUGGEST,
             spea.IS_FORCE_CLOSE,
             spea.IS_WHITE_LIST,
             spea.FORCE_CLOSE_DESC,
@@ -42,8 +42,11 @@
             spea.MODIFIEDTIME,
             spea.RECORDSTATE,
             spea.SNAPSHOP,
+            spea.PRIORITY,
+            spea.DETIAL_COUNT,
             sii.IDC_ID,
-            sii.IDC_NAME
+            sii.IDC_NAME,
+            spea.ENFORCE_COUNT
 </sql>
 <sql id="detailColumns">
 	
@@ -66,7 +69,7 @@
             spea.IP,
             spea.ATTACK_IP,
             spea.SYS_RECTIFY_SUGGEST,
-            spea.FINAL_RECTIFY_SUGGES,
+            spea.FINAL_RECTIFY_SUGGEST,
             spea.IS_FORCE_CLOSE,
             spea.IS_WHITE_LIST,
             spea.FORCE_CLOSE_DESC,
@@ -85,8 +88,11 @@
             spea.MODIFIEDTIME,
             spea.RECORDSTATE,
             spea.SNAPSHOP,
+            spea.PRIORITY,
+            spea.DETIAL_COUNT,
             sii.IDC_ID,
-            sii.IDC_NAME
+            sii.IDC_NAME,
+            spea.ENFORCE_COUNT
 </sql>
 <select id="listData" parameterType="hashmap" resultType="hashmap"> 
 	select sii.IDC_NAME as TRANS_IDC_ID,ssw.WEBSITE_NAME as TRANS_WEB_CASE_RID,
@@ -98,13 +104,7 @@
 	else 
 		'无' 
 	end  as TRANS_SNAPSHOP,	
-	case WHEN 
-		spea.RID is not null and spea.RID!='' 
-	then 
-		'查看明细' 
-	else 
-		'无' 
-	end  as TRANS_RID,
+	DETIAL_COUNT  as TRANS_RID,
 	 spea.Rid as SNAPSHOP,
 	<include refid="listColumns"/> from SMMS_EVENT_MAIN as spea
 	left join smms_idc_info as sii
@@ -184,7 +184,7 @@
             <if test="IP != null ">IP,</if>
             <if test="ATTACK_IP != null ">ATTACK_IP,</if>
             <if test="SYS_RECTIFY_SUGGEST != null ">SYS_RECTIFY_SUGGEST,</if>
-            <if test="FINAL_RECTIFY_SUGGES != null ">FINAL_RECTIFY_SUGGES,</if>
+            <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
             <if test="IS_WHITE_LIST != null ">IS_WHITE_LIST,</if>
             <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
@@ -202,6 +202,8 @@
             <if test="CREATTIME != null ">CREATTIME,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE,</if>
+            <if test="ENFORCE_COUNT != null ">ENFORCE_COUNT,</if>
+            <if test="PRIORITY != null ">PRIORITY,</if>
             <if test="SNAPSHOP != null ">SNAPSHOP</if>)
 	   values (
            <if test="RID != null ">#{RID},</if>
@@ -223,7 +225,7 @@
            <if test="IP != null ">#{IP},</if>
            <if test="ATTACK_IP != null ">#{ATTACK_IP},</if>
            <if test="SYS_RECTIFY_SUGGEST != null ">#{SYS_RECTIFY_SUGGEST},</if>
-           <if test="FINAL_RECTIFY_SUGGES != null ">#{FINAL_RECTIFY_SUGGES},</if>
+           <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if>
            <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
@@ -241,9 +243,20 @@
            <if test="CREATTIME != null ">#{CREATTIME},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE},</if>
+           <if test="ENFORCE_COUNT != null ">#{ENFORCE_COUNT},</if>
+           <if test="PRIORITY != null ">#{PRIORITY},</if>
            <if test="SNAPSHOP != null ">#{SNAPSHOP}</if>)
 </insert> 
-
+<update id="updateState" parameterType="hashmap">
+	update SMMS_EVENT_MAIN   set
+		IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},
+		SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},
+		FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},
+		MODIFIEDTIME=#{MODIFIEDTIME},
+		 RECTIFY_STATE=#{RECTIFY_STATE}
+	where RID=#{RID}
+	 
+</update>
 <update id="updateSave" parameterType="hashmap" > 
 	update SMMS_EVENT_MAIN   
 		<set>
@@ -265,7 +278,7 @@
 		    <if test="IP!=null"> IP=#{IP},</if> 
 		    <if test="ATTACK_IP!=null"> ATTACK_IP=#{ATTACK_IP},</if> 
 		    <if test="SYS_RECTIFY_SUGGEST!=null"> SYS_RECTIFY_SUGGEST=#{SYS_RECTIFY_SUGGEST},</if> 
-		    <if test="FINAL_RECTIFY_SUGGES!=null"> FINAL_RECTIFY_SUGGES=#{FINAL_RECTIFY_SUGGES},</if> 
+		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
 		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
@@ -282,6 +295,8 @@
 		    <if test="MEMO!=null"> MEMO=#{MEMO},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		    <if test="ENFORCE_COUNT!=null"> ENFORCE_COUNT=#{ENFORCE_COUNT},</if> 
+		    <if test="PRIORITY!=null"> PRIORITY=#{PRIORITY},</if> 
 		    <if test="SNAPSHOP!=null"> SNAPSHOP=#{SNAPSHOP},</if> 
 		</set>
 	where RID=#{RID}

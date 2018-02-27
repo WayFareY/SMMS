@@ -15,9 +15,29 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <title>节点</title>
+
+<style>
+.NewtagContent
+{
+   padding-right: 10px;
+   display: none;
+   padding-left: 10px;
+   background-color : #ffffff;
+   padding-bottom: 2px;
+   width: 97%;
+   color: #474747;
+   position:absolute;
+   overflow:auto;
+   //height: 90%;  
+}
+</style>
+
 </head>
 
 <body onload="isshow();">
+<table>
+<tr>
+<td>
 <div id="con">
 <ul id="tags">
 	<li class="selectTag"><a onclick="selectTag('tagContent0',this)"
@@ -29,18 +49,18 @@
 </ul>
 
 <div id="tagContent">
-<div class="tagContent selectTag" id="tagContent0">
+<div class="NewtagContent selectTag" id="tagContent0" style="height: 380px">
 <table id="tab0">
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">节点ID：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">节点ID：</td>
 		<td><input class="x-form-field" id="NODEID" value="" readOnly /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">节点名称：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">节点名称：</td>
 		<td><input class="x-form-field" id="NODENAME" value="" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">是否最终否决：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">是否最终否决：</td>
 		<td>
 		<input type="radio" id="ISLASTREJECT_Y" name="rd_ISLASTREJECT" value="1" onClick="clickRadio(this);">
 		<font size="2px">是</font></input> 
@@ -49,7 +69,7 @@
 			<input id="ISLASTREJECT" type="hidden"/></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">是否支持有条件通过：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">是否支持有条件通过：</td>
 		<td>
 		<input type="radio" id="ISCHECKCONDITION_Y" name="rd_ISCHECKCONDITION" value="1" onClick="clickRadio(this);">
 		<font size="2px">是</font></input> 
@@ -58,7 +78,7 @@
 		<input id="ISCHECKCONDITION" type="hidden" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">是否为有条件通过确认节点：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">是否为有条件通过确认节点：</td>
 		<td><input type="radio" id="ISCONDICONFIRM_Y"
 			name="rd_ISCONDICONFIRM" value="1" onClick="clickRadio(this);"><font
 			size="2px">是</font></input> <input type="radio" id="ISCONDICONFIRM_N"
@@ -66,7 +86,7 @@
 			size="2px">否</font></input> <input id="ISCONDICONFIRM" type="hidden" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">节点功能类型：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">节点功能类型：</td>
 		<td><select class="x-form-field" id="NODEBIZTYPE"
 			onchange="isshow();">
 			<option value="0" class="x-form-field">普通节点</option>
@@ -74,11 +94,11 @@
 		</select></td>
 	</tr>
 	<tr id="thepassrate">
-			<td style="text-align: left; width: 120px; font-size: 12px;">会签通过率(百分比)：</td>
+			<td style="text-align: left; width: 200px; font-size: 12px;">会签通过率(百分比)：</td>
 			<td><input class="x-form-field" id="PASSRATE" onblur="isfloat();" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">节点办理时限(天数)：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">节点办理时限(天数)：</td>
 		<td><input class="x-form-field" id="TRANSACTDAYS"
 			onblur="isNumber();" /></td>
 	</tr>
@@ -90,10 +110,10 @@
 
 </div>
 
-<div class="tagContent" id="tagContent1">
+<div class="NewtagContent" id="tagContent1">
 <table id="tab1">
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">审批机构定义：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">审批机构定义：</td>
 		<td><input class="x-form-field" id="ORGNAMESET" readOnly />
 		<button class="btn"
 			onclick="openPop('SOrg','ORGNAMESET','ORGDEFINE','ORGID','ORGNAME')">
@@ -101,7 +121,7 @@
 		<input id="ORGDEFINE" type="hidden" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">审批机构集合扩展：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">审批机构集合扩展：</td>
 		<td><input type="checkbox" id="BIZORGEXT" name="cbx_ORGEXTSET"
 			value="1" onClick="clickCheckBox(this);"><font size="2px">业务机构</font></input>
 		<input type="checkbox" id="STARTORGEXT" name="cbx_ORGEXTSET" value="2"
@@ -111,7 +131,7 @@
 
 
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">审批部门定义：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">审批部门定义：</td>
 		<td><input class="x-form-field" id="DEPTNAMESET" readOnly />
 		<button class="btn"
 			onclick="openPop('SDept','DEPTNAMESET','DEPTDEFINE','DEPTID','DEPTNAME')">
@@ -119,14 +139,14 @@
 		<input id="DEPTDEFINE" type="hidden" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">审批部门集合扩展：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">审批部门集合扩展：</td>
 		<td><input type="checkbox" id="STARTDEPTEXT"
 			name="cbx_DEPTEXTSET" value="1" onClick="clickCheckBox(this);"><font
 			size="2px">发起部门</font></input> <input id="DEPTEXTSET" type="hidden" /></td>
 	</tr>
 
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">审批职位定义：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">审批职位定义：</td>
 		<td><input class="x-form-field" id="POSTNAMESET" value=""
 			readOnly />
 		<button class="btn"
@@ -135,7 +155,7 @@
 		<input id="POSTDEFINE" type="hidden" value="" /></td>
 	</tr>
 	<tr id="themeetingpost">
-		<td style="text-align: left; width: 120px; font-size: 12px;">会签职位定义：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">会签职位定义：</td>
 		<td><input class="x-form-field" id="MEETINGPOSTNAMESET" value=""
 			readOnly />
 		<button class="btn"
@@ -147,10 +167,10 @@
 
 </div>
 
-<div class="tagContent" id="tagContent2">
+<div class="NewtagContent" id="tagContent2">
 <table id="tab2">
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">短信发送审批结果条件：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">短信发送审批结果条件：</td>
 		<td><input type="checkbox" id="AGREE" name="cbx_SMSSENDCOND"
 			value="1" onClick="clickCheckBox(this);"><font size="2px">同意</font></input>
 		<input type="checkbox" id="DISAGAREE" name="cbx_SMSSENDCOND" value="2"
@@ -164,7 +184,7 @@
 		<input id="SMSSENDCOND" type="hidden" /></td>
 	</tr>
 	<tr>
-		<td style="text-align: left; width: 120px; font-size: 12px;">手机短信模板编号：</td>
+		<td style="text-align: left; width: 200px; font-size: 12px;">手机短信模板编号：</td>
 		<td><input class="x-form-field" id="SMSTEMPCODE" value=""
 			readOnly />
 		<button class="btn"
@@ -177,6 +197,17 @@
 </div>
 </div>
 </div>
+</td>
+</tr>
+<tr>
+<td>
+	<div id="button" style="width:406px;text-align:center;">
+	<button class="h5button blue medium" type="button" onclick="apply();">确定</button>
+	</div>
+</td>
+</tr>
+</table>
+
 <script type="text/javascript">
      function selectTag(showContent, selfObj) {
          // 操作标签
@@ -197,7 +228,7 @@
              var obj=document.getElementById("tab0");
         	 var height=$(obj).css('height');
         	 var heightarr=height.split("px");
-        	 var He=parseInt(heightarr[0])+15;
+        	 var He=parseInt(heightarr[0])+85;
         	 var but=document.getElementById("button");
         	 $(but).css("padding-top",He+"px");
          }
@@ -221,10 +252,7 @@
          }
      }
  </script>
-<div id="button" style="width:406px;text-align:center;">
-<button class="btn" type="button" onclick="apply();">应用</button>
-<button class="btn" type="button" onclick="closeWin();">关闭</button>
-</div>
+
 <script type="text/javascript">
         var topWindow = getMainWindow();
         var obj = topWindow.dataObject; //得到父窗口传递过来的对象        	
@@ -252,8 +280,9 @@
 		if(obj.DEPTNAMESET!=''&&obj.DEPTNAMESET!=null)
 		 document.getElementById('DEPTNAMESET').value=obj.DEPTNAMESET;
 		document.getElementById('DEPTDEFINE').value=obj.DEPTDEFINE;
-		if(obj.deptextset != ''&&obj.deptextset!=null){
-			var deptextsetStr = obj.deptextset;
+
+		if(obj.DEPTEXTSET != ''&&obj.DEPTEXTSET!=null){
+			var deptextsetStr = obj.DEPTEXTSET;
 			if (deptextsetStr.indexOf("1")> -1){
 				document.getElementById('STARTDEPTEXT').checked=true;
 			}
@@ -347,13 +376,7 @@
 				//obj.obj.title = obj.process_name;
 			} 
 			isApply = false;
-		}
-		function closeWin(){
-			if(isApply){
-				alert("请先点击'应用'保存所作修改后关闭。");
-			}else{
-				closeWindow();
-			}
+			closeWindow();
 		}
 
 
@@ -395,16 +418,22 @@
 			if(document.getElementById('NODEBIZTYPE').value =='1'){
 				document.getElementById('thepassrate').style.display='';
 			    document.getElementById('themeetingpost').style.display='';
+			    var obj=document.getElementById("tab0");
+       	    	var height=$(obj).css('height');
+       	    	var heightarr=height.split("px");
+       	    	var He=parseInt(heightarr[0])+75;
+       	    	var but=document.getElementById("button");
+       	    	$(but).css("padding-top",He+"px");
 			}else{
 				document.getElementById('thepassrate').style.display='none';
 				document.getElementById('themeetingpost').style.display='none';
+				var obj=document.getElementById("tab0");
+       	    	var height=$(obj).css('height');
+       	    	var heightarr=height.split("px");
+       	    	var He=parseInt(heightarr[0])+95;
+       	    	var but=document.getElementById("button");
+       	    	$(but).css("padding-top",He+"px");
 			}
-			var obj=document.getElementById("tab0");
-       	    var height=$(obj).css('height');
-       	    var heightarr=height.split("px");
-       	    var He=parseInt(heightarr[0])+55;
-       	    var but=document.getElementById("button");
-       	    $(but).css("padding-top",He+"px");
 		}
 
 		function isNumber(){

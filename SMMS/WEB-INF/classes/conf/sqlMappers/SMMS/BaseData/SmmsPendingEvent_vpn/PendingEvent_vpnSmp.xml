@@ -35,7 +35,7 @@
             ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
-            ssp.FORCE_CLOSE_DESCE,
+            ssp.FORCE_CLOSE_DESC,
             ssp.RECTIFY_TERM,
             ssp.CLOSE_TERM,
             ssp.SEND_TIME,
@@ -49,9 +49,11 @@
             ssp.MEMO,
             ssp.LOG_TABLENAME,
             ssp.LOG_RID,
+            ssp.LOG_FILENAME,
             ssp.CREATTIME,
             ssp.MODIFIEDTIME,
             ssp.RECORDSTATE,
+            ssp.PRIORITY,
             sii.IDC_ID,
             sii.IDC_NAME,
             crc1.CRC_VALUE,
@@ -90,7 +92,7 @@
             ssp.FINAL_RECTIFY_SUGGEST,
             ssp.IS_FORCE_CLOSE,
             ssp.IS_WHITE_LIST,
-            ssp.FORCE_CLOSE_DESCE,
+            ssp.FORCE_CLOSE_DESC,
             ssp.RECTIFY_TERM,
             ssp.CLOSE_TERM,
             ssp.SEND_TIME,
@@ -105,9 +107,11 @@
             ssp.SNAPSHOP,
             ssp.LOG_TABLENAME,
             ssp.LOG_RID,
+            ssp.LOG_FILENAME,
             ssp.CREATTIME,
             ssp.MODIFIEDTIME,
             ssp.RECORDSTATE,
+            ssp.PRIORITY,
             sii.IDC_ID,
             sii.IDC_NAME,
             crc1.CRC_VALUE,
@@ -131,13 +135,11 @@
     	SMMS_WEB_CASE as ssw
     	on ssp.WEB_CASE_RID=ssw.RID
     left join smms_crc_mapting as crc1
-		on ssp.EVENT_TYPE2 = crc1.CRC_KEY 
+		on ssp.EVENT_TYPE2 = crc1.CRC_KEY and (crc1.CRC_TYPE='a' or crc1.CRC_TYPE ='t')
 	left join smms_crc_mapting as crc2
-		on ssp.EVENT_TYPE3 = crc2.CRC_KEY 
+		on ssp.EVENT_TYPE3 = crc2.CRC_KEY and (crc2.CRC_TYPE='a' or crc2.CRC_TYPE ='t')
 	<where>
 		ssp.RECORDSTATE='0'
-		and (crc1.CRC_TYPE='a' or crc1.CRC_TYPE ='r' or crc1.CRC_TYPE ='t')
-		and (crc2.CRC_TYPE='a' or crc2.CRC_TYPE ='r' or crc2.CRC_TYPE ='t')
         <if test="whereCondition!=null and whereCondition!='' ">   
              ${whereCondition}
         </if>		
@@ -228,7 +230,7 @@
             <if test="FINAL_RECTIFY_SUGGEST != null ">FINAL_RECTIFY_SUGGEST,</if>
             <if test="IS_FORCE_CLOSE != null ">IS_FORCE_CLOSE,</if>
             <if test="IS_WHITE_LIST != null ">IS_WHITE_LIST,</if>
-            <if test="FORCE_CLOSE_DESCE != null ">FORCE_CLOSE_DESCE,</if>
+            <if test="FORCE_CLOSE_DESC != null ">FORCE_CLOSE_DESC,</if>
             <if test="RECTIFY_TERM != null ">RECTIFY_TERM,</if>
             <if test="CLOSE_TERM != null ">CLOSE_TERM,</if>
             <if test="SEND_TIME != null ">SEND_TIME,</if>
@@ -243,6 +245,7 @@
             <if test="SNAPSHOP != null ">SNAPSHOP,</if>
             <if test="LOG_TABLENAME != null ">LOG_TABLENAME,</if>
             <if test="LOG_RID != null ">LOG_RID,</if>
+            <if test="LOG_FILENAME != null ">LOG_FILENAME,</if>
             <if test="CREATTIME != null ">CREATTIME,</if>
             <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
             <if test="RECORDSTATE != null ">RECORDSTATE</if>)
@@ -278,7 +281,7 @@
            <if test="FINAL_RECTIFY_SUGGEST != null ">#{FINAL_RECTIFY_SUGGEST},</if>
            <if test="IS_FORCE_CLOSE != null ">#{IS_FORCE_CLOSE},</if>
            <if test="IS_WHITE_LIST != null ">#{IS_WHITE_LIST},</if>
-           <if test="FORCE_CLOSE_DESCE != null ">#{FORCE_CLOSE_DESCE},</if>
+           <if test="FORCE_CLOSE_DESC != null ">#{FORCE_CLOSE_DESC},</if>
            <if test="RECTIFY_TERM != null ">#{RECTIFY_TERM},</if>
            <if test="CLOSE_TERM != null ">#{CLOSE_TERM},</if>
            <if test="SEND_TIME != null ">#{SEND_TIME},</if>
@@ -293,6 +296,7 @@
            <if test="SNAPSHOP != null ">#{SNAPSHOP},</if>
            <if test="LOG_TABLENAME != null ">#{LOG_TABLENAME},</if>
            <if test="LOG_RID != null ">#{LOG_RID},</if>
+           <if test="LOG_FILENAME != null ">#{LOG_FILENAME},</if>
            <if test="CREATTIME != null ">#{CREATTIME},</if>
            <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
            <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
@@ -331,7 +335,7 @@
 		    <if test="FINAL_RECTIFY_SUGGEST!=null"> FINAL_RECTIFY_SUGGEST=#{FINAL_RECTIFY_SUGGEST},</if> 
 		    <if test="IS_FORCE_CLOSE!=null"> IS_FORCE_CLOSE=#{IS_FORCE_CLOSE},</if> 
 		    <if test="IS_WHITE_LIST!=null"> IS_WHITE_LIST=#{IS_WHITE_LIST},</if> 
-		    <if test="FORCE_CLOSE_DESCE!=null"> FORCE_CLOSE_DESCE=#{FORCE_CLOSE_DESCE},</if> 
+		    <if test="FORCE_CLOSE_DESC!=null"> FORCE_CLOSE_DESC=#{FORCE_CLOSE_DESC},</if> 
 		    <if test="RECTIFY_TERM!=null"> RECTIFY_TERM=#{RECTIFY_TERM},</if> 
 		    <if test="CLOSE_TERM!=null"> CLOSE_TERM=#{CLOSE_TERM},</if> 
 		    <if test="SEND_TIME!=null"> SEND_TIME=#{SEND_TIME},</if> 
@@ -346,7 +350,9 @@
 		    <if test="SNAPSHOP!=null"> SNAPSHOP=#{SNAPSHOP},</if> 
 		    <if test="LOG_TABLENAME!=null"> LOG_TABLENAME=#{LOG_TABLENAME},</if> 
 		    <if test="LOG_RID!=null"> LOG_RID=#{LOG_RID},</if> 
+		    <if test="LOG_FILENAME!=null"> LOG_FILENAME=#{LOG_FILENAME},</if> 
 		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="PRIORITY!=null"> PRIORITY=#{PRIORITY},</if> 
 		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
 		</set>
 	where RID=#{RID}

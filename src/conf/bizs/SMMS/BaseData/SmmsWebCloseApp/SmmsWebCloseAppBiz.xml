@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="SMMS.BaseData.SmmsWebCloseApp.SmmsWebCloseAppBiz" namespace="/SMMS/SmmsWebCloseAppBiz" extends="SMMS-default">        
+		<!--进入操作界面List View Add Update -->
+        <action  name="Do*" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.{1}SmmsWebCloseAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/Common{1}.jsp</result>
+        </action>    
+		<!--新增的保存操作-->
+        <action  name="*Save" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.SaveSmmsWebCloseAppAction">
+        	<result type="chain" name="inserSuccess">DoUpdate</result>
+        	<result type="chain" name="updateSuccess">DoUpdate</result>
+        </action>   
+		<!--保存可修改的列表信息-->
+        <action  name="SaveDataList" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.SaveSmmsWebCloseAppDataListAction">
+        	<result type="chain" name="inserSuccess">DoUpdate</result>
+        	<result type="chain" name="updateSuccess">DoUpdate</result>
+        </action>  
+		<!--保存联合主从表信息-->
+        <action  name="SaveUniteSubTableList" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.SaveSmmsWebCloseAppUniteSubTableAction">
+        	<result type="chain" name="inserSuccess">DoUpdate</result>
+        	<result type="chain" name="updateSuccess">DoUpdate</result>        
+        </action>
+		<!--删除操作-->
+        <action  name="Delete" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.DeleteSmmsWebCloseAppAction">
+        </action>  
+        <!-- 保存 更新操作-->   
+         <action  name="submitExam" class="com.zstar.SMMS.BaseData.SmmsWebCloseApp.action.SubmitExamAction">
+        </action>    
+         <!--进入审批界面 -->
+        <action  name="DoApproveView" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.ViewSmmsWebOpenAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/CommonApproveView.jsp</result>
+        </action>    
+        
+        <!--查看审批历史 -->
+        <action  name="DoApproveHisView" class="com.zstar.SMMS.BaseData.SmmsWebOpenApp.action.ViewSmmsWebOpenAppAction">
+            <result>/WEB-INF/jsp/fmp/frame/common/CommonApvHisView.jsp</result>
+        </action>            
+    </package>
+</struts>

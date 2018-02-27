@@ -27,39 +27,62 @@ function viewEventDetialByRid(rid){
 }
 
 function viewAqsjByRid(rid){
-	
-	
+
+
 	var event_main_rid=" and spea.MAIN_RID = '"+rid+"'";
 	var url = rootPath+"/SMMS/PendingEvent_aqsjBiz/DoList?freezeCondition="+event_main_rid+"&tableModelId=PendingEvent_aqsj";
 	openWindow(url);
 }
 function viewVpnByRid(rid){
-	
-	
+
+
 	var event_main_rid=" and ssp.MAIN_RID = '"+rid+"'";
 	var url = rootPath+"/SMMS/PendingEvent_vpnBiz/DoList?freezeCondition="+event_main_rid+"&tableModelId=PendingEvent_vpn";
 	openWindow(url);
 }
 function viewWbaByRid(rid){
-	
-	
+
+
 	var event_main_rid=" and ssp.MAIN_RID = '"+rid+"'";
 	var url = rootPath+"/SMMS/SmmsPendingEvent_WbaBiz/DoList?freezeCondition="+event_main_rid+"&tableModelId=SmmsPendingEvent_Wba";
 	openWindow(url);
 }
 function viewKeyByRid(rid){
-	
-	
+
+
 	var event_main_rid=" and kyy.MAIN_RID = '"+rid+"'";
 	var url = rootPath+"/SMMS/PendingEvent_keyBiz/DoList?freezeCondition="+event_main_rid+"&tableModelId=PendingEvent_key";
 	openWindow(url);
 }
 
+//IDC安全事件管理的标记已整改
+function signCorrect(){
+	var selectedDataList = new Array();
+	selectedDataList = setSelectedDataList();
+	var rids = "";
+	if(selectedDataList != null){
+		for (var i = 0; i<selectedDataList.length ;i++){
+			var rid=selectedDataList[i].get("RID");  
+			rids =rids+rid+",";
+		}
+		var url = rootPath+"/SMMS/SmmsEventMainBiz/signCorrect?RID="+rids;
+		//发送一个ajax请求
+		XMLHttp.urlSubmit(url,backCallSendMsg);
+		function backCallSendMsg(msg){
+			showMessage(msg);
+			//刷新列表
+			doRefreshList();
+		}	
+	}
+}
 
 function viewWebCaseByRid(rid){
-	var url = rootPath+"/SMMS/IdcInfoBiz/DoView?RID="+rid+"&tableModelId=WebCase";
-	openWindow(comUrl(url));
-
+	if(rid!=''&& rid !=null && rid!='无'){
+		var url = rootPath+"/SMMS/IdcInfoBiz/DoView?RID="+rid+"&tableModelId=WebCase";
+		openWindow(comUrl(url));
+	}else{
+		showMessage("该网站无备案信息");
+	}
 
 }
 //显示日志事件详情页
@@ -106,7 +129,7 @@ function sandKeys(){
 			showMessage(msg);
 			doRefreshList();
 		}
-		
+
 	}
 }
 //删除列表的方法

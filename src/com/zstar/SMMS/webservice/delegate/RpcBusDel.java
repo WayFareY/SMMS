@@ -1,6 +1,7 @@
 package com.zstar.SMMS.webservice.delegate;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -287,14 +288,19 @@ public class RpcBusDel extends BaseDelegate {
 			dataMap.put("RECTIFY_MEASURE", String.valueOf(jsonMap.get("rectify_measure")));
 			dataMap.put("FEEDBACK_TIME", FMPContex.getCurrentTime());
 			dataMap.put("FEEDBACK_TIMESTAMP", System.currentTimeMillis());
-
+			dataMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
 			// 字段校验
 			String fieldCheck = RpcBusDel.checkValidMap(dataMap, noNull, FieldLength);
 			pendingEventErrorMessage += fieldCheck;
 
 			// 返回空表示数据校验成功
 			if (fieldCheck.equals("")) {
-				i = this.sqlSession.update("SmmsPendingEvent.stateUpdate", dataMap);
+				i = this.sqlSession.update("SmmsEnforceHis.stateUpdate", dataMap);
+				this.sqlSession.update("SmmsEventMain.stateUpdate", dataMap);
+				Map detailMap = new HashMap();
+				detailMap = (Map) sqlSession.selectOne("SmmsEventMain.selectDetailRid", dataMap);
+				dataMap.putAll(detailMap);
+				this.sqlSession.update("SmmsPendingEvent.stateUpdate", dataMap);
 				sum += i;
 				dataMap.clear();
 			}
@@ -630,17 +636,101 @@ public class RpcBusDel extends BaseDelegate {
 		return result;
 	}
 
+	public String rpc1211(String json) {
+		Map jsonMap = JsonUtil.jsonToDataMap(json);
+		Map dataMap = (Map) jsonMap.get("data");
+		Map selectMap = new HashMap();
+		Map resultMap = new HashMap();
+		String timeRang = "";
+		timeRang = (String) dataMap.get("time_rang");
+		String eventType1 = "";
+		eventType1 = (String) dataMap.get("event_type1");
+		String reurnMessage = "";
+		List list = new ArrayList();
+		if ((timeRang.length() == 17) && ("1".equals(eventType1))) {
+			String startTime = timeRang.substring(0, 8);
+			String endTime = timeRang.substring(9, timeRang.length());
+			selectMap.put("STARTTIME", startTime);
+			selectMap.put("ENDTIME", endTime);
+			list = this.sqlSession.selectList("SmmsEventMain.selectEventMailAfInWeb", selectMap);
+		} else if ((timeRang.length() == 17) && ("2".equals(eventType1))) {
+			String startTime = timeRang.substring(0, 8);
+			String endTime = timeRang.substring(9, timeRang.length());
+			selectMap.put("STARTTIME", startTime);
+			selectMap.put("ENDTIME", endTime);
+			list = this.sqlSession.selectList("SmmsEventMain.selectEventMailAfNotInWeb", selectMap);
+		} else {
+			reurnMessage = "处理失败，参数数据有误";
+		}
+		if ("".equals(reurnMessage)) {
+			Map maps = new HashMap();
+			maps.put("rows", list);
+			maps.put("total", Integer.valueOf(list.size()));
+			resultMap.put("data", maps);
+			resultMap.put("return_code", "000");
+			resultMap.put("return_msg", "处理成功");
+		} else {
+			resultMap.put("return_code", "999");
+			resultMap.put("return_msg", reurnMessage);
+		}
+		String result = JsonUtil.dataMapToJson(resultMap);
+		return result;
+	}
+
+	public String rpc1212(String json) {
+		Map jsonMap = JsonUtil.jsonToDataMap(json);
+		Map dataMap = (Map) jsonMap.get("data");
+		Map selectMap = new HashMap();
+		Map resultMap = new HashMap();
+		String timeRang = "";
+		timeRang = (String) dataMap.get("time_rang");
+		String eventType1 = "";
+		eventType1 = (String) dataMap.get("event_type1");
+		String reurnMessage = "";
+		List list = new ArrayList();
+		if ((timeRang.length() == 17) && ("1".equals(eventType1))) {
+			String startTime = timeRang.substring(0, 8);
+			String endTime = timeRang.substring(9, timeRang.length());
+			selectMap.put("STARTTIME", startTime);
+			selectMap.put("ENDTIME", endTime);
+			list = this.sqlSession.selectList("SmmsEventMain.selectEventMailAcInWeb", selectMap);
+		} else if ((timeRang.length() == 17) && ("2".equals(eventType1))) {
+			String startTime = timeRang.substring(0, 8);
+			String endTime = timeRang.substring(9, timeRang.length());
+			selectMap.put("STARTTIME", startTime);
+			selectMap.put("ENDTIME", endTime);
+			list = this.sqlSession.selectList("SmmsEventMain.selectEventMailAcNotInWeb", selectMap);
+		} else {
+			reurnMessage = "处理失败，参数数据有误";
+		}
+		if ("".equals(reurnMessage)) {
+			Map maps = new HashMap();
+			maps.put("rows", list);
+			maps.put("total", Integer.valueOf(list.size()));
+			resultMap.put("data", maps);
+			resultMap.put("return_code", "000");
+			resultMap.put("return_msg", "处理成功");
+		} else {
+			resultMap.put("return_code", "999");
+			resultMap.put("return_msg", reurnMessage);
+		}
+		String result = JsonUtil.dataMapToJson(resultMap);
+		return result;
+	}
+
 	public static void main(String[] s) {
-		/*Map map = new HashMap();
-		map.put("a", "123123");
-		map.put("b", "234");
-		map.put("c", "123423423");
-		map.put("d", "123223");
-		map.put("e", "");
-		
-		String ss = RpcBusDel.checkValidMap(map, "a,b,c,d,e,f", "a:4,b:5,c:6,d:12");
-		
-		System.err.println(ss);*/
+		/*
+		 * Map map = new HashMap();
+		 * map.put("a", "123123");
+		 * map.put("b", "234");
+		 * map.put("c", "123423423");
+		 * map.put("d", "123223");
+		 * map.put("e", "");
+		 * 
+		 * String ss = RpcBusDel.checkValidMap(map, "a,b,c,d,e,f", "a:4,b:5,c:6,d:12");
+		 * 
+		 * System.err.println(ss);
+		 */
 
 	}
 }

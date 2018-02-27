@@ -66,6 +66,23 @@
         <!--删除表单操作-->
         <action  name="DeleteList" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.DeleteList">
         </action>  
-        
+        <!--标记已整改操作-->
+        <action  name="signCorrect" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.SignCorrectAction">
+        </action>  
+        <!--更新明细记录数-->
+        <action  name="UpdateDetialCountAddOne" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.UpdateDetialCountAction">
+        </action>
+        <!--标记已关停操作-->
+        <action  name="signClose" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.SignCloseAction">
+        </action> 
+        <!--获取json数据-->
+        <action  name="getStatJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetJsonAction">
+        </action> 
+        <!--移至确认关停-->     
+         <action  name="finalToTwo" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.FinalToTwoAction">
+        </action> 
+        <!--移至确认关停-->     
+         <action  name="recoverWeb" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.RecoverWebAction">
+        </action> 
     </package>
 </struts>

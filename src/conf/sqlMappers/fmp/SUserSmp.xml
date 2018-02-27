@@ -109,7 +109,9 @@
 <select id="selectUserIdByOrgId" parameterType="hashmap" resultType="hashmap"> 
 	select USERID from S_USER where ORGID = #{ORGID}  and RECORDSTATE='0' and STATE != '1'
 </select>
-
+<select id="selectNum" parameterType="hashmap" resultType="LONG">
+	SELECT  count(USERID) FROM S_USER WHERE LOGINCODE = #{LOGINCODE} and RECORDSTATE='0'
+</select>
 <select id="selectUserIdByDeptId" parameterType="hashmap" resultType="hashmap"> 
 	select USERID from S_USER where DEPTID = #{DEPTID}   and RECORDSTATE='0'  and STATE != '1'
 </select>
@@ -145,7 +147,6 @@
 <update id="updateSave" parameterType="hashmap" > 
 	update S_USER 
 	<set> 
-		<if test="USERID!=null">USERID = #{USERID}, </if>
 		<if test="USERNAME!=null">USERNAME = #{USERNAME},</if>
 		<if test="NICKNAME!=null">NICKNAME = #{NICKNAME}, </if>
 		<if test="LOGINCODE!=null">LOGINCODE = #{LOGINCODE}, </if>

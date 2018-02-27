@@ -9,10 +9,14 @@ SYSTEMPK=SMMS
 ROOT_PATH=/SMMS
 
 #系统生成权限文件的存放路径
-#AUTHOR_FILE_PATH=/usr/project/SMMS/conf/author/
-AUTHOR_FILE_PATH=D:\\Workspace\\SMMS_Github\\SMMS\\SMMS\\conf\\author\\
-#生成权限文件的编码策略    用TEST测试
-AUTHOR_FILE_ENCODE=
+AUTHOR_FILE_PATH=/usr/project/SMMS/conf/author/
+
+#定时任务调度是否可用
+QUARZE_ENABLE=true
+
+#生成权限文件的编码策略    用TEST测试      /fmp/BuildRightBiz/BuildRight
+#ISO_UTF/ISO_GB/UTF_GB/UTF_ISO/GB_ISO/GB_UTF/UNI_GB/UNI_UTF/UNI_ISO/GB_UNI/UTF_UNI/ISO_UNI
+AUTHOR_FILE_ENCODE=UNI_GB
 
 #读取权限树的编码策略    用TEST测试
 AUTHOR_TREE_ENCODE=
@@ -48,7 +52,7 @@ AC_LOG_KEY_PATH=/home/netmonitor/keyword/
 #AC日志备份目录
 AC_LOG_BACKUP_PATH=/home/netmonitor/backup/
 #ACserviceUrlhttp://172.18.2.88:8000/bbc/idc/ws?wsdl
-DOMAIN_SERVICE=http://172.44.32.36:8000/bbc/idc/ws?wsdl
+DOMAIN_SERVICE=http://172.18.2.88:8000/bbc/idc/ws?wsdl
 #BBCtokenid
 TOKENID=4233e79f-f6b7-4b50-9216-05de1490b429
 #AF日志目录
@@ -60,3 +64,15 @@ AF_LOG_ERR=sangfor_sis_log
 AF_LOG_FORMAT=.err
 #报告默认城市
 REPORT_CITY=珠海
+
+#判断AC是否在线的时间间隔：单位分钟  
+AC_LOG_INTERVAL=30
+#判断AF是否在线的时间间隔：单位分钟
+AF_LOG_INTERVAL=30
+#判断是否存在异常日志事件的时间间隔：单位分钟   
+EVENT_LOG_INTERVAL=1
+
+#角色ID
+IDC_ROLEID=20170014
+#部门ID
+IDC_DEPTID=000069DEPTID

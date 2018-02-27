@@ -310,12 +310,16 @@ function doSubmit(canclose){
 	function callBack(msg){
 		if(msg.substr(0,4) == 'RID='){ // 判断保存是否成功
 			if(typeof doAfterUpdate!='undefined'&& doAfterUpdate instanceof Function){          
-				doAfterUpdate(); 
+				doAfterUpdate(msg); 
 			}else{
 				showMessage('MSG0005');//保存成功！
 			}
 		} else {
-			showMessage(msg);
+			if(typeof doAfterUpdate!='undefined'&& doAfterUpdate instanceof Function){          
+				doAfterUpdate(msg); 
+			}else{			
+				showMessage(msg);
+			}
 		}
 		doRefreshList();		
 		if (canclose){

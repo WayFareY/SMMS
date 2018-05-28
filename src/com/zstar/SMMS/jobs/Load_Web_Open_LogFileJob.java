@@ -61,9 +61,13 @@ public class Load_Web_Open_LogFileJob
           if (list.size() > 0)
           {
             map.put("CHECK_RESULT", "2");
+            
+            map.put("APP_RESULT", "9");
             int result = del.updateState(map);
             if (result == 1)
             {
+              mapRid.put("ENFORCE_COUNT", Long.valueOf(((Long)param.get("ENFORCE_COUNT")).longValue() + 1L));
+              mapRid.put("RECTIFY_STATE", "030");
               String message = mainDel.bbcForceClose(mapRid, rpcBusdel);
               FMPLog.printLog(map.get("ACCESS_ID") + "网站恢复失败");
             }
@@ -75,7 +79,7 @@ public class Load_Web_Open_LogFileJob
               mapRid.put("RECTIFY_STATE", "900");
               mapRid.put("MODIFIEDTIME", FMPContex.getCurrentTime());
               int i = this.sqlSession.update("SmmsEventMain.updateQzgtState", mapRid);
-              FMPLog.printLog("不需要审批的更新待处理日志事件主表：" + i);
+              FMPLog.printLog("不需要审批流量验证通过了的更新待处理日志事件主表：" + i);
               mapRid.put("RID", map.get("EVENT_RID"));
               Map detailMap = (Map)this.sqlSession.selectOne("SmmsEventMain.selectDetailRid", mapRid);
               detailMap.put("RID", detailMap.get("DETAIL_RID"));
@@ -85,15 +89,14 @@ public class Load_Web_Open_LogFileJob
               int j = this.sqlSession.update("SmmsPendingEvent.updateState", detailMap);
               FMPLog.printLog("不需要审批的更新待处理日志事件从表：" + j);
             }
-            else
+            else if (!"900".equals(rectifyState))
             {
-              map.put("CHECK_RESULT", "1");
-              int result = del.updateState(map);
-              
               mapRid.put("RECTIFY_STATE", "030");
-              String message = mainDel.bbcForceClose(mapRid, rpcBusdel);
+              message = mainDel.bbcForceClose(mapRid, rpcBusdel);
               FMPLog.printLog(map.get("ACCESS_ID") + "网站恢复成功");
             }
+            map.put("CHECK_RESULT", "1");
+            String message = del.updateState(map);
           }
         }
         catch (Exception e)

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="exclude" namespace="/SMMS/exclude" extends="default">
+        <action  name="show">
+        	<result>/WEB-INF/jsp/DZRZ/ReportMessage.jsp</result>
+        </action>         
+        <!--获取整改业务的json数据-->  
+        <action  name="getZgywJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetJsonZgywAction">
+        	 <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+        </action> 
+        
+        <!--获取地市IDC安全信息分类汇总json数据-->
+        <action  name="getIdcEventJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GestJsonIdcEventAction">
+        	<result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+        </action>
+        
+       
+           <!--获取涉及信息安全的json数据-->
+        <action  name="getXxaqJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GestJsonByXxaqAction">
+        	<result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+        </action>
+        <!--获取涉网络安全的json数据-->
+        <action  name="getWlaqJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GestJsonByWlaqAction">
+        	<result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+        </action>
+        <!--获取未备案的json数据-->
+        <action  name="getWbaJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GestJsonByWbaAction">
+        	<result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+        </action>
+        <!--获取关停和恢复json数据111-->
+        <action  name="getGtHfJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GestJsonBygtHfAction">
+        	      <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action>
+        <!--获取整改处理json数据-->
+        <action  name="getZgClJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetJsonZgclAction">
+        	   <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action>
+        <!--获取风险服务器json数据-->
+        <action  name="getFxFwqJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetJsonFxFwqAction">
+        	   <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action>
+          <!--获取异常流量json数据-->
+        <action  name="getYcllJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetJsonYcllAction">
+        	    <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action>
+         <!--地市安全信息分类汇总数据Json操作-->
+        <action  name="getSmmsCitySumYbJson" class="com.zstar.SMMS.STAT.SmmsCitySumYb.action.GetJsonSptCitySumAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+          <!--地市查看详情操作json操作-->
+        <action  name="getEventDetailJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetEventDetailAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+          <!--地市查看所有idc信息json操作-->
+        <action  name="getIdcInfoJson" class="com.zstar.SMMS.BaseData.IdcInfo.action.GetIdcInfoAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+          <!--地市查看所有安全事件json操作-->
+        <action  name="getEventTotalJson" class="com.zstar.SMMS.BaseData.SmmsEventMain.action.GetEventTotalAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+            <!--地市查看所有idc机房json操作-->
+        <action  name="getIdcRoomInfoAction" class="com.zstar.SMMS.BaseData.SmmsRoomInfo.action.GetIdcRoomInfoAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+             <!--地市查看所有网站备案信操作-->
+        <action  name="getIdcWebCaseAction" class="com.zstar.SMMS.BaseData.WebCase.action.GetIdcWebCaseAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+              <!--省页面查看整改页面json-->
+        <action  name="GetCityRectiyToSptAction" class="com.zstar.SMMS.BaseData.SptCityRectify.action.GetCityRectiyToSptAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+              <!--省页面查看整改详情页面json-->
+        <action  name="getCityCloseToSptAction" class="com.zstar.SMMS.STAT.SptIdcCloseOpen.action.GetCityCloseToSptAction">
+        	  <result name="empty">/WEB-INF/jsp/fmp/frame/result/empty.jsp</result>
+
+        </action> 
+    </package>
+</struts>

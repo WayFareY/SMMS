@@ -64,6 +64,13 @@ public class InputWebcaseAction
   public String bizExecute()
     throws Exception
   {
+    if (this.idcId == null)
+    {
+      String useRid = (String)getWebData("CURR_USERID");
+      if (useRid.startsWith("IDC")) {
+        this.idcId = useRid;
+      }
+    }
     List<Map> listMap = this.sqlSession.selectList("IdcInfo.viewIdcExist", this.idcId);
     String uploadPath = FMPContex.getSystemProperty("BASE_UPLOAD_PATH") + this.idcId + "/";
     if (this.webcaseFileFileName.endsWith(".xls"))
@@ -179,36 +186,36 @@ public class InputWebcaseAction
         for (int k = 2; k < result.size(); k++) {
           try
           {
-            String zbdw = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER")).intValue()).toString();
-            String zbdwzjlx = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_TYPE")).intValue()).toString();
-            String zbdwzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_NUM")).intValue()).toString();
-            String ztszs = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_PROVINCE")).intValue()).toString();
+            String zbdw = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER")).intValue()).toString().replace(" ", "");
+            String zbdwzjlx = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_TYPE")).intValue()).toString().replace(" ", "");
+            String zbdwzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_NUM")).intValue()).toString().replace(" ", "");
+            String ztszs = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_PROVINCE")).intValue()).toString().replace(" ", "");
             
-            String dz = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_ADDRESS")).intValue()).toString();
-            String ztbah = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CASE_NUM")).intValue()).toString();
-            String ztbazt = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CASE_STATE")).intValue()).toString();
-            String wzmc = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_NAME")).intValue()).toString();
-            String wzsy = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_URL")).intValue()).toString();
+            String dz = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_ADDRESS")).intValue()).toString().replace(" ", "");
+            String ztbah = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CASE_NUM")).intValue()).toString().replace(" ", "");
+            String ztbazt = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CASE_STATE")).intValue()).toString().replace(" ", "");
+            String wzmc = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_NAME")).intValue()).toString().replace(" ", "");
+            String wzsy = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_URL")).intValue()).toString().replace(" ", "");
             
-            String wzbah = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_CASE_NAME")).intValue()).toString();
+            String wzbah = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_CASE_NAME")).intValue()).toString().replace(" ", "");
             
-            String wzbazt = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_CASE_STATE")).intValue()).toString();
-            String ym = ((ArrayList)result.get(k)).get(((Integer)map.get("DOMAIN_NAME")).intValue()).toString();
-            String fwqcfdz = ((ArrayList)result.get(k)).get(((Integer)map.get("SERVER_PLACE")).intValue()).toString();
+            String wzbazt = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_CASE_STATE")).intValue()).toString().replace(" ", "");
+            String ym = ((ArrayList)result.get(k)).get(((Integer)map.get("DOMAIN_NAME")).intValue()).toString().replace(" ", "");
+            String fwqcfdz = ((ArrayList)result.get(k)).get(((Integer)map.get("SERVER_PLACE")).intValue()).toString().replace(" ", "");
             
-            String zjzs = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_ADDRESS")).intValue()).toString();
-            String ztfzr = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER")).intValue()).toString();
-            String ztfzrzjlx = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_CERT_TYPE")).intValue()).toString();
-            String ztfzrzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_CERT_NUM")).intValue()).toString();
-            String ztfzrdhhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_TEL_NUM")).intValue()).toString();
-            String ztfzrsjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_MOBILE")).intValue()).toString();
-            String ztfzrdzyj = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_EMAIL")).intValue()).toString();
-            String wzfzr = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER")).intValue()).toString();
-            String wzfzrdhhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_TEL_NUM")).intValue()).toString();
-            String wzfzrsjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_MOBILE")).intValue()).toString();
-            String wzfzrdzyj = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_EMAIL")).intValue()).toString();
-            String wzfzrzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_CERT_NUM")).intValue()).toString();
-            String ip = ((ArrayList)result.get(k)).get(((Integer)map.get("IPS")).intValue()).toString();
+            String zjzs = ((ArrayList)result.get(k)).get(((Integer)map.get("SPONSER_CERT_ADDRESS")).intValue()).toString().replace(" ", "");
+            String ztfzr = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER")).intValue()).toString().replace(" ", "");
+            String ztfzrzjlx = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_CERT_TYPE")).intValue()).toString().replace(" ", "");
+            String ztfzrzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_CERT_NUM")).intValue()).toString().replace(" ", "");
+            String ztfzrdhhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_TEL_NUM")).intValue()).toString().replace(" ", "");
+            String ztfzrsjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_MOBILE")).intValue()).toString().replace(" ", "");
+            String ztfzrdzyj = ((ArrayList)result.get(k)).get(((Integer)map.get("MANAGER_EMAIL")).intValue()).toString().replace(" ", "");
+            String wzfzr = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER")).intValue()).toString().replace(" ", "");
+            String wzfzrdhhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_TEL_NUM")).intValue()).toString().replace(" ", "");
+            String wzfzrsjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_MOBILE")).intValue()).toString().replace(" ", "");
+            String wzfzrdzyj = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_EMAIL")).intValue()).toString().replace(" ", "");
+            String wzfzrzjhm = ((ArrayList)result.get(k)).get(((Integer)map.get("WEBSITE_MANAGER_CERT_NUM")).intValue()).toString().replace(" ", "");
+            String ip = ((ArrayList)result.get(k)).get(((Integer)map.get("IPS")).intValue()).toString().replace(" ", "");
             
             dataMap.put("SPONSER", zbdw);
             dataMap.put("SPONSER_CERT_TYPE", zbdwzjlx);

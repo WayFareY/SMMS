@@ -3,7 +3,6 @@ package com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate;
 import com.opensymphony.xwork2.ActionContext;
 import com.strutsframe.db.DBSqlSession;
 import com.zstar.SMMS.BaseData.IdcInfo.delegate.IdcInfoDel;
-import com.zstar.SMMS.constant.SMMSConstant;
 import com.zstar.SMMS.webservice.delegate.RpcBusDel;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.base.delegate.BaseDelegate;
@@ -66,7 +65,7 @@ public class PendingEventDel extends BaseDelegate {
 
 			Map messageJson = JsonUtil.jsonToDataMap(msg);
 
-			mapRid.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
+			mapRid.put("RECTIFY_STATE", "010");
 			mapRid.put("SEND_TIME", FMPContex.getCurrentTime());
 			mapRid.put("FEEDBACK_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
 			if ("000".equals(messageJson.get("return_code"))) {
@@ -101,7 +100,7 @@ public class PendingEventDel extends BaseDelegate {
 			Map messageJson = JsonUtil.jsonToDataMap(str);
 			if ("000".equals((String) messageJson.get("return_code"))) {
 				for (Map ridMap : sendList) {
-					ridMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
+					ridMap.put("RECTIFY_STATE", "010");
 					ridMap.put("SEND_TIME", FMPContex.getCurrentTime());
 					ridMap.put("SEND_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
 					int i = this.sqlSession.update("SmmsPendingEvent.updateRectifyState", ridMap);
@@ -128,7 +127,7 @@ public class PendingEventDel extends BaseDelegate {
 			Map messageJson = JsonUtil.jsonToDataMap(str);
 			if ("000".equals((String) messageJson.get("return_code"))) {
 				for (Map ridMap : sendList) {
-					ridMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
+					ridMap.put("RECTIFY_STATE", "010");
 					ridMap.put("SEND_TIME", FMPContex.getCurrentTime());
 					ridMap.put("SEND_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
 					int i = this.sqlSession.update("SmmsPendingEvent.updateQzgtState", ridMap);
@@ -140,41 +139,31 @@ public class PendingEventDel extends BaseDelegate {
 	}
 
 	public String returnForceCloseMessage(List<Map> forceCloselist) {
-		IdcInfoDel idcInfoDel;
-		String str;
-		String tmp_accessid;
-		String idcName;
-		String idcNameErr;
-		String errmsg;
-		int sum;
-		int sumThen;
-		List sendList;
-		Iterator iterator;
-		idcInfoDel = new IdcInfoDel(contex);
-		str = "";
-		tmp_accessid = "";
-		idcName = "";
-		idcNameErr = "";
-		errmsg = "";
-		sum = 0;
-		sumThen = 0;
+		IdcInfoDel idcInfoDel = new IdcInfoDel(contex);
+		String str = "";
+		String tmp_accessid = "";
+		String idcName = "";
+		String idcNameErr = "";
+		String errmsg = "";
+		int sum = 0;
+		int sumThen = 0;
 		int sumAfter = 0;
-		sendList = new ArrayList();
-		iterator = forceCloselist.iterator();
+		List sendList = new ArrayList();
+		Iterator iterator = forceCloselist.iterator();
 		while (iterator.hasNext()) {
 			Map mapToJson;
 			mapToJson = (Map) iterator.next();
 			if (mapToJson.get("close_term") == null) {
-				mapToJson.put("close_term", SMMSConstant.CLOSE_TERM);
+				mapToJson.put("close_term", "0000000000");
 			}
 			if (mapToJson.get("rectify_term") == null) {
-				mapToJson.put("rectify_term", SMMSConstant.RECTIFY_TERM);
+				mapToJson.put("rectify_term", "0000000000");
 			}
 			if (mapToJson.get("security_type") == null) {
-				mapToJson.put("security_type", SMMSConstant.SECURITY_TYPE);
+				mapToJson.put("security_type", "未知");
 			}
 			if (mapToJson.get("access_id") == null || "".equals(mapToJson.get("access_id"))) {
-				continue; /* Loop/switch isn't completed */
+				continue;/* Loop/switch isn't completed */
 			}
 			if ("".equals(tmp_accessid)) {
 				sendList.add(mapToJson);
@@ -217,25 +206,22 @@ public class PendingEventDel extends BaseDelegate {
 		return errmsg;
 	}
 
-	public String insertSmmsPendingEvent(Map insertMap) {
-		String rid = FMPContex.getNewUUID();
-		insertMap.put("RID", rid);
-
-		insertMap.put("REPORT_CITY", SMMSConstant.REPORT_CITY);
+	public int insertSmmsPendingEvent(Map insertMap) {
+		insertMap.put("REPORT_CITY", "珠海");
 
 		insertMap.put("REPORT_TIME", FMPContex.getCurrentTime());
 		if (insertMap.get("OCCUR_TIME") == null) {
 			insertMap.put("OCCUR_TIME", FMPContex.getCurrentTime());
 		}
-		insertMap.put("IS_WHITE_LIST", SMMSConstant.IS_WHITE_LIST);
+		insertMap.put("IS_WHITE_LIST", "2");
 
 		insertMap.put("CREATTIME", FMPContex.getCurrentTime());
 
 		insertMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
 
-		insertMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE);
-		this.sqlSession.insert("SmmsPendingEvent.insertSave", insertMap);
-		return rid;
+		insertMap.put("RECTIFY_STATE", "000");
+		int i = this.sqlSession.insert("SmmsPendingEvent.insertSave", insertMap);
+		return i;
 	}
 
 	public Map selectInsertPendingInfoByIpOrUrl(Map selectMap) {
@@ -249,7 +235,7 @@ public class PendingEventDel extends BaseDelegate {
 			insertMap.put("ACCESS_ID", webCaseMap.get("ACCESS_ID"));
 			insertMap.put("WEB_CASE_RID", webCaseMap.get("rid"));
 
-			insertMap.put("MAPPING_MODE", SMMSConstant.MAPPING_MODE_ONE);
+			insertMap.put("MAPPING_MODE", "1");
 		} else {
 			List roomIdcList = this.sqlSession.selectList("SmmsRoomIprange.selectAccesIdByIp", selectMap);
 			Map roomIdcMap = new HashMap();
@@ -270,7 +256,7 @@ public class PendingEventDel extends BaseDelegate {
 			if ((listWebCaseInfo != null) && (listWebCaseInfo.size() > 0)) {
 				Map webCaseInfoMap = (Map) listWebCaseInfo.get(0);
 				insertMap.put("WEB_CASE_RID", webCaseInfoMap.get("RID"));
-				insertMap.put("MAPPING_MODE", SMMSConstant.MAPPING_MODE_TWO);
+				insertMap.put("MAPPING_MODE", "2");
 
 				Map webCaseMap = (Map) this.sqlSession.selectOne("WebCase.getDomainNameAndWebstiteUrlByRid", webCaseInfoMap);
 				if ((webCaseMap != null) && (webCaseMap.size() > 0)) {
@@ -295,16 +281,16 @@ public class PendingEventDel extends BaseDelegate {
 		Map jsonMap = (Map) this.sqlSession.selectOne("SmmsPendingEvent.viewToJson", mapRid);
 		if ((jsonMap != null) && (jsonMap.size() > 0)) {
 			if (jsonMap.get("close_term") == null) {
-				jsonMap.put("close_term", SMMSConstant.CLOSE_TERM);
+				jsonMap.put("close_term", "0000000000");
 			}
 			if (jsonMap.get("rectify_term") == null) {
-				jsonMap.put("rectify_term", SMMSConstant.RECTIFY_TERM);
+				jsonMap.put("rectify_term", "0000000000");
 			}
 			if (jsonMap.get("damage_class") == null) {
 				jsonMap.put("damage_class", "3");
 			}
 			if (jsonMap.get("security_type") == null) {
-				jsonMap.put("security_type", SMMSConstant.SECURITY_TYPE);
+				jsonMap.put("security_type", "未知");
 			}
 			if (jsonMap.get("access_id") != null) {
 				idcId = String.valueOf(jsonMap.get("access_id"));
@@ -335,7 +321,7 @@ public class PendingEventDel extends BaseDelegate {
 
 				Map messageJson = JsonUtil.jsonToDataMap(str);
 				if ("000".equals(messageJson.get("return_code"))) {
-					mapRid.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
+					mapRid.put("RECTIFY_STATE", "010");
 					this.sqlSession.update("SmmsPendingEvent.updateRectifyState", mapRid);
 				}
 				String message = (String) messageJson.get("return_msg");
@@ -362,7 +348,7 @@ public class PendingEventDel extends BaseDelegate {
 
 			Map messageJson = JsonUtil.jsonToDataMap(str);
 			if ("000".equals(messageJson.get("return_code"))) {
-				mapRid.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_ENGTHIT);
+				mapRid.put("RECTIFY_STATE", "888");
 				this.sqlSession.update("SmmsPendingEvent.updateQzgtState", mapRid);
 			}
 			String message = (String) messageJson.get("return_msg");
@@ -395,7 +381,7 @@ public class PendingEventDel extends BaseDelegate {
 		Map messageJson = JsonUtil.jsonToDataMap(str);
 		if ("000".equals(messageJson.get("return_code"))) {
 			for (Map updateMap : sendList) {
-				updateMap.put("RECTIFY_STATE", SMMSConstant.RECTIFY_STATE_END);
+				updateMap.put("RECTIFY_STATE", "010");
 				updateMap.put("SEND_TIME", FMPContex.getCurrentTime());
 				updateMap.put("FEEDBACK_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
 				i = this.sqlSession.update("SmmsPendingEvent.issueStateUpdate", updateMap);
@@ -406,27 +392,17 @@ public class PendingEventDel extends BaseDelegate {
 	}
 
 	public String returnSandMessage(List<Map> dataList) {
-		IdcInfoDel idcInfoDel;
-		String str;
-		String tmp_accessid;
-		String idcName;
-		String idcNameErr;
-		String errmsg;
-		int sum;
-		int sumThen;
-		List sendList;
-		Iterator iterator;
-		idcInfoDel = new IdcInfoDel(contex);
-		str = "";
-		tmp_accessid = "";
-		idcName = "";
-		idcNameErr = "";
-		errmsg = "";
-		sum = 0;
-		sumThen = 0;
+		IdcInfoDel idcInfoDel = new IdcInfoDel(contex);
+		String str = "";
+		String tmp_accessid = "";
+		String idcName = "";
+		String idcNameErr = "";
+		String errmsg = "";
+		int sum = 0;
+		int sumThen = 0;
 		int sumAfter = 0;
-		sendList = new ArrayList();
-		iterator = dataList.iterator();
+		List sendList = new ArrayList();
+		Iterator iterator = dataList.iterator();
 		while (iterator.hasNext()) {
 			Map mapToJson;
 			mapToJson = (Map) iterator.next();

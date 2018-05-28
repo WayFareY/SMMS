@@ -19,19 +19,38 @@ public class CheckUrlAction
     urlMap.put("URL", url.toUpperCase());
     
     urlMap.put("DBTYPE", FMPContex.DBType);
+    
     List urlList = this.sqlSession.selectList("WebCase.checkUrl", urlMap);
     if ((urlList != null) && (urlList.size() > 0))
     {
       Map webCaseMap = (Map)urlList.get(0);
-      List roomInfoList = this.sqlSession.selectList("SmmsRoomInfo.selectRoomInfo", webCaseMap);
-      if ((roomInfoList != null) && (roomInfoList.size() > 0))
+      
+      Map webCaseRidMap = new HashMap();
+      webCaseRidMap.put("CASE_RID", webCaseMap.get("SWCRID"));
+      List webCaseIpList = this.sqlSession.selectList("SmmsWebCaseIp.findAccessIpByCaseRid", webCaseRidMap);
+      if ((webCaseIpList != null) && (webCaseIpList.size() > 0))
       {
-        Map roomInfoMap = (Map)roomInfoList.get(0);
-        webCaseMap.put("SSRRID", roomInfoMap.get("SSRRID"));
-        webCaseMap.put("ROOM_NAME", roomInfoMap.get("ROOM_NAME"));
-        webCaseMap.put("ROOM_IDX", roomInfoMap.get("ROOM_IDX"));
-        webCaseMap.put("ROOM_ADDRESS", roomInfoMap.get("ROOM_ADDRESS"));
-        setMsg(JsonUtil.dataMapToJson(webCaseMap));
+        Map webCaseIpMap = (Map)webCaseIpList.get(0);
+        webCaseIpMap.put("IP", webCaseIpMap.get("ACCESS_IP"));
+        webCaseIpMap.put("ACCESS_ID", webCaseMap.get("ACCESS_ID"));
+        webCaseIpMap.put("DBTYPE", FMPContex.DBType);
+        
+        List listRoomIdc = this.sqlSession.selectList("SmmsRoomIprange.selectAccesIdByIp", webCaseIpMap);
+        if ((listRoomIdc != null) && (listRoomIdc.size() > 0))
+        {
+          Map roomIdcMap = (Map)listRoomIdc.get(0);
+          
+          List listRoomAndIdc = this.sqlSession.selectList("SmmsEventMain.checkAccessIdAndRoomIdx", roomIdcMap);
+          if ((listRoomAndIdc != null) && (listRoomAndIdc.size() > 0))
+          {
+            Map roomInfoMap = (Map)listRoomAndIdc.get(0);
+            
+            webCaseMap.put("ROOM_NAME", roomInfoMap.get("ROOM_NAME"));
+            webCaseMap.put("ROOM_IDX", roomInfoMap.get("ROOM_IDX"));
+            webCaseMap.put("ROOM_ADDRESS", roomInfoMap.get("ROOM_ADDRESS"));
+            setMsg(JsonUtil.dataMapToJson(webCaseMap));
+          }
+        }
       }
     }
     else

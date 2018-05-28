@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SmmsIdcEvent"> 
+<sql id="listColumns">
+	
+            RID,
+            IDC_ID,
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            IDC_ID,
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SMMS_IDC_EVENT 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SMMS_IDC_EVENT 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<!--统计各个idc事件总和用于插入总表-->
+<select id="selectList" parameterType='hashmap' resultType='hashMap'>
+	select 
+		sum(WBA) as WBA,
+     	sum(SS1_SZ) as SS1_SZ,
+        sum(SS1_SW) as SS1_SW,
+        sum(SS1_SK) as SS1_SK,
+        sum(SS2_SH) as SS2_SH,
+        sum(SS2_SD) as SS2_SD,
+        sum(SS2_SDU) as SS2_SDU,
+     
+       sum(FQDL) as  FQDL,
+       sum(ZSRQ) as ZSRQ,
+       sum(HCML) as HCML,
+       sum(HKKZ) as HKKZ,
+       sum(NBGJ)  as NBGJ,
+       
+       sum(WBA_CLZ) as WBA_CLZ,
+       sum(SS1_SZ_CLZ) as SS1_SZ_CLZ,
+       sum(SS1_SW_CLZ) as SS1_SW_CLZ,
+       sum(SS1_SK_CLZ) as SS1_SK_CLZ,
+       sum(SS2_SH_CLZ) as SS2_SH_CLZ,
+       sum(SS2_SD_CLZ) as SS2_SD_CLZ,
+       sum(SS2_SDU_CLZ) as SS2_SDU_CLZ,
+       sum(FQDL_CLZ) as FQDL_CLZ,
+       sum(ZSRQ_CLZ) as ZSRQ_CLZ,
+       sum(HCML_CLZ)  as HCML_CLZ,
+       sum(HKKZ_CLZ)  as HKKZ_CLZ,
+       sum(NBGJ_CLZ)  as NBGJ_CLZ,
+       
+       sum(WBA_YCL)  as WBA_YCL,
+       sum( SS1_SZ_YCL) as  SS1_SZ_YCL,
+       sum(SS1_SW_YCL) as SS1_SW_YCL, 
+       sum(SS1_SK_YCL) as SS1_SK_YCL,
+       sum(SS2_SH_YCL) as SS2_SH_YCL,
+       sum(SS2_SD_YCL) as SS2_SD_YCL,
+       sum(SS2_SDU_YCL) as SS2_SDU_YCL,
+       sum(FQDL_YCL) as FQDL_YCL,
+       sum(ZSRQ_YCL)  as ZSRQ_YCL,
+       sum(HCML_YCL) as HCML_YCL,
+       sum(HKKZ_YCL) as HKKZ_YCL,
+       sum(NBGJ_YCL) as NBGJ_YCL
+       from smms_idc_event where recordstate='0'
+</select>
+<!--统计各个idc综合事件前十的数据-->
+<select id="selectTop10" parameterType='hashmap' resultType='hashMap'>
+	select  max(sii.idc_short_name) as IDC_NAME,
+	       sum(WBA) +
+		   sum(SS1_SZ) +
+           sum( SS1_SW) +
+           sum( SS1_SK) +
+           sum( SS2_SH) +
+           sum( SS2_SD) +
+           sum( SS2_SDU) +
+           sum( FQDL)+
+           sum(ZSRQ)+
+           sum( HCML)+
+           sum( HKKZ)+
+           sum(NBGJ)+
+            
+           sum(WBA_CLZ)+
+           sum(SS1_SZ_CLZ) +
+           sum(SS1_SW_CLZ) +
+           sum(SS1_SK_CLZ) +
+           sum(SS2_SH_CLZ) +
+           sum(SS2_SD_CLZ) +
+           sum(SS2_SDU_CLZ) +
+           sum(FQDL_CLZ)+
+           sum(ZSRQ_CLZ)+
+           sum(HCML_CLZ)+
+           sum(HKKZ_CLZ)+
+           sum(NBGJ_CLZ)+
+            
+           sum(WBA_YCL)+
+           sum(SS1_SZ_YCL) +
+           sum(SS1_SW_YCL) +
+           sum(SS1_SK_YCL) +
+           sum(SS2_SH_YCL) +
+           sum(SS2_SD_YCL) +
+           sum(SS2_SDU_YCL) +
+           sum(FQDL_YCL)+
+           sum(ZSRQ_YCL)+
+           sum(HCML_YCL)+
+           sum(HKKZ_YCL)+
+           sum(NBGJ_YCL)  as totalTop10 from SMMS_IDC_EVENT as ssi
+left join smms_idc_info as sii
+			on ssi.IDC_ID=sii.IDC_ID
+where ssi.RECORDSTATE='0' GROUP BY ssi.IDC_ID  order by totalTop10 DESC LIMIT 10
+</select>
+<!--各个idc事件总合-->
+<select id="selectEventList" parameterType='hashmap' resultType='hashMap'>
+	select  max(sii.idc_short_name) as IDC_NAME,
+		   sum(WBA) +
+		   sum(SS1_SZ) +
+           sum( SS1_SW) +
+           sum( SS1_SK) +
+           sum( SS2_SH) +
+           sum( SS2_SD) +
+           sum( SS2_SDU) +
+           sum( FQDL)+
+           sum(ZSRQ)+
+           sum( HCML)+
+           sum( HKKZ)+
+           sum(NBGJ)+
+            
+           sum(WBA_CLZ)+
+           sum(SS1_SZ_CLZ) +
+           sum(SS1_SW_CLZ) +
+           sum(SS1_SK_CLZ) +
+           sum(SS2_SH_CLZ) +
+           sum(SS2_SD_CLZ) +
+           sum(SS2_SDU_CLZ) +
+           sum(FQDL_CLZ)+
+           sum(ZSRQ_CLZ)+
+           sum(HCML_CLZ)+
+           sum(HKKZ_CLZ)+
+           sum(NBGJ_CLZ)+
+            
+           sum(WBA_YCL)+
+           sum(SS1_SZ_YCL) +
+           sum(SS1_SW_YCL) +
+           sum(SS1_SK_YCL) +
+           sum(SS2_SH_YCL) +
+           sum(SS2_SD_YCL) +
+           sum(SS2_SDU_YCL) +
+           sum(FQDL_YCL)+
+           sum(ZSRQ_YCL)+
+           sum(HCML_YCL)+
+           sum(HKKZ_YCL)+
+           sum(NBGJ_YCL)   as IDCEVENTALL from SMMS_IDC_EVENT as ssi
+left join smms_idc_info as sii
+			on ssi.IDC_ID=sii.IDC_ID
+where ssi.RECORDSTATE='0'  GROUP BY ssi.IDC_ID 
+</select>
+<!--未备案事件数-->
+<select id="countWbasjs" parameterType='hashmap' resultType='hashMap'>
+	select  
+		   sum(WBA) +
+           sum(WBA_CLZ)+
+           sum(WBA_YCL) as WBASJS from SMMS_IDC_EVENT 
+    where RECORDSTATE='0'
+</select>
+<!--信息安全事件数-->
+<select id="countXxaqsjs" parameterType='hashmap' resultType='hashMap'>
+	select  
+		   sum(SS1_SZ) +
+           sum( SS1_SW) +
+           sum( SS1_SK) +
+           sum( SS2_SH) +
+           sum( SS2_SD) +
+           sum( SS2_SDU) +
+          
+           
+            
+           sum(SS1_SZ_CLZ) +
+           sum(SS1_SW_CLZ) +
+           sum(SS1_SK_CLZ) +
+           sum(SS2_SH_CLZ) +
+           sum(SS2_SD_CLZ) +
+           sum(SS2_SDU_CLZ) +
+           
+          
+            
+           
+           sum(SS1_SZ_YCL) +
+           sum(SS1_SW_YCL) +
+           sum(SS1_SK_YCL) +
+           sum(SS2_SH_YCL) +
+           sum(SS2_SD_YCL) +
+           sum(SS2_SDU_YCL) 
+           as XXAQSJS from SMMS_IDC_EVENT 
+    where RECORDSTATE='0'
+</select>
+<!--网络安全事件数-->
+<select id="countWlaqsjs" parameterType='hashmap' resultType='hashMap'>
+	select  
+	      sum(ZSRQ)+
+          sum(HCML)+
+          sum(HKKZ)+
+          sum(NBGJ)+
+            sum( FQDL)+
+		   sum(ZSRQ_CLZ)+
+           sum(HCML_CLZ)+
+           sum(HKKZ_CLZ)+
+           sum(NBGJ_CLZ)+
+             sum( FQDL_CLZ)+
+        
+           sum(ZSRQ_YCL)+
+           sum(HCML_YCL)+
+           sum(HKKZ_YCL)+
+           sum(NBGJ_YCL)+
+            sum( FQDL_YCL)  as WLAQSJS from SMMS_IDC_EVENT 
+    where RECORDSTATE='0'
+</select>
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SMMS_IDC_EVENT  where RID = #{RID}
+</delete> 
+<delete id="delete" parameterType="hashmap" > 
+	delete from SMMS_IDC_EVENT 
+</delete> 
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SMMS_IDC_EVENT  where RID = #{RID} 
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SMMS_IDC_EVENT  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_IDC_EVENT  where RID = #{RID} 
+</select> 
+
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SMMS_IDC_EVENT (
+            <if test="RID != null ">RID,</if>
+            <if test="IDC_ID != null ">IDC_ID,</if>
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="IDC_ID != null ">#{IDC_ID},</if>
+           <if test="WBA != null ">#{WBA},</if><if test="WBA == null ">0,</if>
+           <if test="SS1_SZ != null ">#{SS1_SZ},</if><if test="SS1_SZ == null ">0,</if>
+           <if test="SS1_SW != null ">#{SS1_SW},</if><if test="SS1_SW == null ">0,</if>
+           <if test="SS1_SK != null ">#{SS1_SK},</if><if test="SS1_SK == null ">0,</if>
+           <if test="SS2_SH != null ">#{SS2_SH},</if><if test="SS2_SH == null ">0,</if>
+           <if test="SS2_SD != null ">#{SS2_SD},</if><if test="SS2_SD == null ">0,</if>
+           <if test="SS2_SDU != null ">#{SS2_SDU},</if><if test="SS2_SDU == null ">0,</if>
+           <if test="FQDL != null ">#{FQDL},</if><if test="FQDL == null ">0,</if>
+           <if test="ZSRQ != null ">#{ZSRQ},</if><if test="ZSRQ == null ">0,</if>
+           <if test="HCML != null ">#{HCML},</if><if test="HCML == null ">0,</if>
+           <if test="HKKZ != null ">#{HKKZ},</if><if test="HKKZ == null ">0,</if>
+           <if test="NBGJ != null ">#{NBGJ},</if><if test="NBGJ == null ">0,</if>
+           <if test="WBA_CLZ != null ">#{WBA_CLZ},</if><if test="WBA_CLZ == null ">0,</if>
+           <if test="SS1_SZ_CLZ != null ">#{SS1_SZ_CLZ},</if><if test="SS1_SZ_CLZ == null ">0,</if>
+           <if test="SS1_SW_CLZ != null ">#{SS1_SW_CLZ},</if><if test="SS1_SW_CLZ == null ">0,</if>
+           <if test="SS1_SK_CLZ != null ">#{SS1_SK_CLZ},</if><if test="SS1_SK_CLZ == null ">0,</if>
+           <if test="SS2_SH_CLZ != null ">#{SS2_SH_CLZ},</if><if test="SS2_SH_CLZ == null ">0,</if>
+           <if test="SS2_SD_CLZ != null ">#{SS2_SD_CLZ},</if><if test="SS2_SD_CLZ == null ">0,</if>
+           <if test="SS2_SDU_CLZ != null ">#{SS2_SDU_CLZ},</if><if test="SS2_SDU_CLZ == null ">0,</if>
+           <if test="FQDL_CLZ != null ">#{FQDL_CLZ},</if><if test="FQDL_CLZ == null ">0,</if>
+           <if test="ZSRQ_CLZ != null ">#{ZSRQ_CLZ},</if><if test="ZSRQ_CLZ == null ">0,</if>
+           <if test="HCML_CLZ != null ">#{HCML_CLZ},</if><if test="HCML_CLZ == null ">0,</if>
+           <if test="HKKZ_CLZ != null ">#{HKKZ_CLZ},</if><if test="HKKZ_CLZ == null ">0,</if>
+           <if test="NBGJ_CLZ != null ">#{NBGJ_CLZ},</if><if test="NBGJ_CLZ == null ">0,</if>
+           <if test="WBA_YCL != null ">#{WBA_YCL},</if><if test="WBA_YCL == null ">0,</if>
+           <if test="SS1_SZ_YCL != null ">#{SS1_SZ_YCL},</if><if test="SS1_SZ_YCL == null ">0,</if>
+           <if test="SS1_SW_YCL != null ">#{SS1_SW_YCL},</if><if test="SS1_SW_YCL == null ">0,</if>
+           <if test="SS1_SK_YCL != null ">#{SS1_SK_YCL},</if><if test="SS1_SK_YCL == null ">0,</if>
+           <if test="SS2_SH_YCL != null ">#{SS2_SH_YCL},</if><if test="SS2_SH_YCL == null ">0,</if>
+           <if test="SS2_SD_YCL != null ">#{SS2_SD_YCL},</if><if test="SS2_SD_YCL == null ">0,</if>
+           <if test="SS2_SDU_YCL != null ">#{SS2_SDU_YCL},</if><if test="SS2_SDU_YCL == null ">0,</if>
+           <if test="FQDL_YCL != null ">#{FQDL_YCL},</if><if test="FQDL_YCL == null ">0,</if>
+           <if test="ZSRQ_YCL != null ">#{ZSRQ_YCL},</if><if test="ZSRQ_YCL == null ">0,</if>
+           <if test="HCML_YCL != null ">#{HCML_YCL},</if><if test="HCML_YCL == null ">0,</if>
+           <if test="HKKZ_YCL != null ">#{HKKZ_YCL},</if><if test="HKKZ_YCL == null ">0,</if>
+           <if test="NBGJ_YCL != null ">#{NBGJ_YCL},</if><if test="NBGJ_YCL == null ">0,</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SMMS_IDC_EVENT   
+		<set>
+				    <if test="IDC_ID!=null"> IDC_ID=#{IDC_ID},</if> 
+		    <if test="WBA!=null"> WBA=#{WBA},</if> 
+		    <if test="SS1_SZ!=null"> SS1_SZ=#{SS1_SZ},</if> 
+		    <if test="SS1_SW!=null"> SS1_SW=#{SS1_SW},</if> 
+		    <if test="SS1_SK!=null"> SS1_SK=#{SS1_SK},</if> 
+		    <if test="SS2_SH!=null"> SS2_SH=#{SS2_SH},</if> 
+		    <if test="SS2_SD!=null"> SS2_SD=#{SS2_SD},</if> 
+		    <if test="SS2_SDU!=null"> SS2_SDU=#{SS2_SDU},</if> 
+		    <if test="FQDL!=null"> FQDL=#{FQDL},</if> 
+		    <if test="ZSRQ!=null"> ZSRQ=#{ZSRQ},</if> 
+		    <if test="HCML!=null"> HCML=#{HCML},</if> 
+		    <if test="HKKZ!=null"> HKKZ=#{HKKZ},</if> 
+		    <if test="NBGJ!=null"> NBGJ=#{NBGJ},</if> 
+		    <if test="WBA_CLZ!=null"> WBA_CLZ=#{WBA_CLZ},</if> 
+		    <if test="SS1_SZ_CLZ!=null"> SS1_SZ_CLZ=#{SS1_SZ_CLZ},</if> 
+		    <if test="SS1_SW_CLZ!=null"> SS1_SW_CLZ=#{SS1_SW_CLZ},</if> 
+		    <if test="SS1_SK_CLZ!=null"> SS1_SK_CLZ=#{SS1_SK_CLZ},</if> 
+		    <if test="SS2_SH_CLZ!=null"> SS2_SH_CLZ=#{SS2_SH_CLZ},</if> 
+		    <if test="SS2_SD_CLZ!=null"> SS2_SD_CLZ=#{SS2_SD_CLZ},</if> 
+		    <if test="SS2_SDU_CLZ!=null"> SS2_SDU_CLZ=#{SS2_SDU_CLZ},</if> 
+		    <if test="FQDL_CLZ!=null"> FQDL_CLZ=#{FQDL_CLZ},</if> 
+		    <if test="ZSRQ_CLZ!=null"> ZSRQ_CLZ=#{ZSRQ_CLZ},</if> 
+		    <if test="HCML_CLZ!=null"> HCML_CLZ=#{HCML_CLZ},</if> 
+		    <if test="HKKZ_CLZ!=null"> HKKZ_CLZ=#{HKKZ_CLZ},</if> 
+		    <if test="NBGJ_CLZ!=null"> NBGJ_CLZ=#{NBGJ_CLZ},</if> 
+		    <if test="WBA_YCL!=null"> WBA_YCL=#{WBA_YCL},</if> 
+		    <if test="SS1_SZ_YCL!=null"> SS1_SZ_YCL=#{SS1_SZ_YCL},</if> 
+		    <if test="SS1_SW_YCL!=null"> SS1_SW_YCL=#{SS1_SW_YCL},</if> 
+		    <if test="SS1_SK_YCL!=null"> SS1_SK_YCL=#{SS1_SK_YCL},</if> 
+		    <if test="SS2_SH_YCL!=null"> SS2_SH_YCL=#{SS2_SH_YCL},</if> 
+		    <if test="SS2_SD_YCL!=null"> SS2_SD_YCL=#{SS2_SD_YCL},</if> 
+		    <if test="SS2_SDU_YCL!=null"> SS2_SDU_YCL=#{SS2_SDU_YCL},</if> 
+		    <if test="FQDL_YCL!=null"> FQDL_YCL=#{FQDL_YCL},</if> 
+		    <if test="ZSRQ_YCL!=null"> ZSRQ_YCL=#{ZSRQ_YCL},</if> 
+		    <if test="HCML_YCL!=null"> HCML_YCL=#{HCML_YCL},</if> 
+		    <if test="HKKZ_YCL!=null"> HKKZ_YCL=#{HKKZ_YCL},</if> 
+		    <if test="NBGJ_YCL!=null"> NBGJ_YCL=#{NBGJ_YCL},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

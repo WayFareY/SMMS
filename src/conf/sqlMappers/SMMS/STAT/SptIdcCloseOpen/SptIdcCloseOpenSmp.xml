@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SptIdcCloseOpen"> 
+<sql id="listColumns">
+	
+            RID,
+            IDC_ID,
+            GTZ,
+            SQHF,
+            YSL,
+            SHZ,
+            YHF,
+            CREATTIME,
+            RECORDSTATE,
+            ROOM_IDX
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            IDC_ID,
+            GTZ,
+            SQHF,
+            YSL,
+            SHZ,
+            YHF,
+            CREATTIME,
+            RECORDSTATE,
+            ROOM_IDX
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SPT_IDC_CLOSE_OPEN 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SPT_IDC_CLOSE_OPEN 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SPT_IDC_CLOSE_OPEN  where RID = #{RID}
+</delete> 
+<delete id="deleteTableData" parameterType="hashmap" > 
+	delete from SPT_IDC_CLOSE_OPEN
+</delete> 
+<select id="selectList" parameterType="hashmap" resultType="hashmap"> 
+select sum(gtz) as GTZ,sum(sqhf) as SQHF,sum(ysl) as YSl,sum(shz) as SHZ ,sum(yhf) as YHF,max(creattime) as CREATTIME from spt_idc_close_open where RECORDSTATE='0'
+</select>
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SPT_IDC_CLOSE_OPEN  where RID = #{RID} 
+</select> 
+<!--市页面关停业务-->
+<select id="selectListToJson" parameterType="hashmap" resultType="hashmap"> 
+select sii.idc_short_name as IDC_NAME, ssr.ROOM_NAME as ROOM_NAME,GTZ, SQHF, YSl,SHZ , YHF from spt_idc_close_open  as sop
+	left join smms_idc_info as sii
+			on sop.IDC_ID=sii.IDC_ID
+	LEFT JOIN SMMS_ROOM_INFO as ssr
+			on sop.IDC_ID=ssr.ACCESS_ID
+where sop.RECORDSTATE='0' and sii.RECORDSTATE='0' and ssr.RECORDSTATE='0' and sop.room_idx=ssr.room_idx
+</select>
+<!--省页面关停业务-->
+<select id="selectListToSptJson" parameterType="hashmap" resultType="hashmap"> 
+select max(sii.idc_short_name) as IDC_NAME,sum(GTZ) as GTZ, sum(SQHF) as SQHF, sum(YSL) as YSl,sum(SHZ) as SHZ , sum(YHF) as YHF from spt_idc_close_open  as sop
+	left join smms_idc_info as sii
+			on sop.IDC_ID=sii.IDC_ID
+
+where sop.RECORDSTATE='0' and sii.RECORDSTATE='0' GROUP BY sop.IDC_ID ORDER BY sop.IDC_ID
+</select>
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SPT_IDC_CLOSE_OPEN  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SPT_IDC_CLOSE_OPEN  where RID = #{RID} 
+</select> 
+
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SPT_IDC_CLOSE_OPEN (
+            <if test="RID != null ">RID,</if>
+            <if test="IDC_ID != null ">IDC_ID,</if>
+            GTZ,
+            SQHF,
+            YSL,
+            SHZ,
+            YHF,
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="ROOM_IDX != null ">ROOM_IDX,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="IDC_ID != null ">#{IDC_ID},</if>
+           <if test="GTZ != null ">#{GTZ},</if><if test="GTZ == null ">0,</if>
+           <if test="SQHF != null ">#{SQHF},</if><if test="SQHF == null ">0,</if>
+           <if test="YSL != null ">#{YSL},</if><if test="YSL == null ">0,</if>
+           <if test="SHZ != null ">#{SHZ},</if><if test="SHZ == null ">0,</if>
+           <if test="YHF != null ">#{YHF},</if><if test="YHF == null ">0,</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="ROOM_IDX != null ">#{ROOM_IDX},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SPT_IDC_CLOSE_OPEN   
+		<set>
+				    <if test="IDC_ID!=null"> IDC_ID=#{IDC_ID},</if> 
+		    <if test="GTZ!=null"> GTZ=#{GTZ},</if> 
+		    <if test="SQHF!=null"> SQHF=#{SQHF},</if> 
+		    <if test="YSL!=null"> YSL=#{YSL},</if> 
+		    <if test="SHZ!=null"> SHZ=#{SHZ},</if> 
+		    <if test="YHF!=null"> YHF=#{YHF},</if> 
+		    <if test="ROOM_IDX!=null"> ROOM_IDX=#{ROOM_IDX},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

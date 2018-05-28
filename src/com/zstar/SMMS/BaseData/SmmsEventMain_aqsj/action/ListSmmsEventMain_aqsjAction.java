@@ -32,6 +32,8 @@ public class ListSmmsEventMain_aqsjAction
       setFreezeCondition(" and THREAT_TYPE1 like '%03%' ");
     } else if ("4".equals(TradeOpType)) {
       setFreezeCondition(" and THREAT_TYPE1 like '%04%' ");
+    } else if ("10".equals(TradeOpType)) {
+      setFreezeCondition(" and THREAT_TYPE1= '10' ");
     }
   }
 }

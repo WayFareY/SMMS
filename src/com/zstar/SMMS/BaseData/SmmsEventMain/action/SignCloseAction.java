@@ -47,7 +47,8 @@ public class SignCloseAction
         ridMap.put("RECTIFY_MEASURE", "2");
         
         ridMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
-        int result = this.sqlSession.update("SmmsEventMain.update", ridMap);
+        
+        int result = this.sqlSession.update("SmmsEventMain.updateClose", ridMap);
         condition = "MAIN_RID IN ('" + map.get("EVENT_RID") + "'" + ")";
         mainRidMap.put("CONDITION", condition);
         mainRidMap.put("FEEDBACK_TIME", FMPContex.getCurrentTime());
@@ -57,8 +58,6 @@ public class SignCloseAction
         mainRidMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
         this.sqlSession.update("SmmsPendingEvent.updateFeedbackTime", mainRidMap);
         
-        int i = mainDel.insertEventHis(map);
-        FMPLog.debug("标记已关停插入历史记录表是否成功：" + i);
         sum += result;
       }
     }

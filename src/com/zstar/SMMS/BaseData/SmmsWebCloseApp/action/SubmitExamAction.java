@@ -38,7 +38,8 @@ public class SubmitExamAction
     insertMap.put("APP_RESULT", "0");
     
     insertMap.put("ISSUE_STATE", "0");
-    insertMap.put("LIABMAN", "admin");
+    
+    insertMap.put("LIABMAN", getWebData("CURR_USERID"));
     insertMap.put("LIABDEPT", "admin");
     insertMap.put("LIABORG", "admin");
     

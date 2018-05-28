@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tablemodel id="SptCityRectify" desc="06 地市安全事件整改处理" tblName="SPT_CITY_RECTIFY" pageSize="10" uniteTableModelId="" listURL="" sqlMapNamespace="SptCityRectify">
+	<Fields>
+		<TableField id="RID" colName="RID" desc="主键" dataType="VARCHAR" length="40" cssClass="" listGroupName="" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="IDC_ID" colName="IDC_ID" desc="IDC运营商编号" dataType="VARCHAR" length="10" cssClass="" listGroupName="" create="LVUA" hidden="L" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="ROOM_IDX" colName="ROOM_IDX" desc="机房序号" dataType="VARCHAR" length="3" cssClass="" listGroupName="" create="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="DZG" colName="DZG" desc="待整改" dataType="INTEGER" length="10" cssClass="" listGroupName="" create="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="ZGZ" colName="ZGZ" desc="整改中" dataType="INTEGER" length="10" cssClass="" listGroupName="" create="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="YZG" colName="YZG" desc="已整改" dataType="INTEGER" length="10" cssClass="" listGroupName="" create="LVUA" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="CREATTIME" colName="CREATTIME" desc="创建时间" dataType="CHAR" length="20" cssClass="" listGroupName="" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+		<TableField id="RECORDSTATE" colName="RECORDSTATE" desc="记录状态" dataType="CHAR" length="1" cssClass="" listGroupName="" groupEnd="F" isSearch="F" fuzzy="F" orderInList="F" required="F" isPK="F" inputInList="F" forceNewRow="F" isSensitive="F" isRangeSearch="F" tableAlias=""/>
+	</Fields>
+	<SubTableModels>
+	</SubTableModels>
+</tablemodel>

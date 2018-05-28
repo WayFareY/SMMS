@@ -3,6 +3,7 @@ package com.zstar.SMMS.BaseData.SmmsEventMain.action;
 import com.strutsframe.db.DBSqlSession;
 import com.zstar.SMMS.BaseData.SmmsEventMain.action.delegate.EventMainDel;
 import com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate.PendingEventDel;
+import com.zstar.SMMS.acLog.SmmsAcLogin.delegate.ReadAcLogDel;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.frame.action.FrameAction;
 import com.zstar.fmp.log.FMPLog;
@@ -26,6 +27,7 @@ public class RectificationSmmsPendingEventAction
     String threat_name = "";
     PendingEventDel del = new PendingEventDel(this.contex);
     EventMainDel mainDel = new EventMainDel(this.contex);
+    ReadAcLogDel acDel = new ReadAcLogDel(this.contex);
     Map insertMap = new HashMap();
     insertMap = mainDel.selectInsertPendingInfoByIpOrUrl(selectMap);
     if ((insertMap != null) && (insertMap.size() > 0))
@@ -82,8 +84,12 @@ public class RectificationSmmsPendingEventAction
       insertMap.put("MAIN_RID", mainRid);
       
       insertMap.put("RID", eventMap.get("DETAIL_RID"));
-      del.insertSmmsPendingEvent(insertMap);
-      
+      int i = del.insertSmmsPendingEvent(insertMap);
+      if ((insertMap.containsKey("ACCESS_ID")) && (insertMap.containsKey("ROOM_IDX")))
+      {
+        String path = (String)insertMap.get("ACCESS_ID") + "," + (String)insertMap.get("ROOM_IDX");
+        acDel.insertRecordMap(path, "999", i);
+      }
       insertMap.put("RID", mainRid);
       
       insertMap.put("SYS_RECTIFY_SUGGEST", "1");
@@ -99,7 +105,7 @@ public class RectificationSmmsPendingEventAction
       
       insertMap.put("FEEDBACK_TIMESTAMP", "");
       int j = this.sqlSession.update("SmmsEventMain.updateSave", insertMap);
-      FMPLog.debug("页面强制关停是否更新：" + j);
+      FMPLog.debug("页面下发是否更新：" + j);
     }
     Map mapRid = new HashMap();
     mapRid.put("EVENT_RID", mainRid);
@@ -110,6 +116,10 @@ public class RectificationSmmsPendingEventAction
     enforceCount = (Long)eventMap.get("ENFORCE_COUNT");
     enforceCount = Long.valueOf(enforceCount.longValue() + 1L);
     mapRid.put("ENFORCE_COUNT", enforceCount);
+    
+    mapRid.put("ENFORCE_USER", getWebData("CURR_USERID"));
+    
+    mapRid.put("ENFORCE_TIME", FMPContex.getCurrentTime());
     
     String message = "";
     if ("1".equals(insertMap.get("MAPPING_MODE")))

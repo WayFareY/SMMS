@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SmmsCitySumYb"> 
+<sql id="listColumns">
+	
+            RID,
+            WBASJS,
+            XXAQSJS,
+            WLAQSJS,
+            
+            YYSS,
+            IDCJFS,
+            WZBAS,
+            ZCYMS,
+            HDIPS,
+            MODIFIEDTIME,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            WBASJS,
+            XXAQSJS,
+            WLAQSJS,
+            WCLSJS,
+            YYSS,
+            IDCJFS,
+            WZBAS,
+            ZCYMS,
+            HDIPS,
+            MODIFIEDTIME,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SMMS_CITY_SUM 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SMMS_CITY_SUM 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SMMS_CITY_SUM  where RID = #{RID}
+</delete> 
+<delete id="delete" parameterType="hashmap" > 
+	delete from SMMS_CITY_SUM 
+</delete>
+<select id="selectList" parameterType="hashmap" resultType="hashmap"> 
+select
+            WBASJS,
+            XXAQSJS,
+            WLAQSJS,
+            YYSS,
+            IDCJFS,
+            WZBAS from smms_city_sum  
+where RECORDSTATE='0' 
+</select>
+
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SMMS_CITY_SUM  where RID = #{RID} 
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SMMS_CITY_SUM  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_CITY_SUM  where RID = #{RID} 
+</select> 
+
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SMMS_CITY_SUM (
+            <if test="RID != null ">RID,</if>
+            WBASJS,
+            XXAQSJS,
+            WLAQSJS,
+            <if test="YYSS != null ">YYSS,</if>
+            <if test="IDCJFS != null ">IDCJFS,</if>
+            <if test="WZBAS != null ">WZBAS,</if>
+            <if test="ZCYMS != null ">ZCYMS,</if>
+            <if test="HDIPS != null ">HDIPS,</if>
+            <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="WBASJS != null ">#{WBASJS},</if><if test="WBASJS == null ">0,</if>
+           <if test="XXAQSJS != null ">#{XXAQSJS},</if><if test="XXAQSJS ==null ">0,</if>
+           <if test="WLAQSJS != null ">#{WLAQSJS},</if><if test="WLAQSJS ==null ">0,</if>
+           <if test="YYSS != null ">#{YYSS},</if>
+           <if test="IDCJFS != null ">#{IDCJFS},</if>
+           <if test="WZBAS != null ">#{WZBAS},</if>
+           <if test="ZCYMS != null ">#{ZCYMS},</if>
+           <if test="HDIPS != null ">#{HDIPS},</if>
+           <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SMMS_CITY_SUM  
+		<set>
+				    <if test="WBASJS!=null"> WBASJS=#{WBASJS},</if> 
+		    <if test="XXAQSJS!=null"> XXAQSJS=#{XXAQSJS},</if> 
+		    <if test="WLAQSJS!=null"> WLAQSJS=#{WLAQSJS},</if> 
+		    <if test="YYSS!=null"> YYSS=#{YYSS},</if> 
+		    <if test="IDCJFS!=null"> IDCJFS=#{IDCJFS},</if> 
+		    <if test="WZBAS!=null"> WZBAS=#{WZBAS},</if> 
+		    <if test="ZCYMS!=null"> ZCYMS=#{ZCYMS},</if> 
+		    <if test="HDIPS!=null"> HDIPS=#{HDIPS},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

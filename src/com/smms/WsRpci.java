@@ -1,29 +1,27 @@
 package com.smms;
 
+import java.util.HashMap;
+
+import org.apache.ibatis.session.SqlSession;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.zstar.SMMS.webservice.delegate.RpcBusDel;
 import com.zstar.fmp.core.base.FMPContex;
-import java.util.HashMap;
-import org.apache.ibatis.session.SqlSession;
 
 public class WsRpci {
 
-	public WsRpci() {
-	}
-
-	public String wscall(String tokenid, String rpc_code, String rpc_json, byte rpc_byte[]) {
-		ActionContext contex;
-		String rtStr;
+	public String wscall(String tokenid, String rpc_code, String rpc_json, byte[] rpc_byte) {
 		System.out.println("*************收到远程调用*****************");
 		System.out.println((new StringBuilder("tokenid=[")).append(tokenid).append("]，rpc_code=[").append(rpc_code).append("] ").toString());
 		System.out.println((new StringBuilder("rpc_json=")).append(rpc_json).toString());
 		System.out.println("*****************************************");
-		contex = new ActionContext(new HashMap());
-		rtStr = "";
+		ActionContext contex = new ActionContext(new HashMap());
+		String rtStr = "";
 		try {
 			contex.put("com.opensymphony.xwork2.ActionContext.session", new HashMap());
 			contex.put("sqlSession", FMPContex.DBConnection.openSqlSession(null));
 			RpcBusDel rbd = new RpcBusDel(contex);
+			rbd.setTokenId(tokenid);
 			if ("1001".equals(rpc_code)) {
 				rtStr = rbd.rpc1001(rpc_json);
 			} else if ("1002".equals(rpc_code)) {
@@ -38,6 +36,12 @@ public class WsRpci {
 				rtStr = rbd.rpc1202(rpc_json);
 			} else if ("1203".equals(rpc_code)) {
 				rtStr = rbd.rpc1203(rpc_json);
+			} else if ("1211".equals(rpc_code)) {
+				rtStr = rbd.rpc1211(rpc_json);
+			} else if ("1212".equals(rpc_code)) {
+				rtStr = rbd.rpc1212(rpc_json);
+			} else if ("1301".equals(rpc_code)) {
+				rtStr = rbd.rpc1301(rpc_json);
 			} else {
 				rtStr = (new StringBuilder("无法识别rpc接口编号(rpc_code)：[")).append(rpc_code).append("]").toString();
 			}
@@ -49,10 +53,10 @@ public class WsRpci {
 			System.err.println((new StringBuilder("未知异常，事务回滚！请将以下错误信息记录下来，以便进行问题跟踪： \n\r")).append(e.toString()).toString());
 		} finally {
 			FMPContex.DBConnection.closeSession((SqlSession) contex.get("sqlSession"));
+			System.out.println("*************返回信息*****************");
+			System.out.println(rtStr);
+			System.out.println("*****************************************");
 		}
-		System.out.println("*************返回信息*****************");
-		System.out.println(rtStr);
-		System.out.println("*****************************************");
 		return rtStr;
 	}
 }

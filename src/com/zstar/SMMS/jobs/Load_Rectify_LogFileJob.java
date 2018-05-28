@@ -39,7 +39,9 @@ public class Load_Rectify_LogFileJob
         String mainRid = (String)map.get("EVENT_RID");
         
         mapRid.put("EVENT_RID", mainRid);
+        mapRid.put("RID", mainRid);
         mapRid.put("MODIFIEDTIME", map.get("MODIFIEDTIME"));
+        mapRid.put("IS_FORCE_CLOSE", "2");
         
         List<Map> list = this.sqlSession.selectList("SmmsEventMain.dealRectify", mapRid);
         try
@@ -57,13 +59,21 @@ public class Load_Rectify_LogFileJob
           {
             mapRid.put("RECTIFY_STATE", "000");
             int i = this.sqlSession.update("SmmsEventMain.updateRectifyState", mapRid);
+            
             FMPLog.printLog("是否更新成功" + i + "---" + map.get("ACCESS_ID") + "网站整改失败");
+            mapRid.put("RECTIFY_STATE", "999");
+            
+            int j = this.sqlSession.update("SmmsEnforceHis.stateUpdate", mapRid);
+            FMPLog.printLog("历史记录是否更新成功" + j + "---" + map.get("ACCESS_ID") + "网站整改失败");
           }
           else if ((list.size() == 0) && (ConditionTime < time))
           {
             mapRid.put("RECTIFY_STATE", "888");
             int i = this.sqlSession.update("SmmsEventMain.updateRectifyState", mapRid);
             FMPLog.printLog("是否更新成功" + i + "---" + map.get("ACCESS_ID") + "网站整改成功");
+            
+            int j = this.sqlSession.update("SmmsEnforceHis.stateUpdate", mapRid);
+            FMPLog.printLog("历史记录是否更新成功" + j + "---" + map.get("ACCESS_ID") + "网站整改成功");
           }
         }
         catch (Exception e)

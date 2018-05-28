@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SmmsCityEvent"> 
+<sql id="listColumns">
+	
+            RID,
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            NF,
+            YF,
+            RQ,
+            XS,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            NF,
+            YF,
+            RQ,
+            XS,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<!--查询最新的数据根据时间最大-->
+<select id="selectMaxCityEventInfo" parameterType="hashmap" resultType="hashmap"> 
+select     max(WBA+ WBA_CLZ+WBA_YCL) as WBA,
+           max(SS1_SZ+ SS1_SW+ SS1_SK+SS1_SZ_CLZ+SS1_SW_CLZ+SS1_SK_CLZ+SS1_SZ_YCL+SS1_SW_YCL+SS1_SK_YCL) as SS1,
+           max(SS2_SH+SS2_SD+SS2_SDU+SS2_SH_CLZ+SS2_SD_CLZ+SS2_SDU_CLZ+ SS2_SH_YCL+SS2_SD_YCL+SS2_SDU_YCL) as SS2,
+           max(FQDL+ FQDL_CLZ+FQDL_YCL) as FQDL,
+           max(ZSRQ+ZSRQ_CLZ+ZSRQ_YCL) as ZSRQ,
+           max(HCML+ HCML_CLZ+HCML_YCL) as HCML,
+           max(HKKZ+HKKZ_CLZ+HKKZ_YCL) as HKKZ,
+           max( NBGJ+ NBGJ_CLZ+ NBGJ_YCL) as NBGJ,
+
+           max(WBA+ WBA_CLZ+WBA_YCL
+       	       +SS1_SZ+ SS1_SW+ SS1_SK+SS1_SZ_CLZ+SS1_SW_CLZ+SS1_SK_CLZ+SS1_SZ_YCL+SS1_SW_YCL+SS1_SK_YCL
+         	   +SS2_SH+SS2_SD+SS2_SDU+SS2_SH_CLZ+SS2_SD_CLZ+SS2_SDU_CLZ+ SS2_SH_YCL+SS2_SD_YCL+SS2_SDU_YCL
+        	   +FQDL+ FQDL_CLZ+FQDL_YCL
+        	   +HCML+ HCML_CLZ+HCML_YCL
+        	   +HKKZ+HKKZ_CLZ+HKKZ_YCL
+        	   +NBGJ+ NBGJ_CLZ+ NBGJ_YCL
+          ) as ZHAQSJ from SMMS_CITY_EVENT  where RECORDSTATE='0' 
+       and CREATTIME=(select max(CREATTIME) from SMMS_CITY_EVENT  where RECORDSTATE='0')
+</select>
+<!--按年月日时来分组用于折线图-->
+<select id="selectSmmsCityEventGroupByXs" parameterType="hashmap" resultType="hashmap"> 
+	select 
+		    sum(WBA)+sum(WBA_CLZ)+sum(WBA_YCL) as WBA,
+            sum(SS1_SZ) + sum( SS1_SW) + sum( SS1_SK)+
+			sum(SS1_SZ_CLZ) +sum(SS1_SW_CLZ) + sum(SS1_SK_CLZ) +
+            sum(SS1_SZ_YCL) + sum(SS1_SW_YCL) + sum(SS1_SK_YCL)  as SS1,
+
+             sum( SS2_SH) +sum( SS2_SD) +sum( SS2_SDU) +
+             sum(SS2_SH_CLZ) +sum(SS2_SD_CLZ) +sum(SS2_SDU_CLZ) + 
+            sum(SS2_SH_YCL) +sum(SS2_SD_YCL) +sum(SS2_SDU_YCL)  AS SS2,
+          
+
+
+            sum(FQDL)+sum(FQDL_CLZ)+sum(FQDL_YCL) as FQDL,
+            sum(ZSRQ)+sum(ZSRQ_CLZ)+sum(ZSRQ_YCL) as ZSRQ,
+            sum(HCML)+sum(HCML_CLZ)+sum(HCML_YCL) as HCML,
+            sum(HKKZ)+sum(HKKZ_CLZ)+sum(HKKZ_YCL) as HKKZ ,
+            sum(NBGJ)+sum(NBGJ_CLZ)+sum(NBGJ_YCL) as NBGJ, 
+           
+           
+            max(CREATTIME) as CREATTIME
+	
+	 from SMMS_CITY_EVENT  where RECORDSTATE='0' GROUP BY CREATTIME ORDER BY CREATTIME  DESC LIMIT 20
+</select>
+
+<!--按年月来分组用于折线图-->
+<select id="selectSmmsCityEventGroupByYf" parameterType="hashmap" resultType="hashmap"> 
+select 
+	  NF,
+      YF,
+      max(
+          ZSRQ+
+          HCML+
+          HKKZ+
+          NBGJ+
+          
+          ZSRQ_CLZ+
+          HCML_CLZ+
+          HKKZ_CLZ+
+          NBGJ_CLZ+
+         
+          ZSRQ_YCL+
+          HCML_YCL+
+          HKKZ_YCL+
+          NBGJ_YCL) as WLAQSJ
+      from SMMS_CITY_EVENT  where RECORDSTATE='0' GROUP BY NF ,YF ORDER BY NF ,YF
+</select>
+
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SMMS_CITY_EVENT 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SMMS_CITY_EVENT 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SMMS_CITY_EVENT  where RID = #{RID}
+</delete> 
+
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SMMS_CITY_EVENT  where RID = #{RID} 
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SMMS_CITY_EVENT  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_CITY_EVENT  where RID = #{RID} 
+</select> 
+
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SMMS_CITY_EVENT (
+            <if test="RID != null ">RID,</if>
+            WBA,
+            SS1_SZ,
+            SS1_SW,
+            SS1_SK,
+            SS2_SH,
+            SS2_SD,
+            SS2_SDU,
+            FQDL,
+            ZSRQ,
+            HCML,
+            HKKZ,
+            NBGJ,
+            WBA_CLZ,
+            SS1_SZ_CLZ,
+            SS1_SW_CLZ,
+            SS1_SK_CLZ,
+            SS2_SH_CLZ,
+            SS2_SD_CLZ,
+            SS2_SDU_CLZ,
+            FQDL_CLZ,
+            ZSRQ_CLZ,
+            HCML_CLZ,
+            HKKZ_CLZ,
+            NBGJ_CLZ,
+            WBA_YCL,
+            SS1_SZ_YCL,
+            SS1_SW_YCL,
+            SS1_SK_YCL,
+            SS2_SH_YCL,
+            SS2_SD_YCL,
+            SS2_SDU_YCL,
+            FQDL_YCL,
+            ZSRQ_YCL,
+            HCML_YCL,
+            HKKZ_YCL,
+            NBGJ_YCL,
+            <if test="NF != null ">NF,</if>
+            <if test="YF != null ">YF,</if>
+            <if test="RQ != null ">RQ,</if>
+            <if test="XS != null ">XS,</if>
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="WBA != null ">#{WBA},</if><if test="WBA == null ">0,</if>
+           <if test="SS1_SZ != null ">#{SS1_SZ},</if><if test="SS1_SZ == null ">0,</if>
+           <if test="SS1_SW != null ">#{SS1_SW},</if><if test="SS1_SW == null ">0,</if>
+           <if test="SS1_SK != null ">#{SS1_SK},</if><if test="SS1_SK == null ">0,</if>
+           <if test="SS2_SH != null ">#{SS2_SH},</if><if test="SS2_SH == null ">0,</if>
+           <if test="SS2_SD != null ">#{SS2_SD},</if><if test="SS2_SD == null ">0,</if>
+           <if test="SS2_SDU != null ">#{SS2_SDU},</if><if test="SS2_SDU == null ">0,</if>
+           <if test="FQDL != null ">#{FQDL},</if><if test="FQDL == null ">0,</if>
+           <if test="ZSRQ != null ">#{ZSRQ},</if><if test="ZSRQ == null ">0,</if>
+           <if test="HCML != null ">#{HCML},</if><if test="HCML == null ">0,</if>
+           <if test="HKKZ != null ">#{HKKZ},</if><if test="HKKZ == null ">0,</if>
+           <if test="NBGJ != null ">#{NBGJ},</if><if test="NBGJ == null ">0,</if>
+           <if test="WBA_CLZ != null ">#{WBA_CLZ},</if><if test="WBA_CLZ == null ">0,</if>
+           <if test="SS1_SZ_CLZ != null ">#{SS1_SZ_CLZ},</if><if test="SS1_SZ_CLZ == null ">0,</if>
+           <if test="SS1_SW_CLZ != null ">#{SS1_SW_CLZ},</if><if test="SS1_SW_CLZ == null ">0,</if>
+           <if test="SS1_SK_CLZ != null ">#{SS1_SK_CLZ},</if><if test="SS1_SK_CLZ == null ">0,</if>
+           <if test="SS2_SH_CLZ != null ">#{SS2_SH_CLZ},</if><if test="SS2_SH_CLZ == null ">0,</if>
+           <if test="SS2_SD_CLZ != null ">#{SS2_SD_CLZ},</if><if test="SS2_SD_CLZ == null ">0,</if>
+           <if test="SS2_SDU_CLZ != null ">#{SS2_SDU_CLZ},</if><if test="SS2_SDU_CLZ == null ">0,</if>
+           <if test="FQDL_CLZ != null ">#{FQDL_CLZ},</if><if test="FQDL_CLZ == null ">0,</if>
+           <if test="ZSRQ_CLZ != null ">#{ZSRQ_CLZ},</if><if test="ZSRQ_CLZ == null ">0,</if>
+           <if test="HCML_CLZ != null ">#{HCML_CLZ},</if><if test="HCML_CLZ == null ">0,</if>
+           <if test="HKKZ_CLZ != null ">#{HKKZ_CLZ},</if><if test="HKKZ_CLZ == null ">0,</if>
+           <if test="NBGJ_CLZ != null ">#{NBGJ_CLZ},</if><if test="NBGJ_CLZ == null ">0,</if>
+           <if test="WBA_YCL != null ">#{WBA_YCL},</if><if test="WBA_YCL == null ">0,</if>
+           <if test="SS1_SZ_YCL != null ">#{SS1_SZ_YCL},</if><if test="SS1_SZ_YCL == null ">0,</if>
+           <if test="SS1_SW_YCL != null ">#{SS1_SW_YCL},</if><if test="SS1_SW_YCL == null ">0,</if>
+           <if test="SS1_SK_YCL != null ">#{SS1_SK_YCL},</if><if test="SS1_SK_YCL == null ">0,</if>
+           <if test="SS2_SH_YCL != null ">#{SS2_SH_YCL},</if><if test="SS2_SH_YCL == null ">0,</if>
+           <if test="SS2_SD_YCL != null ">#{SS2_SD_YCL},</if><if test="SS2_SD_YCL == null ">0,</if>
+           <if test="SS2_SDU_YCL != null ">#{SS2_SDU_YCL},</if><if test="SS2_SDU_YCL == null ">0,</if>
+           <if test="FQDL_YCL != null ">#{FQDL_YCL},</if><if test="FQDL_YCL == null ">0,</if>
+           <if test="ZSRQ_YCL != null ">#{ZSRQ_YCL},</if><if test="ZSRQ_YCL == null ">0,</if>
+           <if test="HCML_YCL != null ">#{HCML_YCL},</if><if test="HCML_YCL == null ">0,</if>
+           <if test="HKKZ_YCL != null ">#{HKKZ_YCL},</if><if test="HKKZ_YCL == null ">0,</if>
+           <if test="NBGJ_YCL != null ">#{NBGJ_YCL},</if><if test="NBGJ_YCL == null ">0,</if>
+           <if test="NF != null ">#{NF},</if>
+           <if test="YF != null ">#{YF},</if>
+           <if test="RQ != null ">#{RQ},</if>
+           <if test="XS != null ">#{XS},</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SMMS_CITY_EVENT   
+		<set>
+				    <if test="WBA!=null"> WBA=#{WBA},</if> 
+		    <if test="SS1_SZ!=null"> SS1_SZ=#{SS1_SZ},</if> 
+		    <if test="SS1_SW!=null"> SS1_SW=#{SS1_SW},</if> 
+		    <if test="SS1_SK!=null"> SS1_SK=#{SS1_SK},</if> 
+		    <if test="SS2_SH!=null"> SS2_SH=#{SS2_SH},</if> 
+		    <if test="SS2_SD!=null"> SS2_SD=#{SS2_SD},</if> 
+		    <if test="SS2_SDU!=null"> SS2_SDU=#{SS2_SDU},</if> 
+		    <if test="FQDL!=null"> FQDL=#{FQDL},</if> 
+		    <if test="ZSRQ!=null"> ZSRQ=#{ZSRQ},</if> 
+		    <if test="HCML!=null"> HCML=#{HCML},</if> 
+		    <if test="HKKZ!=null"> HKKZ=#{HKKZ},</if> 
+		    <if test="NBGJ!=null"> NBGJ=#{NBGJ},</if> 
+		    <if test="WBA_CLZ!=null"> WBA_CLZ=#{WBA_CLZ},</if> 
+		    <if test="SS1_SZ_CLZ!=null"> SS1_SZ_CLZ=#{SS1_SZ_CLZ},</if> 
+		    <if test="SS1_SW_CLZ!=null"> SS1_SW_CLZ=#{SS1_SW_CLZ},</if> 
+		    <if test="SS1_SK_CLZ!=null"> SS1_SK_CLZ=#{SS1_SK_CLZ},</if> 
+		    <if test="SS2_SH_CLZ!=null"> SS2_SH_CLZ=#{SS2_SH_CLZ},</if> 
+		    <if test="SS2_SD_CLZ!=null"> SS2_SD_CLZ=#{SS2_SD_CLZ},</if> 
+		    <if test="SS2_SDU_CLZ!=null"> SS2_SDU_CLZ=#{SS2_SDU_CLZ},</if> 
+		    <if test="FQDL_CLZ!=null"> FQDL_CLZ=#{FQDL_CLZ},</if> 
+		    <if test="ZSRQ_CLZ!=null"> ZSRQ_CLZ=#{ZSRQ_CLZ},</if> 
+		    <if test="HCML_CLZ!=null"> HCML_CLZ=#{HCML_CLZ},</if> 
+		    <if test="HKKZ_CLZ!=null"> HKKZ_CLZ=#{HKKZ_CLZ},</if> 
+		    <if test="NBGJ_CLZ!=null"> NBGJ_CLZ=#{NBGJ_CLZ},</if> 
+		    <if test="WBA_YCL!=null"> WBA_YCL=#{WBA_YCL},</if> 
+		    <if test="SS1_SZ_YCL!=null"> SS1_SZ_YCL=#{SS1_SZ_YCL},</if> 
+		    <if test="SS1_SW_YCL!=null"> SS1_SW_YCL=#{SS1_SW_YCL},</if> 
+		    <if test="SS1_SK_YCL!=null"> SS1_SK_YCL=#{SS1_SK_YCL},</if> 
+		    <if test="SS2_SH_YCL!=null"> SS2_SH_YCL=#{SS2_SH_YCL},</if> 
+		    <if test="SS2_SD_YCL!=null"> SS2_SD_YCL=#{SS2_SD_YCL},</if> 
+		    <if test="SS2_SDU_YCL!=null"> SS2_SDU_YCL=#{SS2_SDU_YCL},</if> 
+		    <if test="FQDL_YCL!=null"> FQDL_YCL=#{FQDL_YCL},</if> 
+		    <if test="ZSRQ_YCL!=null"> ZSRQ_YCL=#{ZSRQ_YCL},</if> 
+		    <if test="HCML_YCL!=null"> HCML_YCL=#{HCML_YCL},</if> 
+		    <if test="HKKZ_YCL!=null"> HKKZ_YCL=#{HKKZ_YCL},</if> 
+		    <if test="NBGJ_YCL!=null"> NBGJ_YCL=#{NBGJ_YCL},</if> 
+		    <if test="NF!=null"> NF=#{NF},</if> 
+		    <if test="YF!=null"> YF=#{YF},</if> 
+		    <if test="RQ!=null"> RQ=#{RQ},</if> 
+		    <if test="XS!=null"> XS=#{XS},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

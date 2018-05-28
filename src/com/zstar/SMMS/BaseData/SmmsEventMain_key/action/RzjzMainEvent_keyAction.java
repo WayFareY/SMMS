@@ -1,24 +1,21 @@
 package com.zstar.SMMS.BaseData.SmmsEventMain_key.action;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.frame.action.FrameAction;
 import com.zstar.fmp.log.FMPLog;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
 
 public class RzjzMainEvent_keyAction extends FrameAction {
 
-	public RzjzMainEvent_keyAction() {
-	}
-
-	public String bizExecute() throws Exception {
-		HttpServletResponse response;
-		File outFile;
-		OutputStream out;
-		FileInputStream fis;
-		response = (HttpServletResponse) contex.get("com.opensymphony.xwork2.dispatcher.HttpServletResponse");
+	public String bizExecute() throws java.lang.Exception {
+		HttpServletResponse response = (HttpServletResponse) contex.get("com.opensymphony.xwork2.dispatcher.HttpServletResponse");
 		String rid = (String) getWebData("RID");
 		Map ridMap = new HashMap();
 		ridMap.put("RID", rid);
@@ -30,9 +27,9 @@ public class RzjzMainEvent_keyAction extends FrameAction {
 				.append((String) map.get("SNAPSHOP")).toString();
 		FMPLog.printLog((new StringBuilder("test:")).append(fileName).toString());
 		if (fileName == null || fileName.length() <= 0) {
-			FMPLog.printErr("fileName == null || fileName.length() <= 0");
+
 		}
-		outFile = new File(fileName);
+		File outFile = new File(fileName);
 		if (!outFile.exists()) {
 			FMPLog.printErr((new StringBuilder("未找到文件：")).append(fileName).toString());
 			setMsg((new StringBuilder("未找到文件：")).append(fileName).toString());
@@ -41,8 +38,8 @@ public class RzjzMainEvent_keyAction extends FrameAction {
 		response.setContentLength((int) outFile.length());
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-type", "text/html;charset=UTF-8");
-		out = null;
-		fis = null;
+		OutputStream out = null;
+		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(outFile);
 			out = response.getOutputStream();
@@ -56,13 +53,16 @@ public class RzjzMainEvent_keyAction extends FrameAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (fis != null) {
-				fis.close();
-				fis = null;
-			}
-			if (out != null) {
-				out.close();
-				out = null;
+			try {
+				if (fis != null) {
+					fis.close();
+					fis = null;
+				}
+				if (out != null) {
+					out.close();
+					out = null;
+				}
+			} catch (Exception exception1) {
 			}
 		}
 		return null;

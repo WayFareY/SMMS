@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SmmsSubjectInfo"> 
+<sql id="listColumns">
+	
+            ssp.RID,
+            ssp.IDC_ID,
+            ssp.ROOM_IDX,
+            ssp.DOMAIN_NAME,
+            ssp.CREATTIME,
+            ssp.MODIFIEDTIME,
+            ssp.RECORDSTATE,
+            ssp.WEB_CASE_RID,
+            ssp.WEB_CASE_STATE,
+            sii.IDC_NAME,
+            ssr.ROOM_NAME
+</sql>
+<sql id="detailColumns">
+	
+            ssp.RID,
+            ssp.IDC_ID,
+            ssp.ROOM_IDX,
+            ssp.DOMAIN_NAME,
+            ssp.CREATTIME,
+            ssp.MODIFIEDTIME,
+            ssp.RECORDSTATE,
+            ssp.WEB_CASE_RID,
+            ssp.WEB_CASE_STATE,
+            sii.IDC_NAME,
+            ssr.ROOM_NAME
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/>,ssw.WEBSITE_NAME as TRANS_WEB_CASE_RID,sii.IDC_NAME as TRANS_IDC_ID,ssr.ROOM_NAME
+	 from SMMS_SUBJECT_INFO as ssp
+	left join smms_idc_info as sii
+    on ssp.IDC_ID=sii.IDC_ID 
+    left join SMMS_ROOM_INFO as ssr
+    on ssp.idc_id = ACCESS_ID
+    left join 
+    	SMMS_WEB_CASE as ssw
+    	on ssp.WEB_CASE_RID=ssw.RID
+	<where>
+		ssp.RECORDSTATE='0'  and ssp.ROOM_IDX=ssr.ROOM_IDX
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SMMS_SUBJECT_INFO  as ssp
+	left join smms_idc_info as sii
+    on ssp.IDC_ID=sii.IDC_ID 
+    left join SMMS_ROOM_INFO as ssr
+    on ssp.idc_id = ACCESS_ID  
+	<where>
+		ssp.RECORDSTATE='0' and ssp.ROOM_IDX=ssr.ROOM_IDX
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SMMS_SUBJECT_INFO  where RID = #{RID}
+</delete> 
+
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>,ssw.WEBSITE_NAME as TRANS_WEB_CASE_RID,
+	sii.IDC_NAME as TRANS_IDC_ID,ssr.ROOM_NAME
+	 from SMMS_SUBJECT_INFO as ssp
+	left join smms_idc_info as sii
+    on ssp.IDC_ID=sii.IDC_ID 
+    left join SMMS_ROOM_INFO as ssr
+    on ssp.idc_id = ACCESS_ID
+    left join 
+    	SMMS_WEB_CASE as ssw
+    	on ssp.WEB_CASE_RID=ssw.RID  where ssp.RID = #{RID} and ssp.ROOM_IDX=ssr.ROOM_IDX
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SMMS_SUBJECT_INFO  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SMMS_SUBJECT_INFO  where RID = #{RID} 
+</select> 
+
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SMMS_SUBJECT_INFO (
+            <if test="RID != null ">RID,</if>
+            <if test="IDC_ID != null ">IDC_ID,</if>
+            <if test="ROOM_IDX != null ">ROOM_IDX,</if>
+            <if test="DOMAIN_NAME != null ">DOMAIN_NAME,</if>
+            <if test="CREATTIME != null ">CREATTIME,</if>
+            <if test="MODIFIEDTIME != null ">MODIFIEDTIME,</if>
+            <if test="WEB_CASE_RID != null ">WEB_CASE_RID,</if>
+            <if test="WEB_CASE_STATE != null ">WEB_CASE_STATE,</if>
+            <if test="RECORDSTATE != null ">RECORDSTATE</if>)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="IDC_ID != null ">#{IDC_ID},</if>
+           <if test="ROOM_IDX != null ">#{ROOM_IDX},</if>
+           <if test="DOMAIN_NAME != null ">#{DOMAIN_NAME},</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="MODIFIEDTIME != null ">#{MODIFIEDTIME},</if>
+           <if test="WEB_CASE_RID != null ">#{WEB_CASE_RID},</if>
+           <if test="WEB_CASE_STATE != null ">#{WEB_CASE_STATE},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+<update id="updateModifiedtime" parameterType="hashmap" > 
+	update SMMS_SUBJECT_INFO  <set> 
+		MODIFIEDTIME=#{MODIFIEDTIME}, 
+		<if test="WEB_CASE_RID!=null"> WEB_CASE_RID=#{WEB_CASE_RID},</if> 
+		 <if test="WEB_CASE_STATE!=null"> WEB_CASE_STATE=#{WEB_CASE_STATE},</if>  
+		</set> where IDC_ID=#{IDC_ID} and ROOM_IDX=#{ROOM_IDX} and DOMAIN_NAME=#{DOMAIN_NAME}
+	
+</update> 
+<update id="updateSave" parameterType="hashmap" > 
+	update SMMS_SUBJECT_INFO   
+		<set>
+				    <if test="IDC_ID!=null"> IDC_ID=#{IDC_ID},</if> 
+		    <if test="ROOM_IDX!=null"> ROOM_IDX=#{ROOM_IDX},</if> 
+		    <if test="DOMAIN_NAME!=null"> DOMAIN_NAME=#{DOMAIN_NAME},</if> 
+		    <if test="MODIFIEDTIME!=null"> MODIFIEDTIME=#{MODIFIEDTIME},</if> 
+		    <if test="WEB_CASE_RID!=null"> WEB_CASE_RID=#{WEB_CASE_RID},</if> 
+		    <if test="WEB_CASE_STATE!=null"> WEB_CASE_STATE=#{WEB_CASE_STATE},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

@@ -6,7 +6,6 @@ import com.zstar.SMMS.BaseData.SmmsEventMain.action.delegate.EventMainDel;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.log.FMPLog;
 import com.zstar.fmp.workflow.flowEngine.delegate.WorkFlowBaseDel;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,20 +116,9 @@ public class WebOpenAppClassDel
     webOpenMap.put("RID", getWebData("RID"));
     
     Map webOpenEventRid = (Map)this.sqlSession.selectOne("SmmsWebOpenApp.webOpenInfo", webOpenMap);
-    if ("2".equals(webOpenEventRid.get("IS_ACCEPT")))
-    {
-      webOpenMap.put("APP_RESULT", "9");
-      
-      webOpenMap.put("BIZRID", getWebData("RID"));
-      
-      webOpenMap.put("APPROVERSET", "900");
-      int i = this.sqlSession.update("WfFlowInstance.updatefApprovestate", webOpenMap);
-      System.out.println("流程实例是否更新成功:" + i);
-    }
-    else
-    {
-      webOpenMap.put("APP_RESULT", "1");
-    }
+    
+    webOpenMap.put("APP_RESULT", "1");
+    
     webOpenMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
     int result = this.sqlSession.update("SmmsWebOpenApp.updateAppResult", webOpenMap);
     
@@ -142,5 +130,35 @@ public class WebOpenAppClassDel
   public String untread(String toNodeId)
   {
     return "000";
+  }
+  
+  public void afterBiz(String bizFlag)
+    throws Exception
+  {
+    FMPLog.debug("流程启动后rid:" + getWebData("RID"));
+    if ("startFlow".equals(bizFlag))
+    {
+      FMPLog.debug("流程启动后rid:" + getWebData("RID"));
+      
+      Map webOpenMap = new HashMap();
+      webOpenMap.put("RID", getWebData("RID"));
+      setWebData("bizRid", getWebData("RID"));
+      
+      Map webOpenEventRid = (Map)this.sqlSession.selectOne("SmmsWebOpenApp.webOpenInfo", webOpenMap);
+      if ("2".equals(webOpenEventRid.get("IS_ACCEPT")))
+      {
+        FMPLog.debug("流程启动后是否受理:" + webOpenEventRid.get("IS_ACCEPT"));
+        setWebData("APPROVERESULT", "2");
+        setWebData("ISLASTREJECT", "1");
+        FMPLog.debug("流程实例rid:" + getWebData("FLOWINSTANCEID"));
+        final_reject();
+      }
+    }
+  }
+  
+  public void beforeBiz(String bizFlag)
+    throws Exception
+  {
+    FMPLog.debug("流程启动前rid:" + getWebData("RID"));
   }
 }

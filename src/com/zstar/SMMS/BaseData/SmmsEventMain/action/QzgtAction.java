@@ -3,6 +3,7 @@ package com.zstar.SMMS.BaseData.SmmsEventMain.action;
 import com.strutsframe.db.DBSqlSession;
 import com.zstar.SMMS.BaseData.SmmsEventMain.action.delegate.EventMainDel;
 import com.zstar.SMMS.BaseData.SmmsPendingEvent.delegate.PendingEventDel;
+import com.zstar.SMMS.acLog.SmmsAcLogin.delegate.ReadAcLogDel;
 import com.zstar.SMMS.webservice.delegate.RpcBusDel;
 import com.zstar.fmp.core.base.FMPContex;
 import com.zstar.fmp.core.frame.action.FrameAction;
@@ -28,6 +29,7 @@ public class QzgtAction
     String threat_name = "";
     PendingEventDel del = new PendingEventDel(this.contex);
     EventMainDel mainDel = new EventMainDel(this.contex);
+    ReadAcLogDel acDel = new ReadAcLogDel(this.contex);
     Map insertMap = new HashMap();
     insertMap = mainDel.selectInsertPendingInfoByIpOrUrl(selectMap);
     if ((insertMap != null) && (insertMap.size() > 0))
@@ -86,8 +88,12 @@ public class QzgtAction
       insertMap.put("MAIN_RID", mainRid);
       
       insertMap.put("RID", eventMap.get("DETAIL_RID"));
-      del.insertSmmsPendingEvent(insertMap);
-      
+      int i = del.insertSmmsPendingEvent(insertMap);
+      if ((insertMap.containsKey("ACCESS_ID")) && (insertMap.containsKey("ROOM_IDX")))
+      {
+        String path = (String)insertMap.get("ACCESS_ID") + "," + (String)insertMap.get("ROOM_IDX");
+        acDel.insertRecordMap(path, "999", i);
+      }
       insertMap.put("RID", mainRid);
       
       insertMap.put("SYS_RECTIFY_SUGGEST", "2");
@@ -123,6 +129,11 @@ public class QzgtAction
     List mapUrlList = this.sqlSession.selectList("WebCase.viewDoMainNameAndAccessId", selectMap);
     
     String message = "";
+    
+    mapRid.put("ENFORCE_USER", getWebData("CURR_USERID"));
+    
+    mapRid.put("ENFORCE_TIME", FMPContex.getCurrentTime());
+    
     FMPLog.debug("url查询数量" + mapUrlList.size());
     if ((url != null) && (!"".equals(url)))
     {

@@ -59,8 +59,7 @@ public class RecoverWebAction
     RpcBusDel rpcBusdel = new RpcBusDel(this.contex);
     try
     {
-      String str = "{\"return_code\":\"000\",\"return_msg\":\"处理成功\"}";
-      
+      String str = rpcBusdel.rpc2105(tokenIdBbc, domainServiceURL, domainJson);
       FMPLog.debug("2105恢复响应回来的json:" + str);
       
       Map messageJson = JsonUtil.jsonToDataMap(str);

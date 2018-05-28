@@ -53,12 +53,14 @@ public class SignCorrectAction
           ridMap.put("FEEDBACK_TIME", FMPContex.getCurrentTime());
           ridMap.put("FEEDBACK_TIMESTAMP", Long.valueOf(System.currentTimeMillis()));
           ridMap.put("RECTIFY_MEASURE", "1");
-          ridMap.put("RID", map.get("EVENT_RID"));
+          condition = "RID IN ('" + map.get("EVENT_RID") + "'" + ")";
+          ridMap.put("CONDITION", condition);
           
           ridMap.putAll(webCase);
           
           ridMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
-          int result = this.sqlSession.update("SmmsEventMain.updateSave", ridMap);
+          
+          int result = this.sqlSession.update("SmmsEventMain.updateRectify", ridMap);
           condition = "MAIN_RID IN ('" + map.get("EVENT_RID") + "'" + ")";
           mainRidMap.put("CONDITION", condition);
           mainRidMap.put("FEEDBACK_TIME", FMPContex.getCurrentTime());
@@ -68,8 +70,6 @@ public class SignCorrectAction
           mainRidMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
           this.sqlSession.update("SmmsPendingEvent.updateFeedbackTime", mainRidMap);
           
-          int i = mainDel.insertEventHis(map);
-          FMPLog.debug("标记已整改插入历史记录表是否成功：" + i);
           successSum += result;
           FMPLog.debug("总数" + successSum);
         }

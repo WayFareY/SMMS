@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SptCityRectify"> 
+<sql id="listColumns">
+	
+            RID,
+            IDC_ID,
+            ROOM_IDX,
+            DZG,
+            ZGZ,
+            YZG,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<sql id="detailColumns">
+	
+            RID,
+            IDC_ID,
+            ROOM_IDX,
+            DZG,
+            ZGZ,
+            YZG,
+            CREATTIME,
+            RECORDSTATE
+</sql>
+<select id="listData" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="listColumns"/> from SPT_CITY_RECTIFY 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>		
+	</where>
+        <if test="order!=null and order!='' ">   
+             order by ${order}
+        </if>				
+</select> 
+
+<select id="totalNum" parameterType="hashmap" resultType="hashmap"> 
+	select count(*) NUM  from SPT_CITY_RECTIFY 
+	<where>
+		RECORDSTATE='0'
+        <if test="whereCondition!=null and whereCondition!='' ">   
+             ${whereCondition}
+        </if>	
+	</where>
+</select> 
+
+<delete id="deleteData" parameterType="hashmap" > 
+	delete from SPT_CITY_RECTIFY  where RID = #{RID}
+</delete> 
+
+<select id="viewDetail" parameterType="hashmap" resultType="hashmap"> 
+	select <include refid="detailColumns"/>  from SPT_CITY_RECTIFY  where RID = #{RID} 
+</select> 
+
+<update id="deleteUpdate" parameterType="hashmap" > 
+	update SPT_CITY_RECTIFY  set RECORDSTATE=#{RECORDSTATE} where RID=#{RID}
+</update> 
+ 
+<select id="updateDetail" parameterType="String" resultType="hashmap"> 
+      select <include refid="detailColumns"/> from SPT_CITY_RECTIFY  where RID = #{RID} 
+</select> 
+<delete id="delete" parameterType="hashmap" > 
+	delete from SPT_CITY_RECTIFY
+</delete> 
+<select id="selectList" parameterType="hashmap" resultType="hashmap"> 
+select sum(DZG) as DZG,sum(ZGZ) as ZGZ,sum(YZG) as YZG,max(creattime) as CREATTIME from SPT_CITY_RECTIFY where RECORDSTATE='0'
+</select>
+<!--市页面 整改处理-->
+<select id="selectListToJson" parameterType="hashmap" resultType="hashmap"> 
+select sii.idc_short_name as IDC_NAME, ssr.ROOM_NAME,DZG, ZGZ, YZG from SPT_CITY_RECTIFY  as scp
+	left join smms_idc_info as sii
+			on scp.IDC_ID=sii.IDC_ID
+	LEFT JOIN SMMS_ROOM_INFO as ssr
+			on scp.IDC_ID=ssr.ACCESS_ID
+where scp.RECORDSTATE='0' and sii.RECORDSTATE='0' and ssr.RECORDSTATE='0' and scp.room_idx=ssr.room_idx
+
+</select>
+<!--省页面统计数据量-->
+<select id="selectListToSpt" parameterType="hashmap" resultType="hashmap"> 
+select max(sii.idc_short_name) as IDC_NAME, sum(DZG) as DZG, sum(ZGZ) as ZGZ, sum(YZG) as YZG from SPT_CITY_RECTIFY  as scp
+	left join smms_idc_info as sii
+	on scp.IDC_ID=sii.IDC_ID
+where scp.RECORDSTATE='0' and sii.RECORDSTATE='0'  GROUP BY scp.IDC_ID ORDER BY scp.IDC_ID
+
+</select>
+<insert id="insertSave" parameterType="hashmap" >
+	insert into SPT_CITY_RECTIFY (
+            <if test="RID != null ">RID,</if>
+            <if test="IDC_ID != null ">IDC_ID,</if>
+            <if test="ROOM_IDX != null ">ROOM_IDX,</if>
+            DZG,
+            ZGZ,
+            YZG,
+            CREATTIME,
+            RECORDSTATE)
+	   values (
+           <if test="RID != null ">#{RID},</if>
+           <if test="IDC_ID != null ">#{IDC_ID},</if>
+           <if test="ROOM_IDX != null ">#{ROOM_IDX},</if>
+           <if test="DZG != null ">#{DZG},</if><if test="DZG == null ">0,</if>
+           <if test="ZGZ != null ">#{ZGZ},</if><if test="ZGZ == null ">0,</if>
+           <if test="YZG != null ">#{YZG},</if><if test="YZG == null ">0,</if>
+           <if test="CREATTIME != null ">#{CREATTIME},</if>
+           <if test="RECORDSTATE != null ">#{RECORDSTATE}</if>)
+</insert> 
+
+<update id="updateSave" parameterType="hashmap" > 
+	update SPT_CITY_RECTIFY   
+		<set>
+				    <if test="IDC_ID!=null"> IDC_ID=#{IDC_ID},</if> 
+		    <if test="ROOM_IDX!=null"> ROOM_IDX=#{ROOM_IDX},</if> 
+		    <if test="DZG!=null"> DZG=#{DZG},</if> 
+		    <if test="ZGZ!=null"> ZGZ=#{ZGZ},</if> 
+		    <if test="YZG!=null"> YZG=#{YZG},</if> 
+		    <if test="RECORDSTATE!=null"> RECORDSTATE=#{RECORDSTATE},</if> 
+		</set>
+	where RID=#{RID}
+</update> 
+
+</mapper>

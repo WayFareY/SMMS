@@ -50,8 +50,11 @@ public class WebOpenDel
       
       count += 1L;
       result.put("ENFORCE_COUNT", Long.valueOf(count));
+      result.put("RECTIFY_STATE", result.get("RECTIFY_STATE"));
       return result;
     }
-    return null;
+    result.put("ENFORCE_COUNT", result.get("ENFORCE_COUNT"));
+    result.put("RECTIFY_STATE", result.get("RECTIFY_STATE"));
+    return result;
   }
 }

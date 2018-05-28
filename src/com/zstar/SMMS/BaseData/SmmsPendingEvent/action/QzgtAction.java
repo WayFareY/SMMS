@@ -53,7 +53,7 @@ public class QzgtAction
     if ("".equals(threat_name)) {
       insertMap.put("THREAT_NAME", "未知");
     }
-    rid = del.insertSmmsPendingEvent(insertMap);
+    del.insertSmmsPendingEvent(insertMap);
     
     Map mapRid = new HashMap();
     

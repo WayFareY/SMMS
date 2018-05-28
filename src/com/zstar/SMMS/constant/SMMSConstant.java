@@ -33,9 +33,11 @@ public class SMMSConstant
   public static final String RECTIFY_STATE_ENGTHIT = "888";
   public static final String RECTIFY_STATE_NINE = "999";
   public static final String RECTIFY_STATE_NINE_ZERO = "900";
+  public static final String RECTIFY_STATE_ENGTHIT_NINE = "899";
   public static final String RECTIFY_TERM = "0000000000";
   public static final String CLOSE_TERM = "0000000000";
   public static final String IS_WHITE_LIST = "2";
+  public static final String ENFORCE_USER = "自动执法";
   public static final String MESSAGE = "000";
   public static final String MESSAGE_NINE = "999";
   public static final String MUST_SMMSROOMINFO = "ACCESS_ID,ROOM_NAME,ROOM_IDX,ROOM_PROPERTY,ROOM_MANAGER,MANAGER_TEL,MANAGER_MOBILE";
@@ -110,6 +112,9 @@ public class SMMSConstant
   public static final String BBS_LOG_FLAG = "040";
   public static final String MAIL_LOG_FLAG = "050";
   public static final String AF_LOG_FLAG = "060";
+  public static final String PROXY_LOG_FLAG = "070";
+  public static final String QQ_LOG_FLAG = "080";
+  public static final String UNDEFIED_LOG_FLAG = "999";
   public static final String AUTOMATIC = "1";
   public static final String ISSUED = "1";
   public static final String OPMODE_DEBLOCKING = "2";
@@ -129,4 +134,7 @@ public class SMMSConstant
   public static final String IS_CONNECT_SYS_TWO = "2";
   public static final String IS_ACCEPT_ONE = "1";
   public static final String IS_ACCEPT_TWO = "2";
+  public static final String WEB_CASE_STATE_ONE = "1";
+  public static final String WEB_CASE_STATE_TWO = "2";
+  public static final String JSON_ZERO = "0";
 }

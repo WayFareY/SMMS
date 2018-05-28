@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 public class FileOperateUtil {
@@ -35,18 +36,12 @@ public class FileOperateUtil {
 	}
 
 	public static void writeFileContent(String filenameTemp, String newstr) {
-		String filein;
-		FileInputStream fis;
-		InputStreamReader isr;
-		BufferedReader br;
-		FileOutputStream fos;
-		PrintWriter pw;
-		filein = (new StringBuilder(String.valueOf(newstr))).append("\r\n").toString();
-		fis = null;
-		isr = null;
-		br = null;
-		fos = null;
-		pw = null;
+		String filein = (new StringBuilder(String.valueOf(newstr))).append("\r\n").toString();
+		FileInputStream fis = null;
+		InputStreamReader isr = null;
+		BufferedReader br = null;
+		FileOutputStream fos = null;
+		PrintWriter pw = null;
 		try {
 			File file = new File(filenameTemp);
 			fis = new FileInputStream(file);
@@ -78,7 +73,7 @@ public class FileOperateUtil {
 					isr.close();
 				if (fis != null)
 					fis.close();
-			} catch (Exception e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -129,7 +124,7 @@ public class FileOperateUtil {
 		try {
 			FileInputStream fis = new FileInputStream(srcPath);
 			FileOutputStream fos = new FileOutputStream(destFile);
-			byte[] buf = new byte['?'];
+			byte[] buf = new byte[1024];
 			int c;
 			while ((c = fis.read(buf)) != -1) {
 				fos.write(buf, 0, c);

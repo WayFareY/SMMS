@@ -39,6 +39,7 @@ public class ReadAcLogDel
     String[] rowKey = tableRow.split(",");
     
     int sum = 0;
+    int i = 0;
     PendingEventDel del = new PendingEventDel(this.contex);
     EventMainDel mainDel = new EventMainDel(this.contex);
     
@@ -85,7 +86,7 @@ public class ReadAcLogDel
           if (!state.booleanValue()) {
             map.put("CASE_STATE", "0");
           }
-          if (sqlId.startsWith("SmmsDomainFulx."))
+          if ((sqlId.startsWith("SmmsDomainFulx.")) && (!"".equals(sqlId)))
           {
             Map resultMap = new HashMap();
             Map timeMap = new HashMap();
@@ -95,14 +96,19 @@ public class ReadAcLogDel
             timeMap = getRecordMap();
             map.putAll(timeMap);
           }
-          int i = this.sqlSession.insert(sqlId, map);
-          sum += i;
+          if (!"".equals(sqlId)) {
+            i = this.sqlSession.insert(sqlId, map);
+          } else {
+            i = 1;
+          }
           if (flag)
           {
             Boolean urlContains = Boolean.valueOf(map.containsKey("URL"));
             Boolean desIpKey = Boolean.valueOf(map.containsKey("DES_IP"));
             Boolean ipKey = Boolean.valueOf(map.containsKey("IP"));
             Boolean keyWords = Boolean.valueOf(map.containsKey("KEYWORDS"));
+            
+            Boolean eventIdex = Boolean.valueOf(map.containsKey("EVENT_INDEX"));
             String url = "";
             String ip = "";
             if (urlContains.booleanValue())
@@ -110,13 +116,28 @@ public class ReadAcLogDel
               url = String.valueOf(map.get("URL"));
               map.put("URL", url.toUpperCase());
             }
-            if (desIpKey.booleanValue())
+            if (ipKey.booleanValue())
             {
-              ip = (String)map.get("DES_IP");
+              ip = (String)map.get("IP");
               map.put("IP", ip);
             }
             Map insertMap = mainDel.selectInsertPendingInfoByIpOrUrl(map);
-            
+            if (desIpKey.booleanValue())
+            {
+              if ((insertMap != null) && (insertMap.size() == 0))
+              {
+                ip = (String)map.get("DES_IP");
+                map.put("IP", ip);
+                insertMap = mainDel.selectInsertPendingInfoByIpOrUrl(map);
+              }
+              insertMap.put("ATTACK_IP", map.get("DES_IP"));
+            }
+            if (eventIdex.booleanValue())
+            {
+              insertMap.put("EVENT_INDEX", map.get("EVENT_INDEX"));
+              
+              insertMap.put("THREAT_TYPE1", "10");
+            }
             insertMap.put("RECTIFY_STATE", "000");
             if (!insertMap.containsKey("MAPPING_MODE")) {
               insertMap.put("MAPPING_MODE", "0");
@@ -124,11 +145,7 @@ public class ReadAcLogDel
             if (urlContains.booleanValue()) {
               insertMap.put("URL", url.toLowerCase());
             }
-            if (ipKey.booleanValue())
-            {
-              ip = (String)map.get("IP");
-              insertMap.put("IP", ip);
-            }
+            insertMap.put("IP", ip);
             if (servcrc.booleanValue()) {
               insertMap.put("EVENT_TYPE2", map.get("SERV_CRC"));
             }
@@ -184,10 +201,13 @@ public class ReadAcLogDel
               
               Map mapLevel = (Map)this.sqlSession.selectOne("SmmsKeyword.selectKeywordLevel", keysMap);
               String keyWordLevel = (String)mapLevel.get("KEYWORD_LEVEL");
+              FMPLog.debug("关键字：" + keys);
               
               List<Map> typeList = this.sqlSession.selectList("SmmsKeyword.selectKeywordType", keysMap);
-              for (Map keyMap : typeList) {
+              for (Map keyMap : typeList)
+              {
                 keyWordType = keyWordType + (String)keyMap.get("KEYWORD_TYPE") + ",";
+                FMPLog.debug("关键字类型：" + keyWordType);
               }
               if (keyWordType.endsWith(",")) {
                 keyWordType = keyWordType.substring(0, keyWordType.length() - 1);
@@ -199,6 +219,8 @@ public class ReadAcLogDel
               insertMap.put("THREAT_TYPE4", keyWordType);
               if (!"".equals(keyWordType)) {
                 isForClose = mainDel.getIsClose(null, keyWordType);
+              } else {
+                isForClose = "2";
               }
               if ("1".equals(isForClose)) {
                 insertMap.put("FORCE_CLOSE_DESC", "涉及一级关键字");
@@ -207,6 +229,7 @@ public class ReadAcLogDel
             }
             else
             {
+              insertMap.put("THREAT_LEVEL", "3");
               isForClose = "2";
             }
             insertMap.put("ACCESS_ID", roomIdcMap.get("ACCESS_ID"));
@@ -237,10 +260,14 @@ public class ReadAcLogDel
                 insertMap.put("LOG_FILENAME", fileName);
                 
                 insertMap.put("RID", mainEventMap.get("DETAIL_RID"));
-                del.insertSmmsPendingEvent(insertMap);
+                int j = del.insertSmmsPendingEvent(insertMap);
+                sum += j;
               }
               String selectKeyWordType = "";
               selectKeyWordType = (String)mainEventMap.get("THREAT_TYPE4");
+              FMPLog.debug("数据库的关键字类型：" + selectKeyWordType);
+              
+              FMPLog.debug("日志的关键字类型：" + keyWordType);
               
               String selectKeys = "";
               selectKeys = (String)mainEventMap.get("KEYWORDS");
@@ -256,7 +283,7 @@ public class ReadAcLogDel
                     }
                   }
                 }
-                else if (selectKeyWordType.equals(keyWordType))
+                else if (!selectKeyWordType.equals(keyWordType))
                 {
                   keyTypeAll = keyTypeAll + "," + selectKeyWordType;
                 }
@@ -304,7 +331,7 @@ public class ReadAcLogDel
                   insertMap.put("RID", mainEventMap.get("MAIN_RID"));
                   
                   insertMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
-                  if (("020".equals(rectifyState)) || ("888".equals(rectifyState)) || ("999".equals(rectifyState)) || ("900".equals(rectifyState))) {
+                  if (("899".equals(rectifyState)) || ("020".equals(rectifyState)) || ("888".equals(rectifyState)) || ("999".equals(rectifyState)) || ("900".equals(rectifyState))) {
                     insertMap.put("RECTIFY_STATE", "000");
                   } else if ((!"1".equals(mainEventMap.get("IS_FORCE_CLOSE"))) && ("010".equals(rectifyState))) {
                     insertMap.put("RECTIFY_STATE", "000");
@@ -332,10 +359,12 @@ public class ReadAcLogDel
                   }
                   rectifyState = (String)insertMap.get("RECTIFY_STATE");
                   if ((!"2".equals(mainEventMap.get("IS_FORCE_CLOSE"))) || (!"010".equals(rectifyState))) {
-                    if (!"020".equals(mainEventMap.get("RECTIFY_STATE")))
-                    {
-                      int j = this.sqlSession.update("SmmsEventMain.updateSave", insertMap);
-                      FMPLog.debug("AC整改 待处理日志是否更新成功：" + j);
+                    if (!"020".equals(mainEventMap.get("RECTIFY_STATE"))) {
+                      if ((!"0".equals(mainEventMap.get("FINAL_RECTIFY_SUGGEST"))) || (!"000".equals(rectifyState)))
+                      {
+                        int j = this.sqlSession.update("SmmsEventMain.updateSave", insertMap);
+                        FMPLog.debug("AC整改 待处理日志是否更新成功：" + j);
+                      }
                     }
                   }
                 }
@@ -377,12 +406,19 @@ public class ReadAcLogDel
               FMPLog.debug("是否为当天：" + resultFlag);
               if ("000".equals(rectifyState))
               {
-                if (("1".equals(automatic)) && ("2".equals(insertMap.get("FINAL_RECTIFY_SUGGEST"))))
+                closeMap.put("ENFORCE_USER", "自动执法");
+                
+                closeMap.put("ENFORCE_TIME", FMPContex.getCurrentTime());
+                if (("1".equals(automatic)) && ("2".equals(mainEventMap.get("FINAL_RECTIFY_SUGGEST"))))
                 {
+                  Long closeCount = (Long)eventMap.get("CLOSE_COUNT");
+                  closeCount = Long.valueOf(closeCount.longValue() + 1L);
+                  closeMap.put("CLOSE_COUNT", closeCount);
+                  
                   message = mainDel.ForceClose(closeMap);
                   FMPLog.debug("处理状态为000AC关停返回结果:" + message);
                 }
-                if (("1".equals(issued)) && ("1".equals(insertMap.get("FINAL_RECTIFY_SUGGEST")))) {
+                if (("1".equals(issued)) && ("1".equals(mainEventMap.get("FINAL_RECTIFY_SUGGEST")))) {
                   if (insertMap.containsKey("WEB_CASE_RID"))
                   {
                     message = mainDel.rectification(closeMap);
@@ -449,29 +485,53 @@ public class ReadAcLogDel
   
   public void insertRecordMap(String filePath, String logFlag, int sum)
   {
-    Map roomIdcMap = selectRoomInfo(filePath);
-    
     Map recorderMap = getRecordMap();
-    recorderMap.put("LOG_FLAG", logFlag);
-    recorderMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
-    recorderMap.putAll(roomIdcMap);
-    
-    List<Map> flagList = new ArrayList();
-    flagList = this.sqlSession.selectList("SmmsRptRecord.selectExist", recorderMap);
-    if ((flagList != null) && (flagList.size() > 0))
+    if ("060".equals(logFlag))
     {
-      Map flagMap = (Map)flagList.get(0);
-      Integer logCount = Integer.valueOf(sum + Integer.valueOf(String.valueOf(flagMap.get("LOG_COUNT"))).intValue());
-      recorderMap.put("LOG_COUNT", logCount);
-      this.sqlSession.update("SmmsRptRecord.updatLogCount", recorderMap);
+      if (filePath.indexOf("/") != -1)
+      {
+        String[] kv = filePath.split("/");
+        recorderMap.put("ACCESS_ID", kv[0]);
+        recorderMap.put("ROOM_IDX", kv[1]);
+      }
+    }
+    else if ("999".equals(logFlag))
+    {
+      if (filePath.indexOf(",") != -1)
+      {
+        String[] kv = filePath.split(",");
+        recorderMap.put("ACCESS_ID", kv[0]);
+        recorderMap.put("ROOM_IDX", kv[1]);
+      }
     }
     else
     {
-      String rid = FMPContex.getNewUUID();
-      recorderMap.put("RID", rid);
-      recorderMap.put("LOG_COUNT", Integer.valueOf(sum));
-      recorderMap.put("CREATTIME", FMPContex.getCurrentTime());
-      this.sqlSession.insert("SmmsRptRecord.insertSave", recorderMap);
+      Map roomIdcMap = selectRoomInfo(filePath);
+      recorderMap.putAll(roomIdcMap);
+    }
+    recorderMap.put("LOG_FLAG", logFlag);
+    recorderMap.put("MODIFIEDTIME", FMPContex.getCurrentTime());
+    if ((recorderMap.containsKey("ACCESS_ID")) && (recorderMap.containsKey("ROOM_IDX")))
+    {
+      List<Map> flagList = new ArrayList();
+      flagList = this.sqlSession.selectList("SmmsRptRecord.selectExist", recorderMap);
+      if ((flagList != null) && (flagList.size() > 0))
+      {
+        Map flagMap = (Map)flagList.get(0);
+        Integer logCount = Integer.valueOf(sum + Integer.valueOf(String.valueOf(flagMap.get("LOG_COUNT"))).intValue());
+        recorderMap.put("LOG_COUNT", logCount);
+        int i = this.sqlSession.update("SmmsRptRecord.updatLogCount", recorderMap);
+        FMPLog.debug("日志记录是否成功更新成功：" + i);
+      }
+      else
+      {
+        String rid = FMPContex.getNewUUID();
+        recorderMap.put("RID", rid);
+        recorderMap.put("LOG_COUNT", Integer.valueOf(sum));
+        recorderMap.put("CREATTIME", FMPContex.getCurrentTime());
+        int i = this.sqlSession.insert("SmmsRptRecord.insertSave", recorderMap);
+        FMPLog.debug("日志记录是否插入更新成功：" + i);
+      }
     }
   }
 }
